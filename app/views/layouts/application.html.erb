@@ -7,14 +7,16 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <% if signed_in? %>
-    <%= current_user.username %>
-    <%= button_to "Sign Out", session_url, :method => :delete %>
-  <% else %>
-    <%= link_to "Sign In", new_session_url %>
-    <%= link_to "Sign Up", new_user_url %>
-  <% end %>
-  
+  <div class="Auth">
+    <% if signed_in? %>
+      <%= current_user.username %>
+      <%= button_to "Sign Out", session_url, :method => :delete %>
+    <% else %>
+      <%= link_to "Sign In", new_session_url %>
+      <%= link_to "Sign Up", new_user_url %>
+    <% end %>
+  </div>
+
   <script>
     <% if current_user %>
       window.CURRENT_USER_ID = <%= current_user.id %>;

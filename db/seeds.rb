@@ -10,7 +10,7 @@ User.create!(username: "AlexeiStukov", password: "AlexeiStukov")
 
 
 Trek.create!(title: "Sykes",
-    location: "Big Sur California",
+    location: "California",
     author_id: 2,
     description: "Hike in Big Sur",
     start_elv: 400,
@@ -24,7 +24,7 @@ Trek.create!(title: "Sykes",
     )
 
 Trek.create!(title: "Tiger Leaping Gorge",
-    location: "Lijiang China",
+    location: "China",
     author_id: 1,
     description: "Hike near the Himalayas",
     start_elv: 5905,
@@ -52,7 +52,7 @@ Trek.create!(title: "Lost Coast",
      )
 
 Trek.create!(title: "Yosemite",
-      location: "Yosemite Califonia",
+      location: "California",
       author_id: 4,
       description: "Hike the whole of Yosemite",
       start_elv: 1800,
@@ -66,7 +66,7 @@ Trek.create!(title: "Yosemite",
       )
 
 Trek.create!(title: "Grand Canyon",
-      location: "Flagstaff Arizona",
+      location: "Arizona",
       author_id: 5,
       description: "Hike to the bottom of the Grand Canyon and back",
       start_elv: 5905,

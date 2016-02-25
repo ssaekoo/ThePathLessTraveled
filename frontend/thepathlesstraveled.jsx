@@ -1,15 +1,19 @@
-var React = require('react'),
-    ReactDOM = require('react-dom'),
-    Router = require('react-router').Router,
-    Route = require('react-router').Route;
+var React = require('react');
+var ReactDOM = require('react-dom');
+var ReactRouter = require('react-router');
+var Router = ReactRouter.Router;
+var Route = ReactRouter.Route;
+var History = require('history');
 
-var routes = (
-  <Route />
-);
+var App = require('./components/app');
+var Search = require('./components/search');
+
+var routes = (<Router history={History.hashHistory}>
+  <Route path='/' component={App}>
+    <Route path='search' component={Search}/>
+  </Route>
+</Router>)
 
 document.addEventListener("DOMContentLoaded", function () {
-  ReactDOM.render(
-    <Router>{routes}</Router>,
-    document.getElementById('root')
-  );
+  ReactDOM.render(routes, document.getElementById('content'));
 });
