@@ -1,19 +1,27 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
 var ApiUtil = require('../util/api_util')
-var ApiAction = {};
+var ApiActions = {};
 
-ApiAction.receiveTreks = function(treks) {
+ApiActions.requestAllTreks = function () {
+  ApiUtil.fetchAllTreks(this.recieveAllTreks);
+};
+
+ApiActions.requestTreksByLocation = function(location){
+  ApiUtil.fetchTreksByLocation(location, this.receiveTreks);
+};
+
+ApiActions.recieveAllTreks = function(treks) {
+  AppDispatcher.dispatch({
+    actionType: "RECEIVED_ALL_TREKS",
+    treks: treks
+  });
+};
+
+ApiActions.receiveTreks = function(treks) {
   AppDispatcher.dispatch({
     actionType: "RECEIVED_TREKS",
     treks: treks
   });
-}
+};
 
-ApiAction.fetchTreksByLocation = function(){
-  AppDispatcher.dispatch({
-    actionType: "FETCH_TREKS",
-    treks: ApiUtil.fetchTreks()
-  });
-}
-
-module.exports = ApiAction;
+module.exports = ApiActions;

@@ -2,20 +2,36 @@
 <html>
 <head>
   <title>ThePathLessTraveled</title>
+  <link href='https://fonts.googleapis.com/css?family=Sorts+Mill+Goudy' rel='stylesheet' type='text/css'>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div class="Auth">
-    <% if signed_in? %>
-      <%= current_user.username %>
-      <%= button_to "Sign Out", session_url, :method => :delete %>
-    <% else %>
-      <%= link_to "Sign In", new_session_url %>
-      <%= link_to "Sign Up", new_user_url %>
-    <% end %>
-  </div>
+  <header class="header">
+    <nav class="header-nav group">
+
+      <h1 class="header-logo">
+        <a href="#">The Path Less Traveled</a>
+      </h1>
+
+      <ul class="header-list group">
+        <li><a href="#">Profile</a></li>
+        <li><a href="#">Settings</a></li>
+        <div class="Auth">
+          <% if signed_in? %>
+            <%= current_user.username %>
+            <%= button_to "Sign Out", session_url, :method => :delete %>
+          <% else %>
+            <%= link_to "Sign In", new_session_url %>
+            <%= link_to "Sign Up", new_user_url %>
+          <% end %>
+        </div>
+      </ul>
+
+    </nav>
+  </header>
+
 
   <script>
     <% if current_user %>

@@ -14,6 +14,9 @@ TrekStore.__onDispatch = function (payload) {
     case "RECEIVED_TREKS":
       resetTreks(payload.treks);
       break;
+    case "RECEIVED_ALL_TREKS":
+      resetTreks(payload.treks);
+      break;
   }
 };
 

@@ -24,6 +24,8 @@ class Trek < ActiveRecord::Base
   validates :title, :location_id, :author_id, :description, presence: true
 
   has_many :reviews
+  has_many :pictures
+  
   belongs_to :user,
     foreign_key: :author_id,
     class_name: 'Trek'

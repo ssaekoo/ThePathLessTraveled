@@ -182,3 +182,39 @@ Review.create!(user_id: 8,
       rating: 5.0,
       difficulty: 5.0
       )
+
+Picture.create!(author_id: 2,
+      trek_id: 1,
+      primary: 1,
+      url: 'sykes.jpg'
+      )
+
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      primary: 1,
+      url: 'tiger-leaping-gorge.jpg'
+      )
+
+Picture.create!(author_id: 3,
+      trek_id: 3,
+      primary: 1,
+      url: 'lost-coast.jpg'
+      )
+
+Picture.create!(author_id: 4,
+      trek_id: 4,
+      primary: 1,
+      url: 'Yosemite2.jpg'
+      )
+
+Picture.create!(author_id: 4,
+      trek_id: 4,
+      primary: 0,
+      url: 'Yosemite.jpg'
+      )
+
+Picture.create!(author_id: 5,
+      trek_id: 5,
+      primary: 1,
+      url: 'Grand-Canyon.jpg'
+      )

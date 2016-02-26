@@ -16,36 +16,6 @@ ActiveRecord::Schema.define(version: 20160224194716) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "gifts", force: :cascade do |t|
-    t.string   "title"
-    t.string   "description"
-    t.integer  "guest_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-  end
-
-  create_table "guests", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "age"
-    t.string   "favorite_color"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
-  create_table "invitations", force: :cascade do |t|
-    t.integer  "guest_id"
-    t.integer  "party_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "parties", force: :cascade do |t|
-    t.string   "name"
-    t.string   "location"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "pictures", force: :cascade do |t|
     t.integer  "author_id",              null: false
     t.integer  "trek_id",                null: false
