@@ -62,8 +62,8 @@
 	  { history: History.hashHistory },
 	  React.createElement(
 	    Route,
-	    { path: '/', component: LandingPage },
-	    React.createElement(IndexRoute, { component: App }),
+	    { path: '/', component: App },
+	    React.createElement(IndexRoute, { component: LandingPage }),
 	    React.createElement(Route, { path: 'search', component: Search })
 	  )
 	);
@@ -25064,22 +25064,28 @@
 
 	var React = __webpack_require__(1);
 	var Search = __webpack_require__(223);
+	var BackgroundStore = __webpack_require__(260);
 	// var NavBar = require('./nav_bar');
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
 	  render: function () {
+	    // var url = "west-coast-trail.jpg)";
+	    var url = BackgroundStore.returnBackground();
+	    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
+	
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(Search, null),
 	      this.props.children
 	    );
 	  }
 	});
 	
 	module.exports = App;
+	
+	//landing page link to search
 
 /***/ },
 /* 223 */
@@ -25234,6 +25240,9 @@
 	});
 	
 	module.exports = Search;
+	
+	// overflow auto
+	// add height param to container
 
 /***/ },
 /* 224 */
@@ -33144,13 +33153,6 @@
 	
 	
 	  render: function () {
-	    // var headerStyle={
-	    //   margin: '0 auto',
-	    //   width: '100%',
-	    //   backgroundImage: "url(https://a2.muscache.com/airbnb/static/landing_pages/pretzel/stills/croatia-887a17b9994536f0d95bfd3f43ed664c.jpg)"
-	    // };
-	
-	    // debugger;
 	    return React.createElement(
 	      "section",
 	      { id: "intro" },
@@ -33191,6 +33193,35 @@
 	//   </div>
 	//   <LandingSearchBar history={this.props.history}/>
 	// </div>
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(242).Store;
+	var AppDispatcher = __webpack_require__(236);
+	var BackgroundStore = new Store(AppDispatcher);
+	
+	// var _backgrounds = {landing-page: "west-coast-trail.jpg", search-page: "blah.png"};
+	
+	var _backgrounds = "west-coast-trail.jpg";
+	
+	BackgroundStore.returnBackground = function () {
+	  return _backgrounds;
+	};
+	
+	BackgroundStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case "RECEIVED_TREKS":
+	      resetTreks(payload.treks);
+	      break;
+	    case "RECEIVED_ALL_TREKS":
+	      resetTreks(payload.treks);
+	      break;
+	  }
+	};
+	
+	module.exports = BackgroundStore;
 
 /***/ }
 /******/ ]);

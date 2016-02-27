@@ -25,7 +25,12 @@ class Trek < ActiveRecord::Base
 
   has_many :reviews
   has_many :pictures
-  
+  has_many :taggings
+
+  has_many :tags,
+    through: :taggings,
+    source: :tag
+
   belongs_to :user,
     foreign_key: :author_id,
     class_name: 'Trek'

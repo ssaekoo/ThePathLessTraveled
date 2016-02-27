@@ -93,3 +93,7 @@ var Search = React.createClass({
 });
 
 module.exports = Search;
+
+
+// overflow auto
+// add height param to container

@@ -218,3 +218,131 @@ Picture.create!(author_id: 5,
       primary: 1,
       url: 'Grand-Canyon.jpg'
       )
+
+Tag.create!(tag_name: 'Beginner')
+
+Tag.create!(tag_name: 'Intermediate')
+
+Tag.create!(tag_name: 'Expert')
+
+Tag.create!(tag_name: 'Req equipment')
+
+Tag.create!(tag_name: 'Multi-day')
+
+Tag.create!(tag_name: 'Single-day')
+
+Tag.create!(tag_name: 'Famous')
+
+Tag.create!(tag_name: 'Populous')
+
+Tag.create!(tag_name: 'Deserted')
+
+Tag.create!(tag_name: 'Water-crossing')
+
+Tag.create!(tag_name: 'Mountainous')
+
+Tag.create!(tag_name: 'Family oriented')
+
+Tagging.create!(trek_id: 1,
+      tag_id: 2
+      )
+
+Tagging.create!(trek_id: 1,
+      tag_id: 5
+      )
+
+Tagging.create!(trek_id: 1,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 1,
+      tag_id: 8
+      )
+
+Tagging.create!(trek_id: 1,
+      tag_id: 12
+      )
+
+Tagging.create!(trek_id: 2,
+      tag_id: 2
+      )
+
+Tagging.create!(trek_id: 2,
+      tag_id: 5
+      )
+
+Tagging.create!(trek_id: 2,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 1,
+      tag_id: 9
+      )
+
+Tagging.create!(trek_id: 1,
+      tag_id: 11
+      )
+
+Tagging.create!(trek_id: 3,
+      tag_id: 1
+      )
+
+Tagging.create!(trek_id: 3,
+      tag_id: 5
+      )
+
+Tagging.create!(trek_id: 3,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 3,
+      tag_id: 9
+      )
+
+Tagging.create!(trek_id: 3,
+      tag_id: 12
+      )
+
+Tagging.create!(trek_id: 4,
+      tag_id: 3
+      )
+
+Tagging.create!(trek_id: 4,
+      tag_id: 4
+      )
+
+Tagging.create!(trek_id: 4,
+      tag_id: 5
+      )
+
+Tagging.create!(trek_id: 4,
+      tag_id: 9
+      )
+
+Tagging.create!(trek_id: 4,
+      tag_id: 10
+      )
+
+Tagging.create!(trek_id: 4,
+      tag_id: 11
+      )
+
+Tagging.create!(trek_id: 5,
+      tag_id: 2
+      )
+
+Tagging.create!(trek_id: 5,
+      tag_id: 5
+      )
+
+Tagging.create!(trek_id: 5,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 5,
+      tag_id: 8
+      )
+
+Tagging.create!(trek_id: 5,
+      tag_id: 11
+      )

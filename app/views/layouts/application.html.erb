@@ -6,38 +6,50 @@
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <!-- <link rel="stylesheet" href="node_modules/react-star-rating/dist/css/react-star-rating.min.css"> -->
+
 </head>
 <body>
-  <header class="header">
-    <nav class="header-nav group">
-
-      <h1 class="header-logo">
-        <a href="#">The Path Less Traveled</a>
-      </h1>
-
-      <ul class="header-list group">
-        <li><a href="#">Profile</a></li>
-        <li><a href="#">Settings</a></li>
-        <div class="Auth">
-          <% if signed_in? %>
-            <%= current_user.username %>
-            <%= button_to "Sign Out", session_url, :method => :delete %>
-          <% else %>
-            <%= link_to "Sign In", new_session_url %>
-            <%= link_to "Sign Up", new_user_url %>
-          <% end %>
-        </div>
-      </ul>
-
-    </nav>
-  </header>
-
-
   <script>
     <% if current_user %>
       window.CURRENT_USER_ID = <%= current_user.id %>;
     <% end %>
   </script>
+
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">ThePathLessTraveled</a>
+        <a class="btn btn-success search-btn" href="/#/search">Search</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <div class="navbar-form navbar-right">
+          <% if signed_in? %>
+            <%= "<div class='form-group'>".html_safe %>
+              <%= "<a class='navbar-brand' href='#'>".html_safe + current_user.username + "</a>".html_safe  %>
+            <%= "</div>".html_safe %>
+            <%= "<div class='form-group'>".html_safe %>
+              <%= button_to "Sign Out", session_url, :method => :delete, :class => 'btn btn-success'%>
+            <%= "</div>".html_safe %>
+          <% else %>
+            <%= "<div class='form-group'>".html_safe %>
+              <%= link_to "Sign In", new_session_url, :class => 'btn btn-success' %>
+            <%= "</div>".html_safe %>
+            <%= "<div class='form-group'>".html_safe %>
+              <%= link_to "Sign Up", new_user_url, :class => 'btn btn-success' %>
+            <%= "</div>".html_safe %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </nav>
 
 <%= yield %>
 

@@ -13,8 +13,8 @@ var LandingPage = require('./components/landing_page')
 
 var routes = (
   <Router history={History.hashHistory}>
-    <Route path='/' component={LandingPage}>
-      <IndexRoute component={App} />
+    <Route path='/' component={App}>
+      <IndexRoute component={LandingPage} />
       <Route path='search' component={Search} />
     </Route>
   </Router>)

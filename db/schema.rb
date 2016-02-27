@@ -11,10 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160224194716) do
+ActiveRecord::Schema.define(version: 20160227033629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "locations", force: :cascade do |t|
+    t.integer  "trek_id",    null: false
+    t.string   "trek_name",  null: false
+    t.string   "country",    null: false
+    t.string   "city",       null: false
+    t.float    "latitude",   null: false
+    t.float    "longitude",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "locations", ["trek_id"], name: "index_locations_on_trek_id", using: :btree
 
   create_table "pictures", force: :cascade do |t|
     t.integer  "author_id",              null: false
@@ -41,6 +54,19 @@ ActiveRecord::Schema.define(version: 20160224194716) do
 
   add_index "reviews", ["trek_id"], name: "index_reviews_on_trek_id", using: :btree
   add_index "reviews", ["user_id"], name: "index_reviews_on_user_id", using: :btree
+
+  create_table "taggings", force: :cascade do |t|
+    t.integer  "trek_id",    null: false
+    t.integer  "tag_id",     null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string   "tag_name",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "treks", force: :cascade do |t|
     t.string   "title",                   null: false
