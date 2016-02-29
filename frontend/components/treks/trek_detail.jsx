@@ -8,11 +8,11 @@ var TrekDetail = React.createClass({
   },
 
   _onChange: function () {
-    this.setState(this.getStateFromStore());
+    this.setState({trek: this.getStateFromStore()});
   },
 
-  getStateFromStore: function functionName() {
-    return this.getStateFromStore();
+  getStateFromStore: function() {
+    return TrekStore.find(parseInt(this.props.params.trekId));
   },
 
   componentWillReceiveProps: function (newProps) {
@@ -21,7 +21,7 @@ var TrekDetail = React.createClass({
 
   componentDidMount: function() {
     this.listenerToken = TrekStore.addListener(this._onChange);
-    TrekActions.requestTreksById(this.props.params.trekId);
+    ApiActions.requestTreksById(this.props.params.trekId);
   },
 
   componentWillUnmount: function () {
@@ -33,16 +33,29 @@ var TrekDetail = React.createClass({
   },
 
   render: function () {
-      if(this.state.trek === undefined) { return <div></div>; }
+      if(this.state.trek.length === undefined) { return <div></div>; }
+      var myTags = this.state.trek.tags.map (function(tag){
+        return (<div>{tag.tag_name}</div>);
+      })
 
       return(
         <div>
           <div className="trek-detail-pane">
             <div className="detail">
-              // <img src={this.state.trek.image_url} />
-              {['title', 'description', 'start_elv', 'peak_elv', 'elv_measure', 'duration', 'length', 'length_measure'].map(function (attr) {
-                return <p key={attr}>{attr}: {this.state.trek[attr]}</p>;
-              }.bind(this))}
+              <div> Title: {this.state.trek.title} </div>
+              <div> Rating: {this.state.trek.average_rating} </div>
+              <div> Reviews: {this.state.trek.total_reviews} </div>
+              <div> Description: {this.state.trek.description} </div>
+              <div> {this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1)}: {this.state.trek.duration} </div>
+              <div> Starting elevation: {this.state.trek.start_elv} {this.state.trek.elv_measure} </div>
+              <div> Highest elevation: {this.state.trek.peak_elv} {this.state.trek.elv_measure} </div>
+
+              <div> <img className="img-responsive search-page-image" src={"/assets/" + this.state.trek.trek_pics[0].url}/></div>
+              <div> Country: {this.state.trek.location.country} </div>
+
+              <div> tags:
+                {myTags}
+              </div>
             </div>
           </div>
 
@@ -54,3 +67,7 @@ var TrekDetail = React.createClass({
   });
 
 module.exports = TrekDetail;
+
+// <div> City: {this.state.trek.location.city} </div>
+// <div> Latitude: {this.state.trek.location.latitude} </div>
+// <div> Longitude: {this.state.trek.location.longitude} </div>

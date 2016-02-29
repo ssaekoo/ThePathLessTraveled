@@ -1,8 +1,12 @@
 var ApiUtil = {};
 
 ApiUtil.fetchAllTreks = function (callback) {
-  $.get('api/treks', {}, function(response){
-    callback(response);
+  $.ajax({
+    url: "api/treks",
+    type: "GET",
+    success: function(treks){
+      callback(treks);
+    }
   });
 };
 

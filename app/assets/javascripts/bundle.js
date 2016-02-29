@@ -55,7 +55,7 @@
 	
 	var App = __webpack_require__(222);
 	var Search = __webpack_require__(223);
-	var LandingPage = __webpack_require__(261);
+	var LandingPage = __webpack_require__(262);
 	var TrekDetail = __webpack_require__(259);
 	
 	var routes = React.createElement(
@@ -65,7 +65,6 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: LandingPage }),
-	    '// ',
 	    React.createElement(Route, { path: 'search', component: Search }),
 	    React.createElement(Route, { path: 'treks/:trekId', component: TrekDetail })
 	  )
@@ -25067,7 +25066,6 @@
 
 	var React = __webpack_require__(1);
 	var Search = __webpack_require__(223);
-	var TrekIndex = __webpack_require__(262);
 	// var BackgroundStore = require('../stores/background_store');
 	
 	var App = React.createClass({
@@ -25079,11 +25077,6 @@
 	    return React.createElement(
 	      'div',
 	      { id: 'treks' },
-	      React.createElement(
-	        'div',
-	        { className: 'treks-index-pane' },
-	        React.createElement(TrekIndex, null)
-	      ),
 	      this.props.children
 	    );
 	  }
@@ -25189,8 +25182,8 @@
 	    return renderArray;
 	  },
 	
-	  showDetail: function () {
-	    this.history.pushState(null, '/treks/' + this.props.trek.id, {});
+	  showDetail: function (id) {
+	    this.history.pushState(null, '/treks/' + id, {});
 	  },
 	
 	  render: function () {
@@ -25198,7 +25191,7 @@
 	    var results = this.matches().map(function (trek) {
 	      return React.createElement(
 	        'div',
-	        { key: trek.id, className: 'container', onClick: this.showDetail },
+	        { key: trek.id, className: 'container', onClick: this.showDetail.bind(null, trek.id) },
 	        React.createElement(
 	          'center',
 	          null,
@@ -26310,23 +26303,15 @@
 	var ApiUtil = __webpack_require__(240);
 	var ApiActions = {};
 	
-	ApiActions.requestAllTreks = function () {
-	  ApiUtil.fetchAllTreks(this.recieveAllTreks);
-	};
-	
-	ApiActions.requestTreksByLocation = function (location) {
-	  ApiUtil.fetchTreksByLocation(location, this.receiveTreks);
-	};
-	
-	ApiActions.requestTreksById = function (id) {
-	  ApiUtil.fetchSingleTrek(id, this.receiveSingleTrek);
-	};
-	
-	ApiActions.recieveAllTreks = function (treks) {
+	ApiActions.receiveAllTreks = function (treks) {
 	  AppDispatcher.dispatch({
 	    actionType: "RECEIVED_ALL_TREKS",
 	    treks: treks
 	  });
+	};
+	
+	ApiActions.requestAllTreks = function () {
+	  ApiUtil.fetchAllTreks(ApiActions.receiveAllTreks);
 	};
 	
 	ApiActions.receiveTreks = function (treks) {
@@ -26341,6 +26326,14 @@
 	    actionType: "RECEIVED_SINGLE_TREK",
 	    treks: trek
 	  });
+	};
+	
+	ApiActions.requestTreksById = function (id) {
+	  ApiUtil.requestTreksById(id, ApiActions.receiveSingleTrek);
+	};
+	
+	ApiActions.requestTreksByLocation = function (location) {
+	  ApiUtil.fetchTreksByLocation(location, ApiActions.receiveTreks);
 	};
 	
 	module.exports = ApiActions;
@@ -26668,8 +26661,12 @@
 	var ApiUtil = {};
 	
 	ApiUtil.fetchAllTreks = function (callback) {
-	  $.get('api/treks', {}, function (response) {
-	    callback(response);
+	  $.ajax({
+	    url: "api/treks",
+	    type: "GET",
+	    success: function (treks) {
+	      callback(treks);
+	    }
 	  });
 	};
 	
@@ -26731,7 +26728,7 @@
 	      resetTreks(payload.treks);
 	      break;
 	    case "RECEIVED_SINGLE_TREK":
-	      resetTreks(payload.treks);
+	      resetTreks([payload.treks]);
 	      break;
 	  }
 	};
@@ -33215,11 +33212,11 @@
 	  },
 	
 	  _onChange: function () {
-	    this.setState(this.getStateFromStore());
+	    this.setState({ trek: this.getStateFromStore() });
 	  },
 	
-	  getStateFromStore: function functionName() {
-	    return this.getStateFromStore();
+	  getStateFromStore: function () {
+	    return TrekStore.find(parseInt(this.props.params.trekId));
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
@@ -33228,7 +33225,7 @@
 	
 	  componentDidMount: function () {
 	    this.listenerToken = TrekStore.addListener(this._onChange);
-	    TrekActions.requestTreksById(this.props.params.trekId);
+	    ApiActions.requestTreksById(this.props.params.trekId);
 	  },
 	
 	  componentWillUnmount: function () {
@@ -33240,9 +33237,16 @@
 	  },
 	
 	  render: function () {
-	    if (this.state.trek === undefined) {
+	    if (this.state.trek.length === undefined) {
 	      return React.createElement('div', null);
 	    }
+	    var myTags = this.state.trek.tags.map(function (tag) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        tag.tag_name
+	      );
+	    });
 	
 	    return React.createElement(
 	      'div',
@@ -33253,17 +33257,80 @@
 	        React.createElement(
 	          'div',
 	          { className: 'detail' },
-	          '// ',
-	          React.createElement('img', { src: this.state.trek.image_url }),
-	          ['title', 'description', 'start_elv', 'peak_elv', 'elv_measure', 'duration', 'length', 'length_measure'].map(function (attr) {
-	            return React.createElement(
-	              'p',
-	              { key: attr },
-	              attr,
-	              ': ',
-	              this.state.trek[attr]
-	            );
-	          }.bind(this))
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Title: ',
+	            this.state.trek.title,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Rating: ',
+	            this.state.trek.average_rating,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Reviews: ',
+	            this.state.trek.total_reviews,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Description: ',
+	            this.state.trek.description,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' ',
+	            this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1),
+	            ': ',
+	            this.state.trek.duration,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Starting elevation: ',
+	            this.state.trek.start_elv,
+	            ' ',
+	            this.state.trek.elv_measure,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Highest elevation: ',
+	            this.state.trek.peak_elv,
+	            ' ',
+	            this.state.trek.elv_measure,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' ',
+	            React.createElement('img', { className: 'img-responsive search-page-image', src: "/assets/" + this.state.trek.trek_pics[0].url })
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Country: ',
+	            this.state.trek.location.country,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' tags:',
+	            myTags
+	          )
 	        )
 	      ),
 	      this.props.children
@@ -33272,6 +33339,10 @@
 	});
 	
 	module.exports = TrekDetail;
+	
+	// <div> City: {this.state.trek.location.city} </div>
+	// <div> Latitude: {this.state.trek.location.latitude} </div>
+	// <div> Longitude: {this.state.trek.location.longitude} </div>
 
 /***/ },
 /* 260 */
@@ -33308,7 +33379,8 @@
 	});
 
 /***/ },
-/* 261 */
+/* 261 */,
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33394,46 +33466,6 @@
 	});
 	
 	module.exports = LandingPage;
-
-/***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var TrekStore = __webpack_require__(241);
-	var ApiUtil = __webpack_require__(240);
-	var TrekIndexItem = __webpack_require__(260);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  getInitialState: function () {
-	    return { treks: TrekStore.all() };
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ treks: TrekStore.all() });
-	  },
-	
-	  componentDidMount: function () {
-	    this.trekListener = TrekStore.addListener(this._onChange);
-	    ApiUtil.fetchAllTreks();
-	  },
-	
-	  compomentWillUnmount: function () {
-	    this.trekListener.remove();
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      null,
-	      this.state.treks.map(function (trek, index) {
-	        return React.createElement(TrekIndexItem, { key: index, trek: trek });
-	      })
-	    );
-	  }
-	});
 
 /***/ }
 /******/ ]);

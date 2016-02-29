@@ -76,15 +76,15 @@ var Search = React.createClass({
     return renderArray;
   },
 
-  showDetail: function () {
-    this.history.pushState(null, '/treks/' + this.props.trek.id, {});
-  }, 
+  showDetail: function (id) {
+    this.history.pushState(null, '/treks/' + id, {});
+  },
 
   render: function () {
 
     var results = this.matches().map(function (trek) {
       return (
-        <div key={trek.id} className="container" onClick={this.showDetail}>
+        <div key={trek.id} className="container" onClick={this.showDetail.bind(null, trek.id)}>
           <center><h4>{trek.title}</h4></center>
           <center>City: {trek.location.city}</center>
           <center>Country: {trek.location.country}</center>
