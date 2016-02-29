@@ -4,8 +4,6 @@
 #
 #  id          :integer          not null, primary key
 #  title       :string           not null
-#  location_id :integer          default(0)
-#  location    :string
 #  author_id   :integer          not null
 #  description :string           not null
 #  start_elv   :integer

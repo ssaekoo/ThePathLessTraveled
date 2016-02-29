@@ -17,18 +17,25 @@ ApiUtil.fetchTreksByLocation = function(location, callback) {
   })
 };
 
-ApiUtil.createUserAccount = function(credentials, receiveNewUser) {
+ApiUtil.fetchTreksByLocation = function(location, callback) {
   $.ajax({
-    url: 'api/users',
-    method: "post",
-    data: {user: credentials},
-    success: function(user){
-              receiveNewUser(user);
-            },
-    error: function(error, status){
-              debugger;
-            }
-  });
-},
+    url: "api/treks",
+    data: {treks: {location: location}},
+    type: "GET",
+    success: function(treks){
+      callback(treks);
+    }
+  })
+};
+
+ApiUtil.requestTreksById = function(id, callback) {
+  $.ajax({
+    url: "api/treks/" + id,
+    type: "GET",
+    success: function(treks){
+      callback(treks);
+    }
+  })
+};
 
 module.exports = ApiUtil;

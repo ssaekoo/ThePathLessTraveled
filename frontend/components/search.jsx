@@ -6,6 +6,7 @@ var Link = require('react-router').Link;
 
 var ApiActions = require('../actions/api_actions');
 var TrekStore = require('../stores/trek_store');
+var TrekDetail = require('./trek/trek_detail')
 // var SessionStore = require('./stores/sessionStore.js');
 
 var Search = React.createClass({
@@ -31,8 +32,19 @@ var Search = React.createClass({
     }
 
     TrekStore.all().forEach(function (trek) {
-      var sub = trek.location.slice(0, this.state.searchValue.length);
-      if(sub.toLowerCase() === this.state.searchValue.toLowerCase()){
+      var city = trek.location.city.slice(0, this.state.searchValue.length);
+      var country = trek.location.country.slice(0, this.state.searchValue.length);
+      var title = trek.title.slice(0, this.state.searchValue.length);
+
+      if(city.toLowerCase() === this.state.searchValue.toLowerCase()){
+        matches.push(trek);
+      }
+
+      if(country.toLowerCase() === this.state.searchValue.toLowerCase()){
+        matches.push(trek);
+      }
+
+      if(title.toLowerCase() === this.state.searchValue.toLowerCase()){
         matches.push(trek);
       }
     }.bind(this));
@@ -63,13 +75,20 @@ var Search = React.createClass({
     return renderArray;
   },
 
+  showDetail: function () {
+    debugger;
+    this.history.pushState(null, "/treks/" + this.props.trek.id, {});
+  },
+
   render: function () {
+
     var results = this.matches().map(function (trek) {
       return (
-        <div key={trek.id} className="search-images"/*onClick={this.showDetail}*/>
+        <div key={trek.id} className="container" onClick={this.showDetail}>
           <center><h4>{trek.title}</h4></center>
-          <center>Location: {trek.location}</center>
-          <center><img className="search-page-image" src={"/assets/" + trek.primary_picture[0].url}/></center>
+          <center>City: {trek.location.city}</center>
+          <center>Country: {trek.location.country}</center>
+          <center><img className="img-responsive search-page-image" src={"/assets/" + trek.trek_pics[0].url}/></center>
           <center>Rating: {trek.average_rating}</center>
           <center><span className="stars">{trek.average_rating}</span></center>
         </div>
@@ -77,10 +96,12 @@ var Search = React.createClass({
     }.bind(this));
 
     return(
-      <div>
+      <div className="search-form below-nav">
         <div>
-          <h4>Search by Location</h4>
-          <input onChange={this.handleInput} value={this.state.searchValue} />
+          <div>
+            <h4>Search by Location</h4>
+            <input onChange={this.handleInput} value={this.state.searchValue} />
+          </div>
         </div>
         <div className="search-images-container">
           <ReactCSSTransitionGroup transitionName="auto" transitionEnterTimeout={500} transitionLeaveTimeout={500}>

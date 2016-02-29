@@ -10,7 +10,6 @@ User.create!(username: "AlexeiStukov", password: "AlexeiStukov")
 
 
 Trek.create!(title: "Sykes",
-    location: "California",
     author_id: 2,
     description: "Hike in Big Sur",
     start_elv: 400,
@@ -24,7 +23,6 @@ Trek.create!(title: "Sykes",
     )
 
 Trek.create!(title: "Tiger Leaping Gorge",
-    location: "China",
     author_id: 1,
     description: "Hike near the Himalayas",
     start_elv: 5905,
@@ -38,9 +36,8 @@ Trek.create!(title: "Tiger Leaping Gorge",
     )
 
 Trek.create!(title: "Lost Coast",
-     location: "California",
      author_id: 3,
-     description: "Hike near the Himalayas",
+     description: "Hike the coast of California",
      start_elv: 50,
      peak_elv: 100,
      elv_measure: "feet",
@@ -52,7 +49,6 @@ Trek.create!(title: "Lost Coast",
      )
 
 Trek.create!(title: "Yosemite",
-      location: "California",
       author_id: 4,
       description: "Hike the whole of Yosemite",
       start_elv: 1800,
@@ -66,7 +62,6 @@ Trek.create!(title: "Yosemite",
       )
 
 Trek.create!(title: "Grand Canyon",
-      location: "Arizona",
       author_id: 5,
       description: "Hike to the bottom of the Grand Canyon and back",
       start_elv: 5905,
@@ -78,6 +73,45 @@ Trek.create!(title: "Grand Canyon",
       len_measure: "miles",
       last_edited: 1
       )
+
+Trek.create!(title: "Point Reyes",
+    author_id: 6,
+    description: "Point Reyes",
+    start_elv: 0,
+    peak_elv: 1400,
+    elv_measure: "feet",
+    duration: 3,
+    dur_measure: "days",
+    length: 57,
+    len_measure: "miles",
+    last_edited: 1
+    )
+
+Trek.create!(title: "Hua Shan",
+    author_id: 7,
+    description: "The most dangerous hike in the world",
+    start_elv: 1614,
+    peak_elv: 7087,
+    elv_measure: "feet",
+    duration: 1,
+    dur_measure: "days",
+    length: 3,
+    len_measure: "miles",
+    last_edited: 1
+    )
+
+Trek.create!(title: "Angel Island",
+    author_id: 8,
+    description: "Beautiful day hike by ferry from SF",
+    start_elv: 0,
+    peak_elv: 300,
+    elv_measure: "feet",
+    duration: 1,
+    dur_measure: "days",
+    length: 6,
+    len_measure: "miles",
+    last_edited: 1
+    )
 
 Review.create!(user_id: 1,
       trek_id: 1,
@@ -183,40 +217,131 @@ Review.create!(user_id: 8,
       difficulty: 5.0
       )
 
+Review.create!(user_id: 8,
+      trek_id: 5,
+      title: "Spectacular View beware of squirrels",
+      body: "Fantastic hike, going down is easy, coming back is hard on your butt. Only thing to be cautious of are the aggressive squirrels. I recall reading that squirrels in the Grand Canyon carry the bubonic plague",
+      rating: 5.0,
+      difficulty: 4.0
+      )
+
+Review.create!(user_id: 8,
+      trek_id: 6,
+      title: "Stroll in the Park with the Family",
+      body: "We are a family of backpackers. We brought our 8 and 10 year old along for this hike and they loved it. Very easy and family friendly!",
+      rating: 5.0,
+      difficulty: 2.0
+      )
+
+Review.create!(user_id: 9,
+      trek_id: 7,
+      title: "The Ultimate Adrenaline Rush",
+      body: "This was on my bucket list for years. Finally did it and loved it! I never felt more alive.",
+      rating: 5.0,
+      difficulty: 5.0
+      )
+
+Review.create!(user_id: 1,
+      trek_id: 8,
+      title: "Great relaxing hike",
+      body: "Beautiful bay scenery. Nice and easy hike. Would go again, but next time I'll bring my bike.",
+      rating: 5.0,
+      difficulty: 5.0
+      )
+
 Picture.create!(author_id: 2,
       trek_id: 1,
-      primary: 1,
       url: 'sykes.jpg'
       )
 
 Picture.create!(author_id: 1,
       trek_id: 2,
-      primary: 1,
       url: 'tiger-leaping-gorge.jpg'
       )
 
 Picture.create!(author_id: 3,
       trek_id: 3,
-      primary: 1,
       url: 'lost-coast.jpg'
       )
 
 Picture.create!(author_id: 4,
       trek_id: 4,
-      primary: 1,
       url: 'Yosemite2.jpg'
       )
 
 Picture.create!(author_id: 4,
       trek_id: 4,
-      primary: 0,
       url: 'Yosemite.jpg'
       )
 
 Picture.create!(author_id: 5,
       trek_id: 5,
-      primary: 1,
       url: 'Grand-Canyon.jpg'
+      )
+
+Picture.create!(author_id: 6,
+      trek_id: 6,
+      url: 'PointReyes.jpg'
+      )
+
+Picture.create!(author_id: 6,
+      trek_id: 6,
+      url: 'PointReyes2.jpg'
+      )
+
+Picture.create!(author_id: 6,
+      trek_id: 6,
+      url: 'PointReyes3.jpg'
+      )
+
+Picture.create!(author_id: 6,
+      trek_id: 6,
+      url: 'PointReyes4.jpp'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan0.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan1.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan2.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan3.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan4.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan5.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan6.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'HuaShan7.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 8,
+      url: 'AngelsIsland.jpg'
       )
 
 Tag.create!(tag_name: 'Beginner')
@@ -275,11 +400,11 @@ Tagging.create!(trek_id: 2,
       tag_id: 7
       )
 
-Tagging.create!(trek_id: 1,
+Tagging.create!(trek_id: 2,
       tag_id: 9
       )
 
-Tagging.create!(trek_id: 1,
+Tagging.create!(trek_id: 2,
       tag_id: 11
       )
 
@@ -345,4 +470,124 @@ Tagging.create!(trek_id: 5,
 
 Tagging.create!(trek_id: 5,
       tag_id: 11
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 1
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 5
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 12
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 1
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 5
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 6,
+      tag_id: 12
+      )
+
+Tagging.create!(trek_id: 8,
+      tag_id: 3
+      )
+
+Tagging.create!(trek_id: 8,
+      tag_id: 4
+      )
+
+Tagging.create!(trek_id: 8,
+      tag_id: 6
+      )
+
+Tagging.create!(trek_id: 8,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 8,
+      tag_id: 8
+      )
+
+Tagging.create!(trek_id: 8,
+      tag_id: 11
+      )
+
+Location.create!(trek_id: 1,
+      trek_name: "Sykes",
+      country: "United States",
+      city: "Big Sur",
+      latitude: 36.1075,
+      longitude: 121.6258,
+      )
+
+Location.create!(trek_id: 2,
+      trek_name: "Tiger Leaping Gorge",
+      country: "China",
+      city: "Lijiang",
+      latitude: 26.8833,
+      longitude: 100.2333,
+      )
+
+Location.create!(trek_id: 3,
+      trek_name: "Lost Coast",
+      country: "United States",
+      city: "Lost Coast",
+      latitude: 40.4401,
+      longitude: 124.4095,
+      )
+
+Location.create!(trek_id: 4,
+      trek_name: "Yosemite",
+      country: "United States",
+      city: "Mariposa",
+      latitude: 37.8499,
+      longitude: 119.5677,
+      )
+
+Location.create!(trek_id: 5,
+      trek_name: "Grand Canyon",
+      country: "United States",
+      city: "Flagstaff",
+      latitude: 36.1000,
+      longitude: 112.1000,
+      )
+
+Location.create!(trek_id: 6,
+      trek_name: "Point Reyes",
+      country: "United States",
+      city: "San Francisco",
+      latitude: 37.9968,
+      longitude: 123.0198,
+      )
+
+Location.create!(trek_id: 7,
+      trek_name: "Hua Shan",
+      country: "China",
+      city: "Huayin",
+      latitude: 34.4833,
+      longitude: 110.0833,
+      )
+
+Location.create!(trek_id: 8,
+      trek_name: "Angel Island",
+      country: "United States",
+      city: "San Francisco",
+      latitude: 37.8600,
+      longitude: 122.4300,
       )

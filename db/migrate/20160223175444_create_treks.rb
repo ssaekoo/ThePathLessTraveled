@@ -2,7 +2,6 @@ class CreateTreks < ActiveRecord::Migration
   def change
     create_table :treks do |t|
       t.string  :title,       null: false
-      t.integer :location_id, default: 0
       t.string  :location
       t.integer :author_id,   null: false
       t.string  :description, null: false
@@ -17,7 +16,6 @@ class CreateTreks < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    add_index :treks, :location_id
     add_index :treks, :author_id
   end
 end

@@ -56,6 +56,7 @@
 	var App = __webpack_require__(222);
 	var Search = __webpack_require__(223);
 	var LandingPage = __webpack_require__(259);
+	var TrekDetail = __webpack_require__(260);
 	
 	var routes = React.createElement(
 	  Router,
@@ -64,7 +65,8 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: LandingPage }),
-	    React.createElement(Route, { path: 'search', component: Search })
+	    React.createElement(Route, { path: 'search', component: Search }),
+	    React.createElement(Route, { path: 'treks/:trekId', component: TrekDetail })
 	  )
 	);
 	
@@ -25064,15 +25066,12 @@
 
 	var React = __webpack_require__(1);
 	var Search = __webpack_require__(223);
-	var BackgroundStore = __webpack_require__(260);
-	// var NavBar = require('./nav_bar');
+	// var BackgroundStore = require('../stores/background_store');
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
 	  render: function () {
-	    // var url = "west-coast-trail.jpg)";
-	    var url = BackgroundStore.returnBackground();
 	    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
 	
 	    return React.createElement(
@@ -25099,6 +25098,7 @@
 	
 	var ApiActions = __webpack_require__(235);
 	var TrekStore = __webpack_require__(241);
+	var TrekDetail = __webpack_require__(260);
 	// var SessionStore = require('./stores/sessionStore.js');
 	
 	var Search = React.createClass({
@@ -25126,8 +25126,19 @@
 	    }
 	
 	    TrekStore.all().forEach(function (trek) {
-	      var sub = trek.location.slice(0, this.state.searchValue.length);
-	      if (sub.toLowerCase() === this.state.searchValue.toLowerCase()) {
+	      var city = trek.location.city.slice(0, this.state.searchValue.length);
+	      var country = trek.location.country.slice(0, this.state.searchValue.length);
+	      var title = trek.title.slice(0, this.state.searchValue.length);
+	
+	      if (city.toLowerCase() === this.state.searchValue.toLowerCase()) {
+	        matches.push(trek);
+	      }
+	
+	      if (country.toLowerCase() === this.state.searchValue.toLowerCase()) {
+	        matches.push(trek);
+	      }
+	
+	      if (title.toLowerCase() === this.state.searchValue.toLowerCase()) {
 	        matches.push(trek);
 	      }
 	    }.bind(this));
@@ -25170,11 +25181,17 @@
 	    return renderArray;
 	  },
 	
+	  showDetail: function () {
+	    debugger;
+	    this.history.pushState(null, "/treks/" + this.props.trek.id, {});
+	  },
+	
 	  render: function () {
+	
 	    var results = this.matches().map(function (trek) {
 	      return React.createElement(
 	        'div',
-	        { key: trek.id, className: 'search-images' /*onClick={this.showDetail}*/ },
+	        { key: trek.id, className: 'container', onClick: this.showDetail },
 	        React.createElement(
 	          'center',
 	          null,
@@ -25187,13 +25204,19 @@
 	        React.createElement(
 	          'center',
 	          null,
-	          'Location: ',
-	          trek.location
+	          'City: ',
+	          trek.location.city
 	        ),
 	        React.createElement(
 	          'center',
 	          null,
-	          React.createElement('img', { className: 'search-page-image', src: "/assets/" + trek.primary_picture[0].url })
+	          'Country: ',
+	          trek.location.country
+	        ),
+	        React.createElement(
+	          'center',
+	          null,
+	          React.createElement('img', { className: 'img-responsive search-page-image', src: "/assets/" + trek.trek_pics[0].url })
 	        ),
 	        React.createElement(
 	          'center',
@@ -25215,16 +25238,20 @@
 	
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'search-form below-nav' },
 	      React.createElement(
 	        'div',
 	        null,
 	        React.createElement(
-	          'h4',
+	          'div',
 	          null,
-	          'Search by Location'
-	        ),
-	        React.createElement('input', { onChange: this.handleInput, value: this.state.searchValue })
+	          React.createElement(
+	            'h4',
+	            null,
+	            'Search by Location'
+	          ),
+	          React.createElement('input', { onChange: this.handleInput, value: this.state.searchValue })
+	        )
 	      ),
 	      React.createElement(
 	        'div',
@@ -26284,6 +26311,10 @@
 	  ApiUtil.fetchTreksByLocation(location, this.receiveTreks);
 	};
 	
+	ApiActions.requestTreksById = function (id) {
+	  ApiUtil.fetchSingleTrek(id, this.receiveSingleTrek);
+	};
+	
 	ApiActions.recieveAllTreks = function (treks) {
 	  AppDispatcher.dispatch({
 	    actionType: "RECEIVED_ALL_TREKS",
@@ -26295,6 +26326,13 @@
 	  AppDispatcher.dispatch({
 	    actionType: "RECEIVED_TREKS",
 	    treks: treks
+	  });
+	};
+	
+	ApiActions.receiveSingleTrek = function (trek) {
+	  AppDispatcher.dispatch({
+	    actionType: "RECEIVED_SINGLE_TREK",
+	    treks: trek
 	  });
 	};
 	
@@ -26639,19 +26677,28 @@
 	  });
 	};
 	
-	ApiUtil.createUserAccount = function (credentials, receiveNewUser) {
+	ApiUtil.fetchTreksByLocation = function (location, callback) {
 	  $.ajax({
-	    url: 'api/users',
-	    method: "post",
-	    data: { user: credentials },
-	    success: function (user) {
-	      receiveNewUser(user);
-	    },
-	    error: function (error, status) {
-	      debugger;
+	    url: "api/treks",
+	    data: { treks: { location: location } },
+	    type: "GET",
+	    success: function (treks) {
+	      callback(treks);
 	    }
 	  });
-	}, module.exports = ApiUtil;
+	};
+	
+	ApiUtil.requestTreksById = function (id, callback) {
+	  $.ajax({
+	    url: "api/treks/" + id,
+	    type: "GET",
+	    success: function (treks) {
+	      callback(treks);
+	    }
+	  });
+	};
+	
+	module.exports = ApiUtil;
 
 /***/ },
 /* 241 */
@@ -26674,6 +26721,9 @@
 	      resetTreks(payload.treks);
 	      break;
 	    case "RECEIVED_ALL_TREKS":
+	      resetTreks(payload.treks);
+	      break;
+	    case "RECEIVED_SINGLE_TREK":
 	      resetTreks(payload.treks);
 	      break;
 	  }
@@ -33149,79 +33199,160 @@
 	var React = __webpack_require__(1);
 	
 	var LandingPage = React.createClass({
-	  displayName: "LandingPage",
+	    displayName: "LandingPage",
 	
 	
-	  render: function () {
-	    return React.createElement(
-	      "section",
-	      { id: "intro" },
-	      React.createElement(
-	        "div",
-	        { className: "content-wrapper" },
-	        React.createElement(
-	          "div",
-	          { className: "welcome logo" },
-	          " ",
-	          React.createElement(
-	            "center",
+	    render: function () {
+	        return React.createElement(
+	            "div",
 	            null,
-	            "The Path Less Traveled"
-	          )
-	        ),
-	        React.createElement(
-	          "div",
-	          { className: "welcome tagline" },
-	          React.createElement(
-	            "center",
-	            null,
-	            "Wander. Explore. Discover."
-	          )
-	        )
-	      )
-	    );
-	  }
+	            React.createElement(
+	                "section",
+	                { id: "parallax", className: "parallax welcome-page" },
+	                React.createElement(
+	                    "div",
+	                    { className: "row" },
+	                    React.createElement(
+	                        "div",
+	                        { className: "container container-custom text-center landing-welcome" },
+	                        React.createElement(
+	                            "h1",
+	                            { className: "welcome logo" },
+	                            "The Path Less Traveled"
+	                        ),
+	                        React.createElement(
+	                            "h4",
+	                            { className: "welcome tagline" },
+	                            "Wander. Explore. Discover."
+	                        )
+	                    )
+	                )
+	            ),
+	            React.createElement(
+	                "section",
+	                { id: "slider-landing", className: "carousel slide", "data-ride": "carousel" },
+	                React.createElement(
+	                    "div",
+	                    { className: "carousel-inner" },
+	                    React.createElement(
+	                        "div",
+	                        { className: "item active" },
+	                        React.createElement("img", { src: "/assets/slider_0.jpg" })
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "item" },
+	                        React.createElement("img", { src: "/assets/slider_1.jpg" })
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "item" },
+	                        React.createElement("img", { src: "/assets/slider_2.jpg" })
+	                    ),
+	                    React.createElement(
+	                        "div",
+	                        { className: "item" },
+	                        React.createElement("img", { src: "/assets/slider_3.jpg" })
+	                    )
+	                ),
+	                React.createElement(
+	                    "a",
+	                    { className: "left carousel-control", href: "#slider", role: "button", "data-slide": "prev" },
+	                    React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
+	                ),
+	                React.createElement(
+	                    "a",
+	                    { className: "right carousel-control", href: "#slider", role: "button", "data-slide": "next" },
+	                    React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
+	                ),
+	                React.createElement(
+	                    "ol",
+	                    { className: "carousel-indicators" },
+	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "0", className: "active" }),
+	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "1" }),
+	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "2" }),
+	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "3" })
+	                )
+	            )
+	        );
+	    }
 	});
 	
 	module.exports = LandingPage;
-	
-	// <div className="jumbotron jumbotron-landing" id="landing-page">
-	//   {/iPad|iPhone|iPod/.test(navigator.platform) ? "" : backgroundVideoDiv }
-	//   <div className="container container-custom text-center">
-	//     <h1>WELCOME HOME</h1>
-	//     <h4>Rent unique places to stay from local hosts in 190+ countries.</h4>
-	//   </div>
-	//   <LandingSearchBar history={this.props.history}/>
-	// </div>
 
 /***/ },
 /* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(242).Store;
-	var AppDispatcher = __webpack_require__(236);
-	var BackgroundStore = new Store(AppDispatcher);
+	var React = __webpack_require__(1);
+	var TrekStore = __webpack_require__(241);
+	var ApiActions = __webpack_require__(235);
 	
-	// var _backgrounds = {landing-page: "west-coast-trail.jpg", search-page: "blah.png"};
+	var TrekDetail = React.createClass({
+	  displayName: 'TrekDetail',
 	
-	var _backgrounds = "west-coast-trail.jpg";
+	  getInitialState: function () {
+	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
+	  },
 	
-	BackgroundStore.returnBackground = function () {
-	  return _backgrounds;
-	};
+	  _onChange: function () {
+	    this.setState(this.getStateFromStore());
+	  },
 	
-	BackgroundStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case "RECEIVED_TREKS":
-	      resetTreks(payload.treks);
-	      break;
-	    case "RECEIVED_ALL_TREKS":
-	      resetTreks(payload.treks);
-	      break;
+	  getStateFromStore: function functionName() {
+	    return this.getStateFromStore();
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.requestTreksById(parseInt(newProps.params.trekId));
+	  },
+	
+	  componentDidMount: function () {
+	    this.listenerToken = TrekStore.addListener(this._onChange);
+	    TrekActions.requestTreksById(this.props.params.trekId);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ trek: this.getStateFromStore() });
+	  },
+	
+	  render: function () {
+	    if (this.state.trek === undefined) {
+	      return React.createElement('div', null);
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'trek-detail-pane' },
+	        React.createElement(
+	          'div',
+	          { className: 'detail' },
+	          '// ',
+	          React.createElement('img', { src: this.state.trek.image_url }),
+	          ['title', 'description', 'start_elv', 'peak_elv', 'elv_measure', 'duration', 'length', 'length_measure'].map(function (attr) {
+	            return React.createElement(
+	              'p',
+	              { key: attr },
+	              attr,
+	              ': ',
+	              this.state.trek[attr]
+	            );
+	          }.bind(this))
+	        )
+	      ),
+	      this.props.children
+	    );
 	  }
-	};
+	});
 	
-	module.exports = BackgroundStore;
+	module.exports = TrekDetail;
 
 /***/ }
 /******/ ]);

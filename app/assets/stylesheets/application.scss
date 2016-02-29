@@ -1,5 +1,6 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
+@import "http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css";
 
 html {
   height: 100%;
@@ -10,9 +11,14 @@ body {
   // position: absolute;
   // width: 100%;
   // overflow: hidden;
+  // background-image: url("/assets/west-coast-trail.jpg");
   padding: 10px;
   height: 100%;
   font-family: "Sorts+Mill+Goudy", sans-serif;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   background-color: transparent;
   font-size: 16px;
   font-weight: 400;
@@ -27,10 +33,48 @@ body {
 // scroll within container
 .search-btn {
   display: inline-block;
+  box-shadow: 0 20px 40px 0 #FF644E inset;
+  background: #F64C44;
+  border: none;
 }
 
-.navbar {
+.search-form {
+  position: relative;
+  margin-top: 50px;
+}
 
+.carousel{width:720px;
+       height:480px;}
+
+.carousel img {
+  width: auto;
+  height: 300px;
+}
+
+#slider-landing {
+  top: 700px;
+}
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img{
+width: 100%; /* use this, or not */
+margin: auto;
+}
+
+.carousel-inner > .item > img {
+    margin: 0 auto;
+}
+
+.profile {
+  font-size: 14
+}
+
+.navbar-header {
+  margin-top: 10px;
+}
+
+.navbar-collapse  {
+  margin-top: 10px;
 }
 
 .navbar-toggle collapsed {
@@ -45,25 +89,39 @@ body {
   margin: 0px;
   padding: 0px;
 }
-.content-wrapper {
-    position:absolute;
-    top: 60%;
-    left: 50%;
-    width: auto;
-    height:10em;
-    margin-top: -9em; /*set to a negative number 1/2 of your height*/
-    margin-left: -15em; /*set to a negative number 1/2 of your width*/
-    color: white;
-}
+
+
+.container-custom {
+  //  margin-top: 60px;
+  position: absolute;
+  width: 100%;
+  margin-top: 15%;
+  color: #fff;
+ }
+
+// .landing-welcome {
+//     display: block;
+//     position: absolute;
+//     top: 60%;
+//     left: 50%;
+//     width: auto;
+//     height: 50em;
+//     margin-top: -9em; /*set to a negative number 1/2 of your height*/
+//     margin-left: -15em; /*set to a negative number 1/2 of your width*/
+//     color: white;
+// }
 
 .logo {
+    display: block;
     font-family: 'Bitter';
     src: url(https://fonts.googleapis.com/css?family=Bitter);
     font-size: 43px;
+    font-weight: 700;
 }
 
 .tagline {
-    font-size: 25px;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 .navbar-brand{
@@ -84,10 +142,6 @@ body {
   width: 350px;
   height: 300px;
   margin: auto;
-}
-
-.search-images-container {
-
 }
 
 .trek-item {

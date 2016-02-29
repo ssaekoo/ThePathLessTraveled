@@ -4,8 +4,6 @@
 #
 #  id          :integer          not null, primary key
 #  title       :string           not null
-#  location_id :integer          default(0)
-#  location    :string
 #  author_id   :integer          not null
 #  description :string           not null
 #  start_elv   :integer
@@ -21,7 +19,7 @@
 #
 
 class Trek < ActiveRecord::Base
-  validates :title, :location_id, :author_id, :description, presence: true
+  validates :title, :author_id, :description, presence: true
 
   has_many :reviews
   has_many :pictures
@@ -30,6 +28,8 @@ class Trek < ActiveRecord::Base
   has_many :tags,
     through: :taggings,
     source: :tag
+
+  has_one :location
 
   belongs_to :user,
     foreign_key: :author_id,

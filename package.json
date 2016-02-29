@@ -28,5 +28,6 @@
     "react-router": "^2.0.0",
     "react-star-rating": "^1.4.2",
     "webpack": "^1.12.14"
-  }
+  },
+  "devDependencies": {}
 }

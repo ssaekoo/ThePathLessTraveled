@@ -5,10 +5,13 @@ json.reviews do
   json.array! trek.reviews, partial: 'api/reviews/review', as: :review
 end
 
-json.primary_picture do
-  json.array! trek.pictures.where(primary: 1), partial: 'api/pictures/picture', as: :picture
+# json.primary_picture do
+#   json.partial! 'api/pictures/picture', picture: trek.pictures.where(primary: 1).first
+# end
+
+json.trek_pics do
+  json.array! trek.pictures, partial: 'api/pictures/picture', as: :picture
 end
 
-json.secondary_pictures do
-  json.array! trek.pictures.where(primary: 0), partial: 'api/pictures/picture', as: :picture
-end
+json.tags trek.tags
+json.location trek.location, partial: 'api/locations/location', as: :location

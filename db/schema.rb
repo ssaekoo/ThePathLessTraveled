@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227033629) do
+ActiveRecord::Schema.define(version: 20160229183721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,12 +30,11 @@ ActiveRecord::Schema.define(version: 20160227033629) do
   add_index "locations", ["trek_id"], name: "index_locations_on_trek_id", using: :btree
 
   create_table "pictures", force: :cascade do |t|
-    t.integer  "author_id",              null: false
-    t.integer  "trek_id",                null: false
-    t.integer  "primary",    default: 0, null: false
-    t.string   "url",                    null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "author_id",  null: false
+    t.integer  "trek_id",    null: false
+    t.string   "url",        null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "pictures", ["author_id"], name: "index_pictures_on_author_id", using: :btree
@@ -70,8 +69,6 @@ ActiveRecord::Schema.define(version: 20160227033629) do
 
   create_table "treks", force: :cascade do |t|
     t.string   "title",                   null: false
-    t.integer  "location_id", default: 0
-    t.string   "location"
     t.integer  "author_id",               null: false
     t.string   "description",             null: false
     t.integer  "start_elv"
@@ -87,7 +84,6 @@ ActiveRecord::Schema.define(version: 20160227033629) do
   end
 
   add_index "treks", ["author_id"], name: "index_treks_on_author_id", using: :btree
-  add_index "treks", ["location_id"], name: "index_treks_on_location_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",        null: false
