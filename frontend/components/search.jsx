@@ -6,7 +6,8 @@ var Link = require('react-router').Link;
 
 var ApiActions = require('../actions/api_actions');
 var TrekStore = require('../stores/trek_store');
-var TrekDetail = require('./trek/trek_detail')
+var TrekDetail = require('./treks/trek_detail');
+var TrekIndexItem = require('./treks/trek_item');
 // var SessionStore = require('./stores/sessionStore.js');
 
 var Search = React.createClass({
@@ -76,9 +77,8 @@ var Search = React.createClass({
   },
 
   showDetail: function () {
-    debugger;
-    this.history.pushState(null, "/treks/" + this.props.trek.id, {});
-  },
+    this.history.pushState(null, '/treks/' + this.props.trek.id, {});
+  }, 
 
   render: function () {
 

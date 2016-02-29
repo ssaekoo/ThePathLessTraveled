@@ -55,8 +55,8 @@
 	
 	var App = __webpack_require__(222);
 	var Search = __webpack_require__(223);
-	var LandingPage = __webpack_require__(259);
-	var TrekDetail = __webpack_require__(260);
+	var LandingPage = __webpack_require__(261);
+	var TrekDetail = __webpack_require__(259);
 	
 	var routes = React.createElement(
 	  Router,
@@ -65,6 +65,7 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: LandingPage }),
+	    '// ',
 	    React.createElement(Route, { path: 'search', component: Search }),
 	    React.createElement(Route, { path: 'treks/:trekId', component: TrekDetail })
 	  )
@@ -25066,6 +25067,7 @@
 
 	var React = __webpack_require__(1);
 	var Search = __webpack_require__(223);
+	var TrekIndex = __webpack_require__(262);
 	// var BackgroundStore = require('../stores/background_store');
 	
 	var App = React.createClass({
@@ -25076,7 +25078,12 @@
 	
 	    return React.createElement(
 	      'div',
-	      null,
+	      { id: 'treks' },
+	      React.createElement(
+	        'div',
+	        { className: 'treks-index-pane' },
+	        React.createElement(TrekIndex, null)
+	      ),
 	      this.props.children
 	    );
 	  }
@@ -25098,7 +25105,8 @@
 	
 	var ApiActions = __webpack_require__(235);
 	var TrekStore = __webpack_require__(241);
-	var TrekDetail = __webpack_require__(260);
+	var TrekDetail = __webpack_require__(259);
+	var TrekIndexItem = __webpack_require__(260);
 	// var SessionStore = require('./stores/sessionStore.js');
 	
 	var Search = React.createClass({
@@ -25182,8 +25190,7 @@
 	  },
 	
 	  showDetail: function () {
-	    debugger;
-	    this.history.pushState(null, "/treks/" + this.props.trek.id, {});
+	    this.history.pushState(null, '/treks/' + this.props.trek.id, {});
 	  },
 	
 	  render: function () {
@@ -33197,6 +33204,114 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var TrekStore = __webpack_require__(241);
+	var ApiActions = __webpack_require__(235);
+	
+	var TrekDetail = React.createClass({
+	  displayName: 'TrekDetail',
+	
+	  getInitialState: function () {
+	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
+	  },
+	
+	  _onChange: function () {
+	    this.setState(this.getStateFromStore());
+	  },
+	
+	  getStateFromStore: function functionName() {
+	    return this.getStateFromStore();
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.requestTreksById(parseInt(newProps.params.trekId));
+	  },
+	
+	  componentDidMount: function () {
+	    this.listenerToken = TrekStore.addListener(this._onChange);
+	    TrekActions.requestTreksById(this.props.params.trekId);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ trek: this.getStateFromStore() });
+	  },
+	
+	  render: function () {
+	    if (this.state.trek === undefined) {
+	      return React.createElement('div', null);
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'trek-detail-pane' },
+	        React.createElement(
+	          'div',
+	          { className: 'detail' },
+	          '// ',
+	          React.createElement('img', { src: this.state.trek.image_url }),
+	          ['title', 'description', 'start_elv', 'peak_elv', 'elv_measure', 'duration', 'length', 'length_measure'].map(function (attr) {
+	            return React.createElement(
+	              'p',
+	              { key: attr },
+	              attr,
+	              ': ',
+	              this.state.trek[attr]
+	            );
+	          }.bind(this))
+	        )
+	      ),
+	      this.props.children
+	    );
+	  }
+	});
+	
+	module.exports = TrekDetail;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var History = __webpack_require__(159).History;
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  mixins: [History],
+	
+	  showDetail: function () {
+	    this.history.pushState(null, '/treks/' + this.props.trek.id, {});
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'li',
+	      { onClick: this.showDetail, className: 'trek-list-item' },
+	      React.createElement(
+	        'p',
+	        null,
+	        this.props.trek.title
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        this.props.trek.description
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
 	
 	var LandingPage = React.createClass({
 	    displayName: "LandingPage",
@@ -33281,78 +33396,44 @@
 	module.exports = LandingPage;
 
 /***/ },
-/* 260 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var TrekStore = __webpack_require__(241);
-	var ApiActions = __webpack_require__(235);
+	var ApiUtil = __webpack_require__(240);
+	var TrekIndexItem = __webpack_require__(260);
 	
-	var TrekDetail = React.createClass({
-	  displayName: 'TrekDetail',
+	module.exports = React.createClass({
+	  displayName: 'exports',
 	
 	  getInitialState: function () {
-	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
+	    return { treks: TrekStore.all() };
 	  },
 	
 	  _onChange: function () {
-	    this.setState(this.getStateFromStore());
-	  },
-	
-	  getStateFromStore: function functionName() {
-	    return this.getStateFromStore();
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.requestTreksById(parseInt(newProps.params.trekId));
+	    this.setState({ treks: TrekStore.all() });
 	  },
 	
 	  componentDidMount: function () {
-	    this.listenerToken = TrekStore.addListener(this._onChange);
-	    TrekActions.requestTreksById(this.props.params.trekId);
+	    this.trekListener = TrekStore.addListener(this._onChange);
+	    ApiUtil.fetchAllTreks();
 	  },
 	
-	  componentWillUnmount: function () {
-	    this.listenerToken.remove();
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ trek: this.getStateFromStore() });
+	  compomentWillUnmount: function () {
+	    this.trekListener.remove();
 	  },
 	
 	  render: function () {
-	    if (this.state.trek === undefined) {
-	      return React.createElement('div', null);
-	    }
-	
 	    return React.createElement(
-	      'div',
+	      'ul',
 	      null,
-	      React.createElement(
-	        'div',
-	        { className: 'trek-detail-pane' },
-	        React.createElement(
-	          'div',
-	          { className: 'detail' },
-	          '// ',
-	          React.createElement('img', { src: this.state.trek.image_url }),
-	          ['title', 'description', 'start_elv', 'peak_elv', 'elv_measure', 'duration', 'length', 'length_measure'].map(function (attr) {
-	            return React.createElement(
-	              'p',
-	              { key: attr },
-	              attr,
-	              ': ',
-	              this.state.trek[attr]
-	            );
-	          }.bind(this))
-	        )
-	      ),
-	      this.props.children
+	      this.state.treks.map(function (trek, index) {
+	        return React.createElement(TrekIndexItem, { key: index, trek: trek });
+	      })
 	    );
 	  }
 	});
-	
-	module.exports = TrekDetail;
 
 /***/ }
 /******/ ]);
