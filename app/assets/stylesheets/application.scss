@@ -55,6 +55,27 @@ body {
   top: 700px;
 }
 
+#nav {
+  margin-bottom: 10px;
+}
+
+.search-result {
+    top: 50px;
+    left: 0;
+    bottom: 0;
+    position: fixed;
+    overflow-y: scroll;
+}
+
+.search-map {
+    padding: 0;
+    position: fixed;
+    right: 0px;
+    left: auto;
+    bottom: 0px;
+    top: 50px;
+}
+
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img{
 width: 100%; /* use this, or not */
@@ -137,11 +158,9 @@ margin: auto;
   height: auto;
 }
 
-.search-images {
-  background-color: white;
-  width: 350px;
-  height: 300px;
-  margin: auto;
+.map {
+  height: 500px;
+  width: 500px;
 }
 
 .trek-item {

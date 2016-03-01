@@ -57,6 +57,7 @@
 	var Search = __webpack_require__(223);
 	var LandingPage = __webpack_require__(262);
 	var TrekDetail = __webpack_require__(259);
+	// var Map = require('./components/maps/map');
 	
 	var routes = React.createElement(
 	  Router,
@@ -66,6 +67,8 @@
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: LandingPage }),
 	    React.createElement(Route, { path: 'search', component: Search }),
+	    '// ',
+	    React.createElement(Route, { path: 'map', component: Map }),
 	    React.createElement(Route, { path: 'treks/:trekId', component: TrekDetail })
 	  )
 	);
@@ -25100,6 +25103,7 @@
 	var TrekStore = __webpack_require__(241);
 	var TrekDetail = __webpack_require__(259);
 	var TrekIndexItem = __webpack_require__(260);
+	var Map = __webpack_require__(261);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -25131,16 +25135,15 @@
 	      var city = trek.location.city.slice(0, this.state.searchValue.length);
 	      var country = trek.location.country.slice(0, this.state.searchValue.length);
 	      var title = trek.title.slice(0, this.state.searchValue.length);
+	      var state = trek.location.state.slice(0, this.state.searchValue.length);
 	
 	      if (city.toLowerCase() === this.state.searchValue.toLowerCase()) {
 	        matches.push(trek);
-	      }
-	
-	      if (country.toLowerCase() === this.state.searchValue.toLowerCase()) {
+	      } else if (country.toLowerCase() === this.state.searchValue.toLowerCase()) {
 	        matches.push(trek);
-	      }
-	
-	      if (title.toLowerCase() === this.state.searchValue.toLowerCase()) {
+	      } else if (title.toLowerCase() === this.state.searchValue.toLowerCase()) {
+	        matches.push(trek);
+	      } else if (state.toLowerCase() === this.state.searchValue.toLowerCase()) {
 	        matches.push(trek);
 	      }
 	    }.bind(this));
@@ -25188,7 +25191,10 @@
 	  },
 	
 	  render: function () {
-	
+	    document.body.style.backgroundImage = "";
+	    var selection = document.getElementById("nav");
+	    selection.style.backgroundColor = '#D3E3E8';
+	    selection.style.borderBottom = '1px solid black';
 	    var myMatches = this.matches();
 	
 	    var results = myMatches.map(function (trek) {
@@ -25213,7 +25219,7 @@
 	        React.createElement(
 	          'div',
 	          null,
-	          'Country: ',
+	          'State: ',
 	          trek.location.state
 	        ),
 	        React.createElement(
@@ -25249,53 +25255,60 @@
 	      );
 	    }.bind(this));
 	
-	    var myTagObjs = {};
-	
-	    myMatches.forEach(function (trek) {
-	      trek.tags.forEach(function (tag) {
-	        myTagObjs[tag.id] = tag.tag_name;
-	      });
-	    });
-	
-	    var myTags = Object.keys(myTagObjs).map(function (key) {
-	      return React.createElement(
-	        'li',
-	        { className: key },
-	        ' ',
-	        myTagObjs[key],
-	        ' '
-	      );
-	    });
+	    // var myTagObjs = {};
+	    //
+	    // myMatches.forEach(function (trek) {
+	    //   trek.tags.forEach (function (tag) {
+	    //       myTagObjs[tag.id] = tag.tag_name;
+	    //   });
+	    // });
+	    //
+	    // var myTags = Object.keys(myTagObjs).map(function(key){
+	    //   return (
+	    //     <li className={key}> {myTagObjs[key]} </li>
+	    //   )
+	    // });
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'search-form below-nav' },
+	      { className: 'col-xs-12 col-md-7 search-form below-nav' },
 	      React.createElement(
 	        'div',
-	        null,
+	        { className: 'row search-form left-side-container' },
 	        React.createElement(
 	          'div',
-	          null,
+	          { className: 'search-filters' },
 	          React.createElement(
-	            'h4',
+	            'div',
 	            null,
-	            'Search by Location'
+	            React.createElement('input', { placeholder: 'Search', onChange: this.handleInput, value: this.state.searchValue })
 	          ),
-	          React.createElement('input', { onChange: this.handleInput, value: this.state.searchValue })
-	        )
-	      ),
-	      React.createElement(
-	        'ul',
-	        null,
-	        myTags
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'search-images-container' },
+	          React.createElement(
+	            'div',
+	            { className: 'container-fluid search-list-frame' },
+	            React.createElement(
+	              'div',
+	              { className: 'row' },
+	              React.createElement(
+	                'div',
+	                { className: 'container-fluid search-list-listings' },
+	                React.createElement(
+	                  'div',
+	                  { className: 'row' },
+	                  React.createElement(
+	                    ReactCSSTransitionGroup,
+	                    { transitionName: 'auto', transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
+	                    results
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        ),
 	        React.createElement(
-	          ReactCSSTransitionGroup,
-	          { transitionName: 'auto', transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
-	          results
+	          'div',
+	          { className: 'right-side-container' },
+	          React.createElement(Map, { className: 'trek-map' })
 	        )
 	      )
 	    );
@@ -26372,6 +26385,13 @@
 	  ApiUtil.fetchTreksByLocation(location, ApiActions.receiveTreks);
 	};
 	
+	ApiActions.receiveTagChange = function (tag) {
+	  AppDispatcher.dispatch({
+	    actionType: "CHANGE_TAG",
+	    tags: tag
+	  });
+	};
+	
 	module.exports = ApiActions;
 
 /***/ },
@@ -26750,9 +26770,22 @@
 	
 	var _treks = [];
 	
+	var _tags = {};
+	
+	var resetTags = function () {
+	  for (var i = 1; i <= 12; i++) {
+	    _tags[i] = false;
+	  };
+	};
+	
 	var resetTreks = function (treks) {
 	  _treks = treks;
+	  resetTags();
 	  TrekStore.__emitChange();
+	};
+	
+	var changeTag = function (tag) {
+	  _tags[tag.id] = !_tags[tag.id];
 	};
 	
 	TrekStore.__onDispatch = function (payload) {
@@ -26766,11 +26799,18 @@
 	    case "RECEIVED_SINGLE_TREK":
 	      resetTreks([payload.treks]);
 	      break;
+	    case "CHANGE_TAG":
+	      changeTag(payload);
+	      break;
 	  }
 	};
 	
 	TrekStore.all = function () {
 	  return _treks.slice(0);
+	};
+	
+	TrekStore.tagsAll = function () {
+	  return _tags;
 	};
 	
 	TrekStore.find = function (id) {
@@ -33273,6 +33313,10 @@
 	  },
 	
 	  render: function () {
+	    document.body.style.backgroundImage = "";
+	    var selection = document.getElementById("nav");
+	    selection.style.backgroundColor = '#D3E3E8';
+	
 	    if (this.state.trek.length === undefined) {
 	      return React.createElement('div', null);
 	    }
@@ -33382,126 +33426,246 @@
 
 /***/ },
 /* 260 */
+/***/ function(module, exports) {
+
+	// var React = require('react');
+	// var History = require('react-router').History;
+	//
+	// module.exports = React.createClass({
+	//   mixins: [History],
+	//
+	//   showDetail: function () {
+	//     this.history.pushState(null, '/treks/' + this.props.trek.id, {});
+	//   },
+	//
+	//   render: function () {
+	//     return(
+	//       <li onClick={this.showDetail} className="trek-list-item">
+	//         <p>{this.props.trek.title}</p>
+	//         <p>{this.props.trek.description}</p>
+	//       </li>
+	//     );
+	//   }
+	// });
+
+/***/ },
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var History = __webpack_require__(159).History;
+	var ReactDOM = __webpack_require__(158);
+	var TrekStore = __webpack_require__(241);
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	function _getCoordsObj(latLng) {
+	  return {
+	    lat: latLng.lat(),
+	    lng: latLng.lng()
+	  };
+	}
 	
-	  mixins: [History],
+	var CENTER = { lat: 37.7758, lng: -122.435 };
 	
-	  showDetail: function () {
-	    this.history.pushState(null, '/treks/' + this.props.trek.id, {});
+	var Map = React.createClass({
+	  displayName: 'Map',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      treks: TrekStore.all()
+	    };
+	  },
+	
+	  updateTreks: function () {
+	    this.setState({ treks: TrekStore.all() });
+	  },
+	
+	  componentDidMount: function () {
+	    console.log('map mounted');
+	    this.listenerToken = TrekStore.addListener(this.updateTreks);
+	    var map = ReactDOM.findDOMNode(this.refs.map);
+	    var mapOptions = {
+	      center: this.centerTrekCoords(),
+	      zoom: 11
+	    };
+	    this.map = new google.maps.Map(map, mapOptions);
+	    this.registerListeners();
+	    this.markers = [];
+	    this.state.treks.forEach(this.createMarkerFromTrek);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  centerTrekCoords: function () {
+	    return CENTER;
+	  },
+	
+	  componentDidUpdate: function (oldstate) {
+	    this._onChange();
+	  },
+	
+	  _onChange: function () {
+	    var treks = this.state.treks;
+	    var toAdd = [],
+	        toRemove = this.markers.slice(0);
+	    treks.forEach(function (trek, idx) {
+	      var idx = -1;
+	      for (var i = 0; i < toRemove.length; i++) {
+	        if (toRemove[i].trekId == trek.id) {
+	          idx = i;
+	          break;
+	        }
+	      }
+	      if (idx === -1) {
+	        toAdd.push(trek);
+	      } else {
+	        toRemove.splice(idx, 1);
+	      }
+	    });
+	    toAdd.forEach(this.createMarkerFromTrek);
+	    toRemove.forEach(this.removeMarker);
+	
+	    if (this.state.singletrek) {
+	      this.map.setOptions({ draggable: false });
+	      this.map.setCenter(this.centerTrekCoords());
+	    }
+	  },
+	
+	  registerListeners: function () {
+	    var that = this;
+	    google.maps.event.addListener(this.map, 'idle', function () {
+	      var bounds = that.map.getBounds();
+	      var northEast = _getCoordsObj(bounds.getNorthEast());
+	      var southWest = _getCoordsObj(bounds.getSouthWest());
+	      var bounds = {
+	        northEast: northEast,
+	        southWest: southWest
+	      };
+	    });
+	    google.maps.event.addListener(this.map, 'click', function (event) {
+	      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+	      that.state.onMapClick(coords);
+	    });
+	  },
+	
+	  createMarkerFromTrek: function (trek) {
+	    var that = this;
+	    var pos = new google.maps.LatLng(trek.location.latitude, trek.location.longitude);
+	    var marker = new google.maps.Marker({
+	      position: pos,
+	      setMap: this.map,
+	      trekId: trek.id
+	    });
+	    marker.addListener('click', function () {
+	      that.state.onMarkerClick(trek);
+	    });
+	    this.markers.push(marker);
+	  },
+	
+	  removeMarker: function (marker) {
+	    for (var i = 0; i < this.markers.length; i++) {
+	      if (this.markers[i].trekId === marker.trekId) {
+	        this.markers[i].setMap(null);
+	        this.markers.splice(i, 1);
+	        break;
+	      }
+	    }
 	  },
 	
 	  render: function () {
 	    return React.createElement(
-	      'li',
-	      { onClick: this.showDetail, className: 'trek-list-item' },
-	      React.createElement(
-	        'p',
-	        null,
-	        this.props.trek.title
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        this.props.trek.description
-	      )
+	      'div',
+	      { className: 'map', ref: 'map' },
+	      'Map'
 	    );
 	  }
 	});
+	
+	module.exports = Map;
 
 /***/ },
-/* 261 */,
 /* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var LandingPage = React.createClass({
-	    displayName: "LandingPage",
+	module.exports = React.createClass({
+	  displayName: "exports",
 	
+	  render: function () {
+	    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
 	
-	    render: function () {
-	        return React.createElement(
+	    return React.createElement(
+	      "div",
+	      null,
+	      React.createElement(
+	        "section",
+	        { id: "parallax", className: "parallax welcome-page" },
+	        React.createElement(
+	          "div",
+	          { className: "row" },
+	          React.createElement(
 	            "div",
-	            null,
+	            { className: "container container-custom text-center landing-welcome" },
 	            React.createElement(
-	                "section",
-	                { id: "parallax", className: "parallax welcome-page" },
-	                React.createElement(
-	                    "div",
-	                    { className: "row" },
-	                    React.createElement(
-	                        "div",
-	                        { className: "container container-custom text-center landing-welcome" },
-	                        React.createElement(
-	                            "h1",
-	                            { className: "welcome logo" },
-	                            "The Path Less Traveled"
-	                        ),
-	                        React.createElement(
-	                            "h4",
-	                            { className: "welcome tagline" },
-	                            "Wander. Explore. Discover."
-	                        )
-	                    )
-	                )
+	              "h1",
+	              { className: "welcome logo" },
+	              "The Path Less Traveled"
 	            ),
 	            React.createElement(
-	                "section",
-	                { id: "slider-landing", className: "carousel slide", "data-ride": "carousel" },
-	                React.createElement(
-	                    "div",
-	                    { className: "carousel-inner" },
-	                    React.createElement(
-	                        "div",
-	                        { className: "item active" },
-	                        React.createElement("img", { src: "/assets/slider_0.jpg" })
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "item" },
-	                        React.createElement("img", { src: "/assets/slider_1.jpg" })
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "item" },
-	                        React.createElement("img", { src: "/assets/slider_2.jpg" })
-	                    ),
-	                    React.createElement(
-	                        "div",
-	                        { className: "item" },
-	                        React.createElement("img", { src: "/assets/slider_3.jpg" })
-	                    )
-	                ),
-	                React.createElement(
-	                    "a",
-	                    { className: "left carousel-control", href: "#slider", role: "button", "data-slide": "prev" },
-	                    React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
-	                ),
-	                React.createElement(
-	                    "a",
-	                    { className: "right carousel-control", href: "#slider", role: "button", "data-slide": "next" },
-	                    React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
-	                ),
-	                React.createElement(
-	                    "ol",
-	                    { className: "carousel-indicators" },
-	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "0", className: "active" }),
-	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "1" }),
-	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "2" }),
-	                    React.createElement("li", { "data-target": "#slider", "data-slide-to": "3" })
-	                )
+	              "h4",
+	              { className: "welcome tagline" },
+	              "Wander. Explore. Discover."
+	            ),
+	            React.createElement(
+	              "a",
+	              { className: "btn btn-danger search-btn", href: "/#/search" },
+	              "Begin Exploring"
 	            )
-	        );
-	    }
+	          )
+	        )
+	      )
+	    );
+	  }
 	});
-	
-	module.exports = LandingPage;
+	// <section id="slider-landing" className="carousel slide" data-ride="carousel">
+	//     <div className="carousel-inner">
+	//
+	//         <div className="item active">
+	//             <img src={"/assets/slider_0.jpg"}/>
+	//         </div>
+	//
+	//         <div className="item">
+	//             <img src={"/assets/slider_1.jpg"}/>
+	//         </div>
+	//
+	//         <div className="item">
+	//             <img src={"/assets/slider_2.jpg"}/>
+	//         </div>
+	//
+	//         <div className="item">
+	//             <img src={"/assets/slider_3.jpg"}/>
+	//         </div>
+	//
+	//     </div>
+	//
+	//
+	//     <a className="left carousel-control" href="#slider" role="button" data-slide="prev">
+	//         <span className="glyphicon glyphicon-chevron-left"></span>
+	//     </a>
+	//     <a className="right carousel-control" href="#slider" role="button" data-slide="next">
+	//         <span className="glyphicon glyphicon-chevron-right"></span>
+	//     </a>
+	//
+	//     <ol className="carousel-indicators">
+	//         <li data-target="#slider" data-slide-to="0" className="active"></li>
+	//         <li data-target="#slider" data-slide-to="1"></li>
+	//         <li data-target="#slider" data-slide-to="2"></li>
+	//         <li data-target="#slider" data-slide-to="3"></li>
+	//     </ol>
+	//
+	// </section>
 
 /***/ }
 /******/ ]);

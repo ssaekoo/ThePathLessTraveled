@@ -33,10 +33,11 @@ var TrekDetail = React.createClass({
   },
 
   render: function () {
-    document.body.style.backgroundImage = "";
-    var selection = document.getElementById("nav");
-    selection.style.backgroundColor = '#D3E3E8';
-
+      document.body.style.backgroundImage = "";
+      var selection = document.getElementById("nav");
+      selection.style.backgroundColor = '#D3E3E8';
+      selection.style.borderBottom = '1px solid black';
+      
       if(this.state.trek.length === undefined) { return <div></div>; }
       var myTags = this.state.trek.tags.map (function(tag){
         return (<div>{tag.tag_name}</div>);

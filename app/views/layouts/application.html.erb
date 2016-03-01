@@ -7,7 +7,14 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <!-- <link rel="stylesheet" href="node_modules/react-star-rating/dist/css/react-star-rating.min.css"> -->
-
+  <!-- <script
+    id="gmapslib"
+    async="true"
+    src="https://maps.googleapis.com/maps/api/js?key=&libraries=places,geometry&callback=gMapsReady">
+  </script> -->
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCv-nf4YjPyxxXVDupj90D4KEujcYL93Pw&callback=initMap"
+    async defer></script> -->
+    <%= javascript_include_tag "https://maps.googleapis.com/maps/api/js?key=AIzaSyCv-nf4YjPyxxXVDupj90D4KEujcYL93Pw"%>
 </head>
 <body>
   <script>
@@ -17,7 +24,7 @@
   </script>
 
 
-  <nav class="nav nav-justified navbar-fixed-top">
+  <nav id="nav" class="nav nav-justified navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">

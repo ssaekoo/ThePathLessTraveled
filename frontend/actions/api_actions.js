@@ -37,5 +37,12 @@ ApiActions.requestTreksByLocation = function(location){
   ApiUtil.fetchTreksByLocation(location, ApiActions.receiveTreks);
 };
 
+ApiActions.receiveTagChange = function(tag) {
+  AppDispatcher.dispatch({
+    actionType: "CHANGE_TAG",
+    tags: tag
+  });
+}
+
 
 module.exports = ApiActions;
