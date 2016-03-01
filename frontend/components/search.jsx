@@ -91,7 +91,7 @@ var Search = React.createClass({
 
     var results = myMatches.map(function (trek) {
       return (
-        <div key={trek.id} className="container text-center" onClick={this.showDetail.bind(null, trek.id)}>
+        <div key={trek.id} className="col-xs-12 col-sm-6 row-space-5 text-center" onClick={this.showDetail.bind(null, trek.id)}>
           <div><h4>{trek.title}</h4></div>
           <div>City: {trek.location.city}</div>
           <div>State: {trek.location.state}</div>
@@ -118,30 +118,31 @@ var Search = React.createClass({
     // });
 
     return(
-      <div className="col-xs-12 col-md-7 search-form below-nav">
-        <div className="row search-form left-side-container">
-          <div className="search-filters">
-            <div>
-              <input placeholder="Search" onChange={this.handleInput} value={this.state.searchValue} />
-            </div>
+      <div id="sidx" className="search-container below-nav">
+        <div className="col-xs-12 col-md-7 search-form">
+          <div className="row search-form">
+            <div className="search-filters">
+              <div>
+                <input placeholder="Search" onChange={this.handleInput} value={this.state.searchValue} />
+              </div>
 
-            <div className="container-fluid search-list-frame">
-              <div className="row">
-                <div className="container-fluid search-list-listings">
-                  <div className="row">
-                    <ReactCSSTransitionGroup transitionName="auto" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
-                      {results}
-                    </ReactCSSTransitionGroup>
+              <div className="container-fluid search-list-frame">
+                <div className="row">
+                  <div className="container-fluid search-list-listings">
+                    <div className="row">
+                      <ReactCSSTransitionGroup transitionName="auto" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
+                        {results}
+                      </ReactCSSTransitionGroup>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div className='right-side-container'>
-            <Map className='trek-map'/>
-          </div>
         </div>
-
+        <div className="col-md-5 search-map hidden-xs">
+          <Map className='trek-map'/>
+        </div>
       </div>
     );
   }

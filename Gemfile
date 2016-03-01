@@ -9,6 +9,7 @@ gem 'jquery-rails'
 gem 'newrelic_rpm'
 gem 'pg'
 gem 'rails', '4.2.5'
+gem 'rails_12factor'
 gem 'sass-rails', '~> 5.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'turbolinks'

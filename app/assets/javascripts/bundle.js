@@ -25200,7 +25200,7 @@
 	    var results = myMatches.map(function (trek) {
 	      return React.createElement(
 	        'div',
-	        { key: trek.id, className: 'container text-center', onClick: this.showDetail.bind(null, trek.id) },
+	        { key: trek.id, className: 'col-xs-12 col-sm-6 row-space-5 text-center', onClick: this.showDetail.bind(null, trek.id) },
 	        React.createElement(
 	          'div',
 	          null,
@@ -25271,45 +25271,49 @@
 	
 	    return React.createElement(
 	      'div',
-	      { className: 'col-xs-12 col-md-7 search-form below-nav' },
+	      { id: 'sidx', className: 'search-container below-nav' },
 	      React.createElement(
 	        'div',
-	        { className: 'row search-form left-side-container' },
+	        { className: 'col-xs-12 col-md-7 search-form' },
 	        React.createElement(
 	          'div',
-	          { className: 'search-filters' },
+	          { className: 'row search-form' },
 	          React.createElement(
 	            'div',
-	            null,
-	            React.createElement('input', { placeholder: 'Search', onChange: this.handleInput, value: this.state.searchValue })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'container-fluid search-list-frame' },
+	            { className: 'search-filters' },
 	            React.createElement(
 	              'div',
-	              { className: 'row' },
+	              null,
+	              React.createElement('input', { placeholder: 'Search', onChange: this.handleInput, value: this.state.searchValue })
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'container-fluid search-list-frame' },
 	              React.createElement(
 	                'div',
-	                { className: 'container-fluid search-list-listings' },
+	                { className: 'row' },
 	                React.createElement(
 	                  'div',
-	                  { className: 'row' },
+	                  { className: 'container-fluid search-list-listings' },
 	                  React.createElement(
-	                    ReactCSSTransitionGroup,
-	                    { transitionName: 'auto', transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
-	                    results
+	                    'div',
+	                    { className: 'row' },
+	                    React.createElement(
+	                      ReactCSSTransitionGroup,
+	                      { transitionName: 'auto', transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
+	                      results
+	                    )
 	                  )
 	                )
 	              )
 	            )
 	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'right-side-container' },
-	          React.createElement(Map, { className: 'trek-map' })
 	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'col-md-5 search-map hidden-xs' },
+	        React.createElement(Map, { className: 'trek-map' })
 	      )
 	    );
 	  }
@@ -33313,6 +33317,7 @@
 	  },
 	
 	  render: function () {
+	    // create a new util to set background
 	    document.body.style.backgroundImage = "";
 	    var selection = document.getElementById("nav");
 	    selection.style.backgroundColor = '#D3E3E8';
@@ -33475,6 +33480,25 @@
 	    };
 	  },
 	
+	  // _updateMarkers: function() {
+	  //
+	  //   var markers = this.markers;
+	  //   var newTreks = TrekStore.all();
+	  //   var addIds = newTreks.filter(function(trek){
+	  //     return (
+	  //       for (var i = 0; i < this.markers.length; i++){
+	  //
+	  //       }
+	  //
+	  //     );
+	  //   });
+	  //   var removeRoomIds = Object.keys(this.markers).filter(function(roomId){
+	  //     return (typeof newRooms[roomId] === 'undefined');
+	  //   });
+	  //   this._removeMarkers(removeRoomIds);
+	  //   this._addMarkers(addRoomIds, newRooms);
+	  // },
+	
 	  updateTreks: function () {
 	    this.setState({ treks: TrekStore.all() });
 	  },
@@ -33485,7 +33509,7 @@
 	    var map = ReactDOM.findDOMNode(this.refs.map);
 	    var mapOptions = {
 	      center: this.centerTrekCoords(),
-	      zoom: 11
+	      zoom: 5
 	    };
 	    this.map = new google.maps.Map(map, mapOptions);
 	    this.registerListeners();
@@ -33573,10 +33597,54 @@
 	    }
 	  },
 	
+	  // _addMarkers: function(addRoomIds, newRoomds) {
+	  //   var _markers = this.markers;
+	  //   var _map = this.map;
+	  //   // var image = "/assets/markers/pink.png";
+	  //   // var imageBlue = "/assets/markers/blue.png";
+	  //   // var img = this.sampleMarker;
+	  //   var room, pos, img;
+	  //   var markerBg = this.markerBg;
+	  //
+	  //   addRoomIds.forEach(function(roomId) {
+	  //     room = newRoomds[roomId];
+	  //     img = MarkerImg(room.price, markerBg);
+	  //     pos = new google.maps.LatLng(room.lat, room.lng);
+	  //     _markers[roomId] = new google.maps.Marker({
+	  //       position: pos,
+	  //       map: _map,
+	  //       icon: {
+	  //         url: img,
+	  //         // size: new google.maps.Size(60, 60),
+	  //         scaledSize: new google.maps.Size(55, 35)
+	  //       }
+	  //       // icon: img
+	  //     });
+	  //
+	  //     var toggleBounce = function(marker, status) {
+	  //       if (status) {
+	  //         marker.setAnimation(google.maps.Animation.BOUNCE);
+	  //       } else {
+	  //         marker.setAnimation(null);
+	  //       }
+	  //     };
+	  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
+	  //                                     "mouseenter",
+	  //                                      function() {
+	  //       toggleBounce(_markers[roomId], true);
+	  //     });
+	  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
+	  //                                     "mouseleave",
+	  //                                      function() {
+	  //       toggleBounce(_markers[roomId], false);
+	  //     });
+	  //   });
+	  // },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'map', ref: 'map' },
+	      { id: 'search-map-canvas', className: 'google-map-canvas', ref: 'map' },
 	      'Map'
 	    );
 	  }

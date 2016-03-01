@@ -33,6 +33,7 @@ var TrekDetail = React.createClass({
   },
 
   render: function () {
+    // create a new util to set background
     document.body.style.backgroundImage = "";
     var selection = document.getElementById("nav");
     selection.style.backgroundColor = '#D3E3E8';

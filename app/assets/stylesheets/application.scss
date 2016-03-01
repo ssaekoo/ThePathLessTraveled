@@ -2,9 +2,11 @@
 @import "bootstrap";
 @import "http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css";
 
-html {
-  height: 100%;
-  width: 100%;
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
 }
 
 body {
@@ -13,7 +15,6 @@ body {
   // overflow: hidden;
   // background-image: url("/assets/west-coast-trail.jpg");
   padding: 10px;
-  height: 100%;
   font-family: "Sorts+Mill+Goudy", sans-serif;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -30,6 +31,15 @@ body {
   background-repeat: no-repeat;
   background-size:100% 100%;
 }
+
+.search-map-canvas {
+  margin-bottom: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+
+
 // scroll within container
 .search-btn {
   display: inline-block;
@@ -67,13 +77,29 @@ body {
     overflow-y: scroll;
 }
 
+#sidx {
+  top: 50px;
+  padding: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
+
+#search-map-canvas {
+  //  position: fixed;
+  margin-bottom: 0px;
+  width: 100%;
+  height: 100%;
+}
+
 .search-map {
-    padding: 0;
-    position: fixed;
-    right: 0px;
-    left: auto;
-    bottom: 0px;
-    top: 50px;
+  padding: 0;
+  position: fixed;
+  right: 0px;
+  left: auto;
+  bottom: 0px;
+  top: 50px;
 }
 
 .carousel-inner > .item > img,
@@ -158,9 +184,13 @@ margin: auto;
   height: auto;
 }
 
-.map {
-  height: 500px;
-  width: 500px;
+.right-side-container{
+  top: 50px;
+  padding: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
 }
 
 .trek-item {

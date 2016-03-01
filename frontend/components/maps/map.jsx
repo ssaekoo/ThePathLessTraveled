@@ -19,6 +19,25 @@ var Map = React.createClass({
     });
   },
 
+  // _updateMarkers: function() {
+  //
+  //   var markers = this.markers;
+  //   var newTreks = TrekStore.all();
+  //   var addIds = newTreks.filter(function(trek){
+  //     return (
+  //       for (var i = 0; i < this.markers.length; i++){
+  //
+  //       }
+  //
+  //     );
+  //   });
+  //   var removeRoomIds = Object.keys(this.markers).filter(function(roomId){
+  //     return (typeof newRooms[roomId] === 'undefined');
+  //   });
+  //   this._removeMarkers(removeRoomIds);
+  //   this._addMarkers(addRoomIds, newRooms);
+  // },
+
   updateTreks: function() {
     this.setState({treks: TrekStore.all()});
   },
@@ -29,7 +48,7 @@ var Map = React.createClass({
     var map = ReactDOM.findDOMNode(this.refs.map);
     var mapOptions = {
       center: this.centerTrekCoords(),
-      zoom: 11
+      zoom: 5
     };
     this.map = new google.maps.Map(map, mapOptions);
     this.registerListeners();
@@ -116,8 +135,52 @@ var Map = React.createClass({
     }
   },
 
+  // _addMarkers: function(addRoomIds, newRoomds) {
+  //   var _markers = this.markers;
+  //   var _map = this.map;
+  //   // var image = "/assets/markers/pink.png";
+  //   // var imageBlue = "/assets/markers/blue.png";
+  //   // var img = this.sampleMarker;
+  //   var room, pos, img;
+  //   var markerBg = this.markerBg;
+  //
+  //   addRoomIds.forEach(function(roomId) {
+  //     room = newRoomds[roomId];
+  //     img = MarkerImg(room.price, markerBg);
+  //     pos = new google.maps.LatLng(room.lat, room.lng);
+  //     _markers[roomId] = new google.maps.Marker({
+  //       position: pos,
+  //       map: _map,
+  //       icon: {
+  //         url: img,
+  //         // size: new google.maps.Size(60, 60),
+  //         scaledSize: new google.maps.Size(55, 35)
+  //       }
+  //       // icon: img
+  //     });
+  //
+  //     var toggleBounce = function(marker, status) {
+  //       if (status) {
+  //         marker.setAnimation(google.maps.Animation.BOUNCE);
+  //       } else {
+  //         marker.setAnimation(null);
+  //       }
+  //     };
+  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
+  //                                     "mouseenter",
+  //                                      function() {
+  //       toggleBounce(_markers[roomId], true);
+  //     });
+  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
+  //                                     "mouseleave",
+  //                                      function() {
+  //       toggleBounce(_markers[roomId], false);
+  //     });
+  //   });
+  // },
+
   render: function(){
-    return ( <div className="map" ref="map">Map</div> );
+    return ( <div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div> );
   }
 });
 
