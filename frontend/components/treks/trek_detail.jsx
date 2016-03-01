@@ -42,6 +42,7 @@ var TrekDetail = React.createClass({
         <div>
           <div className="trek-detail-pane">
             <div className="detail">
+              <div> <img className="img-responsive search-page-image" src={"/assets/" + this.state.trek.trek_pics[0].url}/></div>
               <div> Title: {this.state.trek.title} </div>
               <div> Rating: {this.state.trek.average_rating} </div>
               <div> Reviews: {this.state.trek.total_reviews} </div>
@@ -49,8 +50,6 @@ var TrekDetail = React.createClass({
               <div> {this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1)}: {this.state.trek.duration} </div>
               <div> Starting elevation: {this.state.trek.start_elv} {this.state.trek.elv_measure} </div>
               <div> Highest elevation: {this.state.trek.peak_elv} {this.state.trek.elv_measure} </div>
-
-              <div> <img className="img-responsive search-page-image" src={"/assets/" + this.state.trek.trek_pics[0].url}/></div>
               <div> Country: {this.state.trek.location.country} </div>
 
               <div> tags:

@@ -25100,6 +25100,7 @@
 	var TrekStore = __webpack_require__(241);
 	var TrekDetail = __webpack_require__(259);
 	var TrekIndexItem = __webpack_require__(260);
+	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
 	var Search = React.createClass({
@@ -25188,12 +25189,14 @@
 	
 	  render: function () {
 	
-	    var results = this.matches().map(function (trek) {
+	    var myMatches = this.matches();
+	
+	    var results = myMatches.map(function (trek) {
 	      return React.createElement(
 	        'div',
-	        { key: trek.id, className: 'container', onClick: this.showDetail.bind(null, trek.id) },
+	        { key: trek.id, className: 'container text-center', onClick: this.showDetail.bind(null, trek.id) },
 	        React.createElement(
-	          'center',
+	          'div',
 	          null,
 	          React.createElement(
 	            'h4',
@@ -25202,39 +25205,67 @@
 	          )
 	        ),
 	        React.createElement(
-	          'center',
+	          'div',
 	          null,
 	          'City: ',
 	          trek.location.city
 	        ),
 	        React.createElement(
-	          'center',
+	          'div',
+	          null,
+	          'Country: ',
+	          trek.location.state
+	        ),
+	        React.createElement(
+	          'div',
 	          null,
 	          'Country: ',
 	          trek.location.country
 	        ),
 	        React.createElement(
-	          'center',
+	          'div',
 	          null,
 	          React.createElement('img', { className: 'img-responsive search-page-image', src: "/assets/" + trek.trek_pics[0].url })
 	        ),
 	        React.createElement(
-	          'center',
+	          'div',
 	          null,
 	          'Rating: ',
 	          trek.average_rating
 	        ),
 	        React.createElement(
-	          'center',
+	          'div',
 	          null,
 	          React.createElement(
-	            'span',
-	            { className: 'stars' },
-	            trek.average_rating
+	            'center',
+	            null,
+	            React.createElement(
+	              'span',
+	              { className: 'stars' },
+	              trek.average_rating
+	            )
 	          )
 	        )
 	      );
 	    }.bind(this));
+	
+	    var myTagObjs = {};
+	
+	    myMatches.forEach(function (trek) {
+	      trek.tags.forEach(function (tag) {
+	        myTagObjs[tag.id] = tag.tag_name;
+	      });
+	    });
+	
+	    var myTags = Object.keys(myTagObjs).map(function (key) {
+	      return React.createElement(
+	        'li',
+	        { className: key },
+	        ' ',
+	        myTagObjs[key],
+	        ' '
+	      );
+	    });
 	
 	    return React.createElement(
 	      'div',
@@ -25252,6 +25283,11 @@
 	          ),
 	          React.createElement('input', { onChange: this.handleInput, value: this.state.searchValue })
 	        )
+	      ),
+	      React.createElement(
+	        'ul',
+	        null,
+	        myTags
 	      ),
 	      React.createElement(
 	        'div',
@@ -33260,6 +33296,12 @@
 	          React.createElement(
 	            'div',
 	            null,
+	            ' ',
+	            React.createElement('img', { className: 'img-responsive search-page-image', src: "/assets/" + this.state.trek.trek_pics[0].url })
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
 	            ' Title: ',
 	            this.state.trek.title,
 	            ' '
@@ -33311,12 +33353,6 @@
 	            ' ',
 	            this.state.trek.elv_measure,
 	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' ',
-	            React.createElement('img', { className: 'img-responsive search-page-image', src: "/assets/" + this.state.trek.trek_pics[0].url })
 	          ),
 	          React.createElement(
 	            'div',

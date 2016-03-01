@@ -532,62 +532,70 @@ Location.create!(trek_id: 1,
       trek_name: "Sykes",
       country: "United States",
       city: "Big Sur",
+      state: "California",
       latitude: 36.1075,
-      longitude: 121.6258,
+      longitude: 121.6258
       )
 
 Location.create!(trek_id: 2,
       trek_name: "Tiger Leaping Gorge",
       country: "China",
       city: "Lijiang",
+      state: "",
       latitude: 26.8833,
-      longitude: 100.2333,
+      longitude: 100.2333
       )
 
 Location.create!(trek_id: 3,
       trek_name: "Lost Coast",
       country: "United States",
       city: "Lost Coast",
+      state: "California",
       latitude: 40.4401,
-      longitude: 124.4095,
+      longitude: 124.4095
       )
 
 Location.create!(trek_id: 4,
       trek_name: "Yosemite",
       country: "United States",
       city: "Mariposa",
+      state: "California",
       latitude: 37.8499,
-      longitude: 119.5677,
+      longitude: 119.5677
       )
 
 Location.create!(trek_id: 5,
       trek_name: "Grand Canyon",
       country: "United States",
       city: "Flagstaff",
+      state: "Arizona",
       latitude: 36.1000,
-      longitude: 112.1000,
+      longitude: 112.1000
       )
 
 Location.create!(trek_id: 6,
       trek_name: "Point Reyes",
       country: "United States",
       city: "San Francisco",
+      state: "California",
       latitude: 37.9968,
-      longitude: 123.0198,
+      longitude: 123.0198
       )
 
 Location.create!(trek_id: 7,
       trek_name: "Hua Shan",
       country: "China",
       city: "Huayin",
+      state: "",
       latitude: 34.4833,
-      longitude: 110.0833,
+      longitude: 110.0833
       )
 
 Location.create!(trek_id: 8,
       trek_name: "Angel Island",
       country: "United States",
       city: "San Francisco",
+      state: "California",
       latitude: 37.8600,
-      longitude: 122.4300,
+      longitude: 122.4300
       )
