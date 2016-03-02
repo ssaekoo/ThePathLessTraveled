@@ -251,97 +251,97 @@ Review.create!(user_id: 1,
 
 Picture.create!(author_id: 2,
       trek_id: 1,
-      url: 'sykes.jpg'
+      url: 'sykes0.jpg'
       )
 
 Picture.create!(author_id: 1,
       trek_id: 2,
-      url: 'tiger-leaping-gorge.jpg'
+      url: 'tigerLeapingGorge0.jpg'
       )
 
 Picture.create!(author_id: 3,
       trek_id: 3,
-      url: 'lost-coast.jpg'
+      url: 'lostCoast0.jpg'
       )
 
 Picture.create!(author_id: 4,
       trek_id: 4,
-      url: 'Yosemite2.jpg'
+      url: 'yosemite0.jpg'
       )
 
 Picture.create!(author_id: 4,
       trek_id: 4,
-      url: 'Yosemite.jpg'
+      url: 'yosemite1.jpg'
       )
 
 Picture.create!(author_id: 5,
       trek_id: 5,
-      url: 'Grand-Canyon.jpg'
+      url: 'grandCanyon0.jpg'
       )
 
 Picture.create!(author_id: 6,
       trek_id: 6,
-      url: 'PointReyes.jpg'
+      url: 'pointReyes0.jpg'
       )
 
 Picture.create!(author_id: 6,
       trek_id: 6,
-      url: 'PointReyes2.jpg'
+      url: 'pointReyes1.jpg'
       )
 
 Picture.create!(author_id: 6,
       trek_id: 6,
-      url: 'PointReyes3.jpg'
+      url: 'pointReyes2.jpg'
       )
 
 Picture.create!(author_id: 6,
       trek_id: 6,
-      url: 'PointReyes4.jpp'
+      url: 'pointReyes3.jpp'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan0.jpg'
+      url: 'huaShan0.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan1.jpg'
+      url: 'huaShan1.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan2.jpg'
+      url: 'huaShan2.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan3.jpg'
+      url: 'huaShan3.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan4.jpg'
+      url: 'huaShan4.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan5.jpg'
+      url: 'huaShan5.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan6.jpg'
+      url: 'huaShan6.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 7,
-      url: 'HuaShan7.jpg'
+      url: 'huaShan7.jpg'
       )
 
 Picture.create!(author_id: 7,
       trek_id: 8,
-      url: 'AngelsIsland.jpg'
+      url: 'angelsIsland0.jpg'
       )
 
 Tag.create!(tag_name: 'Beginner')

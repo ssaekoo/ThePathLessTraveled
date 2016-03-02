@@ -55,8 +55,8 @@
 	
 	var App = __webpack_require__(222);
 	var Search = __webpack_require__(223);
-	var LandingPage = __webpack_require__(262);
-	var TrekDetail = __webpack_require__(259);
+	var LandingPage = __webpack_require__(263);
+	// var TrekDetail = require('./components/treks/trek_detail');
 	// var Map = require('./components/maps/map');
 	
 	var routes = React.createElement(
@@ -66,13 +66,11 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: LandingPage }),
-	    React.createElement(Route, { path: 'search', component: Search }),
-	    '// ',
-	    React.createElement(Route, { path: 'map', component: Map }),
-	    React.createElement(Route, { path: 'treks/:trekId', component: TrekDetail })
+	    React.createElement(Route, { path: 'search', component: Search })
 	  )
 	);
-	
+	// <Route path='map' component={Map} />
+	// <Route path="treks/:trekId" component={TrekDetail} />
 	document.addEventListener("DOMContentLoaded", function () {
 	  ReactDOM.render(routes, document.getElementById('content'));
 	});
@@ -25101,9 +25099,10 @@
 	
 	var ApiActions = __webpack_require__(235);
 	var TrekStore = __webpack_require__(241);
-	var TrekDetail = __webpack_require__(259);
+	// var TrekDetail = require('./treks/trek_detail');
 	var TrekIndexItem = __webpack_require__(260);
 	var Map = __webpack_require__(261);
+	var Utilities = __webpack_require__(262);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -25191,10 +25190,7 @@
 	  },
 	
 	  render: function () {
-	    document.body.style.backgroundImage = "";
-	    var selection = document.getElementById("nav");
-	    selection.style.backgroundColor = '#D3E3E8';
-	    selection.style.borderBottom = '1px solid black';
+	    Utilities.changeBackground();
 	    var myMatches = this.matches();
 	
 	    var results = myMatches.map(function (trek) {
@@ -33277,159 +33273,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var TrekStore = __webpack_require__(241);
-	var ApiActions = __webpack_require__(235);
-	
-	var TrekDetail = React.createClass({
-	  displayName: 'TrekDetail',
-	
-	  getInitialState: function () {
-	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ trek: this.getStateFromStore() });
-	  },
-	
-	  getStateFromStore: function () {
-	    return TrekStore.find(parseInt(this.props.params.trekId));
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.requestTreksById(parseInt(newProps.params.trekId));
-	  },
-	
-	  componentDidMount: function () {
-	    this.listenerToken = TrekStore.addListener(this._onChange);
-	    ApiActions.requestTreksById(this.props.params.trekId);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.listenerToken.remove();
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ trek: this.getStateFromStore() });
-	  },
-	
-	  render: function () {
-	    // create a new util to set background
-	    document.body.style.backgroundImage = "";
-	    var selection = document.getElementById("nav");
-	    selection.style.backgroundColor = '#D3E3E8';
-	
-	    if (this.state.trek.length === undefined) {
-	      return React.createElement('div', null);
-	    }
-	    var myTags = this.state.trek.tags.map(function (tag) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        tag.tag_name
-	      );
-	    });
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'div',
-	        { className: 'trek-detail-pane' },
-	        React.createElement(
-	          'div',
-	          { className: 'detail' },
-	          React.createElement(
-	            'div',
-	            null,
-	            ' ',
-	            React.createElement('img', { className: 'img-responsive search-page-image', src: "/assets/" + this.state.trek.trek_pics[0].url })
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Title: ',
-	            this.state.trek.title,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Rating: ',
-	            this.state.trek.average_rating,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Reviews: ',
-	            this.state.trek.total_reviews,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Description: ',
-	            this.state.trek.description,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' ',
-	            this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1),
-	            ': ',
-	            this.state.trek.duration,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Starting elevation: ',
-	            this.state.trek.start_elv,
-	            ' ',
-	            this.state.trek.elv_measure,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Highest elevation: ',
-	            this.state.trek.peak_elv,
-	            ' ',
-	            this.state.trek.elv_measure,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Country: ',
-	            this.state.trek.location.country,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' tags:',
-	            myTags
-	          )
-	        )
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
-	
-	module.exports = TrekDetail;
-	
-	// <div> City: {this.state.trek.location.city} </div>
-	// <div> Latitude: {this.state.trek.location.latitude} </div>
-	// <div> Longitude: {this.state.trek.location.longitude} </div>
-
-/***/ },
+/* 259 */,
 /* 260 */
 /***/ function(module, exports) {
 
@@ -33460,6 +33304,7 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var TrekStore = __webpack_require__(241);
+	window.TrekStore = TrekStore;
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -33511,7 +33356,7 @@
 	      center: this.centerTrekCoords(),
 	      zoom: 5
 	    };
-	    this.map = new google.maps.Map(map, mapOptions);
+	    window.map = this.map = new google.maps.Map(map, mapOptions);
 	    this.registerListeners();
 	    this.markers = [];
 	    this.state.treks.forEach(this.createMarkerFromTrek);
@@ -33654,6 +33499,27 @@
 
 /***/ },
 /* 262 */
+/***/ function(module, exports) {
+
+	var GeneralUtilities = {};
+	
+	// GeneralUtilities.camelize = function(str) {
+	//   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+	//     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+	//   }).replace(/\s+/g, '');
+	// };
+	
+	GeneralUtilities.changeBackground = function () {
+	  document.body.style.backgroundImage = "";
+	  var selection = document.getElementById("nav");
+	  selection.style.backgroundColor = '#D3E3E8';
+	  selection.style.borderBottom = '1px solid black';
+	};
+	
+	module.exports = GeneralUtilities;
+
+/***/ },
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

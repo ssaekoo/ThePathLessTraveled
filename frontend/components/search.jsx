@@ -6,9 +6,10 @@ var Link = require('react-router').Link;
 
 var ApiActions = require('../actions/api_actions');
 var TrekStore = require('../stores/trek_store');
-var TrekDetail = require('./treks/trek_detail');
+// var TrekDetail = require('./treks/trek_detail');
 var TrekIndexItem = require('./treks/trek_item');
 var Map = require('./maps/map');
+var Utilities = require('../util/util');
 // var Tags = require('./tags');
 // var SessionStore = require('./stores/sessionStore.js');
 
@@ -83,10 +84,7 @@ var Search = React.createClass({
   },
 
   render: function () {
-    document.body.style.backgroundImage = "";
-    var selection = document.getElementById("nav");
-    selection.style.backgroundColor = '#D3E3E8';
-    selection.style.borderBottom = '1px solid black';
+    Utilities.changeBackground();
     var myMatches = this.matches();
 
     var results = myMatches.map(function (trek) {

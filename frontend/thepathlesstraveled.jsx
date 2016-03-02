@@ -10,7 +10,7 @@ var History = require('history');
 var App = require('./components/app');
 var Search = require('./components/search');
 var LandingPage = require('./components/landing/landing_page');
-var TrekDetail = require('./components/treks/trek_detail');
+// var TrekDetail = require('./components/treks/trek_detail');
 // var Map = require('./components/maps/map');
 
 var routes = (
@@ -18,12 +18,11 @@ var routes = (
     <Route path='/' component={App}>
       <IndexRoute component={LandingPage} />
       <Route path='search' component={Search} />
-      // <Route path='map' component={Map} />
-      <Route path="treks/:trekId" component={TrekDetail} />
     </Route>
   </Router>
 )
-
+// <Route path='map' component={Map} />
+// <Route path="treks/:trekId" component={TrekDetail} />
 document.addEventListener("DOMContentLoaded", function () {
   ReactDOM.render(routes, document.getElementById('content'));
 });

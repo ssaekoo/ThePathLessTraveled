@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var TrekStore = require('../../stores/trek_store');
+window.TrekStore = TrekStore;
 
 function _getCoordsObj(latLng) {
   return {
@@ -50,7 +51,7 @@ var Map = React.createClass({
       center: this.centerTrekCoords(),
       zoom: 5
     };
-    this.map = new google.maps.Map(map, mapOptions);
+    window.map = this.map = new google.maps.Map(map, mapOptions);
     this.registerListeners();
     this.markers = [];
     this.state.treks.forEach(this.createMarkerFromTrek);
@@ -124,6 +125,7 @@ var Map = React.createClass({
     });
     this.markers.push(marker);
   },
+
 
   removeMarker: function(marker){
     for(var i = 0; i < this.markers.length; i++){
