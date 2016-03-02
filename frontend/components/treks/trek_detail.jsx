@@ -2,7 +2,6 @@ var React = require('react');
 var TrekStore = require('../../stores/trek_store');
 var ApiActions = require('../../actions/api_actions');
 var Utilities = require('../../util/util');
-// var TrekUtils = require('../../util/trek_util');
 
 var TrekDetail = React.createClass({
   getInitialState: function () {
@@ -52,24 +51,19 @@ var TrekDetail = React.createClass({
     var carouselInner = [];
     if (this.state.trek.trek_pics !== undefined){
       carouselInner = this.state.trek.trek_pics.map (function (picture, idx){
+          var pictureClass = "item";
+
           if (idx === 0){
             carouselIndicators.push (<li data-target="#slider" data-slide-to="0" className="active"></li>);
+            var pictureClass = "item active";
           } else {
             carouselIndicators.push (<li data-target="#slider" data-slide-to={idx}></li>);
           }
 
-          if (idx === 0) {
-            <div className="item active">
-                <img src={"/assets/" + picture.url} />
-            </div>
-          } else {
-            <div className="item">
-                <img src={"/assets/" + picture.url} />
-            </div>
-          }
-
           return (
-
+              <div className={pictureClass}>
+                  <img src={"/assets/" + picture.url} />
+              </div>
           )
       })
     };
@@ -83,7 +77,7 @@ var TrekDetail = React.createClass({
         <div>
           <div className="trek-detail-pane">
             <div className="detail">
-                // <img className="img-responsive search-page-image" src={"/assets/" + this.state.trek.trek_pics[0].url}/>
+
               <section id="slider" className="carousel slide" data-ride="carousel">
                 <div className="carousel-inner">
                   {carouselInner}

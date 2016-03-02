@@ -56,7 +56,7 @@
 	var App = __webpack_require__(222);
 	var Search = __webpack_require__(223);
 	var LandingPage = __webpack_require__(263);
-	// var TrekDetail = require('./components/treks/trek_detail');
+	var TrekDetail = __webpack_require__(259);
 	// var Map = require('./components/maps/map');
 	
 	var routes = React.createElement(
@@ -66,11 +66,12 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: LandingPage }),
-	    React.createElement(Route, { path: 'search', component: Search })
+	    React.createElement(Route, { path: 'search', component: Search }),
+	    React.createElement(Route, { path: 'treks/:trekId', component: TrekDetail })
 	  )
 	);
 	// <Route path='map' component={Map} />
-	// <Route path="treks/:trekId" component={TrekDetail} />
+	
 	document.addEventListener("DOMContentLoaded", function () {
 	  ReactDOM.render(routes, document.getElementById('content'));
 	});
@@ -25099,7 +25100,7 @@
 	
 	var ApiActions = __webpack_require__(235);
 	var TrekStore = __webpack_require__(241);
-	// var TrekDetail = require('./treks/trek_detail');
+	var TrekDetail = __webpack_require__(259);
 	var TrekIndexItem = __webpack_require__(260);
 	var Map = __webpack_require__(261);
 	var Utilities = __webpack_require__(262);
@@ -25194,6 +25195,25 @@
 	    var myMatches = this.matches();
 	
 	    var results = myMatches.map(function (trek) {
+	      if (trek.trek_pics !== undefined) {
+	        carouselInner = trek.trek_pics.map(function (picture, idx) {
+	          var pictureClass = "item";
+	
+	          if (idx === 0) {
+	            carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': '0', className: 'active' }));
+	            var pictureClass = "item active";
+	          } else {
+	            carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': idx }));
+	          }
+	
+	          return React.createElement(
+	            'div',
+	            { className: pictureClass },
+	            React.createElement('img', { src: "/assets/" + picture.url })
+	          );
+	        });
+	      };
+	
 	      return React.createElement(
 	        'div',
 	        { key: trek.id, className: 'col-xs-12 col-sm-6 row-space-5 text-center', onClick: this.showDetail.bind(null, trek.id) },
@@ -25308,7 +25328,7 @@
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'col-md-5 search-map hidden-xs' },
+	        { className: 'col-md-5 search-map' },
 	        React.createElement(Map, { className: 'trek-map' })
 	      )
 	    );
@@ -33273,7 +33293,207 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 259 */,
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var TrekStore = __webpack_require__(241);
+	var ApiActions = __webpack_require__(235);
+	var Utilities = __webpack_require__(262);
+	
+	var TrekDetail = React.createClass({
+	  displayName: 'TrekDetail',
+	
+	  getInitialState: function () {
+	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ trek: this.getStateFromStore() });
+	  },
+	
+	  getStateFromStore: function () {
+	    return TrekStore.find(parseInt(this.props.params.trekId));
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.requestTreksById(parseInt(newProps.params.trekId));
+	  },
+	
+	  componentDidMount: function () {
+	    this.listenerToken = TrekStore.addListener(this._onChange);
+	    ApiActions.requestTreksById(this.props.params.trekId);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ trek: this.getStateFromStore() });
+	  },
+	
+	  // createInnerCarousel: function() {
+	  //   return this.state.trek.pictures.map (function (picture){
+	  //       return (<div className="item active">
+	  //           <img src="img/" + {picture.url}>
+	  //       </div>)
+	  //     })
+	  // }
+	
+	  render: function () {
+	    Utilities.changeBackground();
+	
+	    var trekTitle = this.state.trek.title;
+	    // var camelizeTitle = Utilities.camelize(trekTitle);
+	    var carouselIndicators = [];
+	
+	    var carouselInner = [];
+	    if (this.state.trek.trek_pics !== undefined) {
+	      carouselInner = this.state.trek.trek_pics.map(function (picture, idx) {
+	        var pictureClass = "item";
+	
+	        if (idx === 0) {
+	          carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': '0', className: 'active' }));
+	          var pictureClass = "item active";
+	        } else {
+	          carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': idx }));
+	        }
+	
+	        return React.createElement(
+	          'div',
+	          { className: pictureClass },
+	          React.createElement('img', { src: "/assets/" + picture.url })
+	        );
+	      });
+	    };
+	
+	    if (this.state.trek.length === undefined) {
+	      return React.createElement('div', null);
+	    }
+	    var myTags = this.state.trek.tags.map(function (tag) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        tag.tag_name
+	      );
+	    });
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'trek-detail-pane' },
+	        React.createElement(
+	          'div',
+	          { className: 'detail' },
+	          React.createElement(
+	            'section',
+	            { id: 'slider', className: 'carousel slide', 'data-ride': 'carousel' },
+	            React.createElement(
+	              'div',
+	              { className: 'carousel-inner' },
+	              carouselInner
+	            ),
+	            React.createElement(
+	              'a',
+	              { className: 'left carousel-control', href: '#slider', role: 'button', 'data-slide': 'prev' },
+	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
+	            ),
+	            React.createElement(
+	              'a',
+	              { className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
+	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+	            ),
+	            React.createElement(
+	              'ol',
+	              { className: 'carousel-indicators' },
+	              carouselIndicators
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Title: ',
+	            this.state.trek.title,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Rating: ',
+	            this.state.trek.average_rating,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Reviews: ',
+	            this.state.trek.total_reviews,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Description: ',
+	            this.state.trek.description,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' ',
+	            this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1),
+	            ': ',
+	            this.state.trek.duration,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Starting elevation: ',
+	            this.state.trek.start_elv,
+	            ' ',
+	            this.state.trek.elv_measure,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Highest elevation: ',
+	            this.state.trek.peak_elv,
+	            ' ',
+	            this.state.trek.elv_measure,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Country: ',
+	            this.state.trek.location.country,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' tags:',
+	            myTags
+	          )
+	        )
+	      ),
+	      this.props.children
+	    );
+	  }
+	});
+	
+	module.exports = TrekDetail;
+	
+	// <div> City: {this.state.trek.location.city} </div>
+	// <div> Latitude: {this.state.trek.location.latitude} </div>
+	// <div> Longitude: {this.state.trek.location.longitude} </div>
+
+/***/ },
 /* 260 */
 /***/ function(module, exports) {
 

@@ -534,7 +534,7 @@ Location.create!(trek_id: 1,
       city: "Big Sur",
       state: "California",
       latitude: 36.1075,
-      longitude: 121.6258
+      longitude: -121.6258
       )
 
 Location.create!(trek_id: 2,

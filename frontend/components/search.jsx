@@ -6,7 +6,7 @@ var Link = require('react-router').Link;
 
 var ApiActions = require('../actions/api_actions');
 var TrekStore = require('../stores/trek_store');
-// var TrekDetail = require('./treks/trek_detail');
+var TrekDetail = require('./treks/trek_detail');
 var TrekIndexItem = require('./treks/trek_item');
 var Map = require('./maps/map');
 var Utilities = require('../util/util');
@@ -88,6 +88,25 @@ var Search = React.createClass({
     var myMatches = this.matches();
 
     var results = myMatches.map(function (trek) {
+      if (trek.trek_pics !== undefined){
+        carouselInner = trek.trek_pics.map (function (picture, idx){
+            var pictureClass = "item";
+
+            if (idx === 0){
+              carouselIndicators.push (<li data-target="#slider" data-slide-to="0" className="active"></li>);
+              var pictureClass = "item active";
+            } else {
+              carouselIndicators.push (<li data-target="#slider" data-slide-to={idx}></li>);
+            }
+
+            return (
+                <div className={pictureClass}>
+                    <img src={"/assets/" + picture.url} />
+                </div>
+            )
+        })
+      };
+
       return (
         <div key={trek.id} className="col-xs-12 col-sm-6 row-space-5 text-center" onClick={this.showDetail.bind(null, trek.id)}>
           <div><h4>{trek.title}</h4></div>
@@ -138,7 +157,7 @@ var Search = React.createClass({
             </div>
           </div>
         </div>
-        <div className="col-md-5 search-map hidden-xs">
+        <div className="col-md-5 search-map">
           <Map className='trek-map'/>
         </div>
       </div>
