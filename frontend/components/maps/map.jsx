@@ -1,6 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Update = require('react-addons-update');
 var TrekStore = require('../../stores/trek_store');
+
 window.TrekStore = TrekStore;
 
 function _getCoordsObj(latLng) {
@@ -20,25 +22,6 @@ var Map = React.createClass({
     });
   },
 
-  // _updateMarkers: function() {
-  //
-  //   var markers = this.markers;
-  //   var newTreks = TrekStore.all();
-  //   var addIds = newTreks.filter(function(trek){
-  //     return (
-  //       for (var i = 0; i < this.markers.length; i++){
-  //
-  //       }
-  //
-  //     );
-  //   });
-  //   var removeRoomIds = Object.keys(this.markers).filter(function(roomId){
-  //     return (typeof newRooms[roomId] === 'undefined');
-  //   });
-  //   this._removeMarkers(removeRoomIds);
-  //   this._addMarkers(addRoomIds, newRooms);
-  // },
-
   updateTreks: function() {
     this.setState({treks: TrekStore.all()});
   },
@@ -46,12 +29,13 @@ var Map = React.createClass({
   componentDidMount: function(){
     console.log('map mounted');
     this.listenerToken = TrekStore.addListener(this.updateTreks);
+
     var map = ReactDOM.findDOMNode(this.refs.map);
     var mapOptions = {
       center: this.centerTrekCoords(),
       zoom: 5
     };
-    window.map = this.map = new google.maps.Map(map, mapOptions);
+    this.map = new google.maps.Map(map, mapOptions);
     this.registerListeners();
     this.markers = [];
     this.state.treks.forEach(this.createMarkerFromTrek);
@@ -90,6 +74,13 @@ var Map = React.createClass({
     toRemove.forEach(this.removeMarker);
   },
 
+  placeMarker: function(location) {
+    var marker = new google.maps.Marker({
+        position: location,
+        map: this.map
+    });
+  },
+
   registerListeners: function(){
     var that = this;
     google.maps.event.addListener(this.map, 'idle', function() {
@@ -102,10 +93,7 @@ var Map = React.createClass({
       };
     });
     google.maps.event.addListener(this.map, 'click', function(event) {
-      console.log("map clicked");
-      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-      new google.maps.Marker(coords, map);
-      that.state.onMapClick(coords);
+      that.placeMarker(event.latLng);
     });
   },
 
@@ -117,7 +105,6 @@ var Map = React.createClass({
       map: this.map,
       trekId: trek.id
     });
-    window.map = this.map;
     marker.addListener('click', function () {
       that.state.onMarkerClick(trek)
     });
@@ -134,50 +121,6 @@ var Map = React.createClass({
       }
     }
   },
-
-  // _addMarkers: function(addRoomIds, newRoomds) {
-  //   var _markers = this.markers;
-  //   var _map = this.map;
-  //   // var image = "/assets/markers/pink.png";
-  //   // var imageBlue = "/assets/markers/blue.png";
-  //   // var img = this.sampleMarker;
-  //   var room, pos, img;
-  //   var markerBg = this.markerBg;
-  //
-  //   addRoomIds.forEach(function(roomId) {
-  //     room = newRoomds[roomId];
-  //     img = MarkerImg(room.price, markerBg);
-  //     pos = new google.maps.LatLng(room.lat, room.lng);
-  //     _markers[roomId] = new google.maps.Marker({
-  //       position: pos,
-  //       map: _map,
-  //       icon: {
-  //         url: img,
-  //         // size: new google.maps.Size(60, 60),
-  //         scaledSize: new google.maps.Size(55, 35)
-  //       }
-  //       // icon: img
-  //     });
-  //
-  //     var toggleBounce = function(marker, status) {
-  //       if (status) {
-  //         marker.setAnimation(google.maps.Animation.BOUNCE);
-  //       } else {
-  //         marker.setAnimation(null);
-  //       }
-  //     };
-  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
-  //                                     "mouseenter",
-  //                                      function() {
-  //       toggleBounce(_markers[roomId], true);
-  //     });
-  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
-  //                                     "mouseleave",
-  //                                      function() {
-  //       toggleBounce(_markers[roomId], false);
-  //     });
-  //   });
-  // },
 
   render: function(){
     return ( <div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div> );

@@ -14,7 +14,6 @@ var CENTER = {lat: this.props.trek.location.latitude, lng: this.props.trek.locat
 var Map = React.createClass({
 
   getInitialState: function() {
-    debugger;
     return({
       trek: this.props.trek
     });
@@ -106,7 +105,6 @@ var Map = React.createClass({
     });
     this.markers.push(marker);
   },
-
 
   removeMarker: function(marker){
     for(var i = 0; i < this.markers.length; i++){

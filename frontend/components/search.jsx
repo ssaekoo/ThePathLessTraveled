@@ -17,7 +17,7 @@ var Search = React.createClass({
   mixins: [History],
 
   getInitialState: function () {
-    return {treks: [], searchValue: ''};
+    return {searchValue: ''};
   },
 
   handleInput: function (event) {
@@ -29,36 +29,36 @@ var Search = React.createClass({
     ApiActions.requestAllTreks();
   },
 
-  matches: function () {
-    var matches = [];
-    if(this.state.searchValue.length === 0){
-      return TrekStore.all();
-    }
-
-    TrekStore.all().forEach(function (trek) {
-      var city = trek.location.city.slice(0, this.state.searchValue.length);
-      var country = trek.location.country.slice(0, this.state.searchValue.length);
-      var title = trek.title.slice(0, this.state.searchValue.length);
-      var state = trek.location.state.slice(0, this.state.searchValue.length);
-
-      if(city.toLowerCase() === this.state.searchValue.toLowerCase()){
-        matches.push(trek);
-      } else if(country.toLowerCase() === this.state.searchValue.toLowerCase()){
-        matches.push(trek);
-      } else if(title.toLowerCase() === this.state.searchValue.toLowerCase()){
-        matches.push(trek);
-      } else if(state.toLowerCase() === this.state.searchValue.toLowerCase()){
-        matches.push(trek);
-      }
-
-    }.bind(this));
-
-    if (matches.length === 0) {
-      matches.push("No matches");
-    }
-
-    return matches;
-  },
+  // matches: function () {
+  //   var matches = [];
+  //   if(this.state.searchValue.length === 0){
+  //     return TrekStore.all();
+  //   }
+  //
+  //   TrekStore.all().forEach(function (trek) {
+  //     var city = trek.location.city.slice(0, this.state.searchValue.length);
+  //     var country = trek.location.country.slice(0, this.state.searchValue.length);
+  //     var title = trek.title.slice(0, this.state.searchValue.length);
+  //     var state = trek.location.state.slice(0, this.state.searchValue.length);
+  //
+  //     if(city.toLowerCase() === this.state.searchValue.toLowerCase()){
+  //       matches.push(trek);
+  //     } else if(country.toLowerCase() === this.state.searchValue.toLowerCase()){
+  //       matches.push(trek);
+  //     } else if(title.toLowerCase() === this.state.searchValue.toLowerCase()){
+  //       matches.push(trek);
+  //     } else if(state.toLowerCase() === this.state.searchValue.toLowerCase()){
+  //       matches.push(trek);
+  //     }
+  //
+  //   }.bind(this));
+  //
+  //   if (matches.length === 0) {
+  //     matches.push("No matches");
+  //   }
+  //
+  //   return matches;
+  // },
 
   updateTreks: function () {
     this.setState({treks: TrekStore.all()});
@@ -85,48 +85,55 @@ var Search = React.createClass({
 
   render: function () {
     Utilities.changeBackground();
-    var myMatches = this.matches();
+    var myMatches = TrekStore.filterStore(this.state.searchvalue);
+
     var carouselIndicators = [];
 
     var carouselInner = [];
     var results = myMatches.map(function (trek) {
+      carouselIndicators = [];
+      carouselInner = [];
       if (trek.trek_pics !== undefined){
         carouselInner = trek.trek_pics.map (function (picture, idx){
             var pictureClass = "item";
 
             if (idx === 0){
-              carouselIndicators.push (<li data-target="#slider" data-slide-to="0" className="active"></li>);
-              var pictureClass = "item active";
+              carouselIndicators.push (<li key={picture.id} data-target="#slider" data-slide-to="0" className="active"></li>);
+              pictureClass = "item active";
             } else {
-              carouselIndicators.push (<li data-target="#slider" data-slide-to={idx}></li>);
+              carouselIndicators.push (<li key={picture.id} data-target="#slider" data-slide-to={idx}></li>);
             }
 
             return (
-                <div className={pictureClass}>
+                <div key={trek.title + picture.id} className={pictureClass}>
                     <img src={"/assets/" + picture.url} />
                 </div>
             )
         })
       };
 
+      var makeCarousels = (
+        <section id={trek.id} className="carousel slide search-page-image" data-interval="false">
+          <div onClick={this.showDetail.bind(null, trek.id)} className="carousel-inner">
+            {carouselInner}
+          </div>
+
+          <a className="left carousel-control" href={trek.id} role="button" data-slide="prev">
+              <span className="glyphicon glyphicon-chevron-left"></span>
+          </a>
+          <a className="right carousel-control" href={trek.id} role="button" data-slide="next">
+              <span className="glyphicon glyphicon-chevron-right"></span>
+          </a>
+
+          <ol className="carousel-indicators">
+            {carouselIndicators}
+          </ol>
+        </section>
+      );
+
       return (
         <div key={trek.id} className="col-xs-12 col-sm-6 row-space-5 text-center">
-          <section id="slider" className="carousel slide search-page-image" data-ride="carousel">
-            <div onClick={this.showDetail.bind(null, trek.id)}className="carousel-inner">
-              {carouselInner}
-            </div>
-
-            <a className="left carousel-control" href="#slider" role="button" data-slide="prev">
-                <span className="glyphicon glyphicon-chevron-left"></span>
-            </a>
-            <a className="right carousel-control" href="#slider" role="button" data-slide="next">
-                <span className="glyphicon glyphicon-chevron-right"></span>
-            </a>
-
-            <ol className="carousel-indicators">
-              {carouselIndicators}
-            </ol>
-          </section>
+          {makeCarousels}
           <div onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
           <div onClick={this.showDetail.bind(null, trek.id)}>City: {trek.location.city}</div>
           <div onClick={this.showDetail.bind(null, trek.id)}>State: {trek.location.state}</div>

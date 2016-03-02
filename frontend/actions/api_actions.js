@@ -31,7 +31,7 @@ ApiActions.receiveSingleTrek = function(trek) {
 
 ApiActions.requestTreksById = function(id) {
   ApiUtil.requestTreksById(id, ApiActions.receiveSingleTrek);
-}
+};
 
 ApiActions.requestTreksByLocation = function(location){
   ApiUtil.fetchTreksByLocation(location, ApiActions.receiveTreks);
@@ -42,6 +42,13 @@ ApiActions.receiveTagChange = function(tag) {
     actionType: "CHANGE_TAG",
     tags: tag
   });
+};
+
+ApiActions.filterStore = function(treks){
+  AppDispatcher.dispath({
+    actionType: "FILTER_STORE",
+    treks: treks
+  })
 }
 
 

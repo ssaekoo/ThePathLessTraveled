@@ -36,8 +36,37 @@ TrekStore.__onDispatch = function (payload) {
     case "CHANGE_TAG":
       changeTag(payload);
       break;
+    case "FILTER_STORE":
+
   }
 };
+
+TrekStore.filterStore = function(filterString) {
+  var matches = [];
+  if(filterString.length === 0){
+    return TrekStore.all();
+  }
+
+  TrekStore.all().forEach(function (trek) {
+    var city = trek.location.city.slice(0, filterString.length);
+    var country = trek.location.country.slice(0, filterString.length);
+    var title = trek.title.slice(0, filterString.length);
+    var state = trek.location.state.slice(0, filterString.length);
+
+    if(city.toLowerCase() === filterString.toLowerCase()){
+      matches.push(trek);
+    } else if(country.toLowerCase() === filterString.toLowerCase()){
+      matches.push(trek);
+    } else if(title.toLowerCase() === filterString.toLowerCase()){
+      matches.push(trek);
+    } else if(state.toLowerCase() === filterString.toLowerCase()){
+      matches.push(trek);
+    }
+
+  }.bind(this));
+
+  return matches;
+}
 
 TrekStore.all = function() {
   return _treks.slice(0);

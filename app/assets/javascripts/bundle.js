@@ -55,7 +55,7 @@
 	
 	var App = __webpack_require__(222);
 	var Search = __webpack_require__(223);
-	var LandingPage = __webpack_require__(264);
+	var LandingPage = __webpack_require__(263);
 	var TrekDetail = __webpack_require__(259);
 	// var Map = require('./components/maps/map');
 	
@@ -25101,8 +25101,8 @@
 	var ApiActions = __webpack_require__(235);
 	var TrekStore = __webpack_require__(241);
 	var TrekDetail = __webpack_require__(259);
-	var TrekIndexItem = __webpack_require__(262);
-	var Map = __webpack_require__(263);
+	var TrekIndexItem = __webpack_require__(261);
+	var Map = __webpack_require__(262);
 	var Utilities = __webpack_require__(260);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
@@ -25113,7 +25113,7 @@
 	  mixins: [History],
 	
 	  getInitialState: function () {
-	    return { treks: [], searchValue: '' };
+	    return { searchValue: '' };
 	  },
 	
 	  handleInput: function (event) {
@@ -25125,35 +25125,36 @@
 	    ApiActions.requestAllTreks();
 	  },
 	
-	  matches: function () {
-	    var matches = [];
-	    if (this.state.searchValue.length === 0) {
-	      return TrekStore.all();
-	    }
-	
-	    TrekStore.all().forEach(function (trek) {
-	      var city = trek.location.city.slice(0, this.state.searchValue.length);
-	      var country = trek.location.country.slice(0, this.state.searchValue.length);
-	      var title = trek.title.slice(0, this.state.searchValue.length);
-	      var state = trek.location.state.slice(0, this.state.searchValue.length);
-	
-	      if (city.toLowerCase() === this.state.searchValue.toLowerCase()) {
-	        matches.push(trek);
-	      } else if (country.toLowerCase() === this.state.searchValue.toLowerCase()) {
-	        matches.push(trek);
-	      } else if (title.toLowerCase() === this.state.searchValue.toLowerCase()) {
-	        matches.push(trek);
-	      } else if (state.toLowerCase() === this.state.searchValue.toLowerCase()) {
-	        matches.push(trek);
-	      }
-	    }.bind(this));
-	
-	    if (matches.length === 0) {
-	      matches.push("No matches");
-	    }
-	
-	    return matches;
-	  },
+	  // matches: function () {
+	  //   var matches = [];
+	  //   if(this.state.searchValue.length === 0){
+	  //     return TrekStore.all();
+	  //   }
+	  //
+	  //   TrekStore.all().forEach(function (trek) {
+	  //     var city = trek.location.city.slice(0, this.state.searchValue.length);
+	  //     var country = trek.location.country.slice(0, this.state.searchValue.length);
+	  //     var title = trek.title.slice(0, this.state.searchValue.length);
+	  //     var state = trek.location.state.slice(0, this.state.searchValue.length);
+	  //
+	  //     if(city.toLowerCase() === this.state.searchValue.toLowerCase()){
+	  //       matches.push(trek);
+	  //     } else if(country.toLowerCase() === this.state.searchValue.toLowerCase()){
+	  //       matches.push(trek);
+	  //     } else if(title.toLowerCase() === this.state.searchValue.toLowerCase()){
+	  //       matches.push(trek);
+	  //     } else if(state.toLowerCase() === this.state.searchValue.toLowerCase()){
+	  //       matches.push(trek);
+	  //     }
+	  //
+	  //   }.bind(this));
+	  //
+	  //   if (matches.length === 0) {
+	  //     matches.push("No matches");
+	  //   }
+	  //
+	  //   return matches;
+	  // },
 	
 	  updateTreks: function () {
 	    this.setState({ treks: TrekStore.all() });
@@ -25192,57 +25193,62 @@
 	
 	  render: function () {
 	    Utilities.changeBackground();
-	    var myMatches = this.matches();
+	    var myMatches = TrekStore.filterStore(this.state.searchvalue);
+	
 	    var carouselIndicators = [];
 	
 	    var carouselInner = [];
 	    var results = myMatches.map(function (trek) {
+	      carouselIndicators = [];
+	      carouselInner = [];
 	      if (trek.trek_pics !== undefined) {
 	        carouselInner = trek.trek_pics.map(function (picture, idx) {
 	          var pictureClass = "item";
 	
 	          if (idx === 0) {
-	            carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': '0', className: 'active' }));
-	            var pictureClass = "item active";
+	            carouselIndicators.push(React.createElement('li', { key: picture.id, 'data-target': '#slider', 'data-slide-to': '0', className: 'active' }));
+	            pictureClass = "item active";
 	          } else {
-	            carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': idx }));
+	            carouselIndicators.push(React.createElement('li', { key: picture.id, 'data-target': '#slider', 'data-slide-to': idx }));
 	          }
 	
 	          return React.createElement(
 	            'div',
-	            { className: pictureClass },
+	            { key: trek.title + picture.id, className: pictureClass },
 	            React.createElement('img', { src: "/assets/" + picture.url })
 	          );
 	        });
 	      };
 	
+	      var makeCarousels = React.createElement(
+	        'section',
+	        { id: trek.id, className: 'carousel slide search-page-image', 'data-interval': 'false' },
+	        React.createElement(
+	          'div',
+	          { onClick: this.showDetail.bind(null, trek.id), className: 'carousel-inner' },
+	          carouselInner
+	        ),
+	        React.createElement(
+	          'a',
+	          { className: 'left carousel-control', href: trek.id, role: 'button', 'data-slide': 'prev' },
+	          React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
+	        ),
+	        React.createElement(
+	          'a',
+	          { className: 'right carousel-control', href: trek.id, role: 'button', 'data-slide': 'next' },
+	          React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+	        ),
+	        React.createElement(
+	          'ol',
+	          { className: 'carousel-indicators' },
+	          carouselIndicators
+	        )
+	      );
+	
 	      return React.createElement(
 	        'div',
 	        { key: trek.id, className: 'col-xs-12 col-sm-6 row-space-5 text-center' },
-	        React.createElement(
-	          'section',
-	          { id: 'slider', className: 'carousel slide search-page-image', 'data-ride': 'carousel' },
-	          React.createElement(
-	            'div',
-	            { onClick: this.showDetail.bind(null, trek.id), className: 'carousel-inner' },
-	            carouselInner
-	          ),
-	          React.createElement(
-	            'a',
-	            { className: 'left carousel-control', href: '#slider', role: 'button', 'data-slide': 'prev' },
-	            React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
-	          ),
-	          React.createElement(
-	            'a',
-	            { className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
-	            React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
-	          ),
-	          React.createElement(
-	            'ol',
-	            { className: 'carousel-indicators' },
-	            carouselIndicators
-	          )
-	        ),
+	        makeCarousels,
 	        React.createElement(
 	          'div',
 	          { onClick: this.showDetail.bind(null, trek.id) },
@@ -26433,6 +26439,13 @@
 	  });
 	};
 	
+	ApiActions.filterStore = function (treks) {
+	  AppDispatcher.dispath({
+	    actionType: "FILTER_STORE",
+	    treks: treks
+	  });
+	};
+	
 	module.exports = ApiActions;
 
 /***/ },
@@ -26843,7 +26856,35 @@
 	    case "CHANGE_TAG":
 	      changeTag(payload);
 	      break;
+	    case "FILTER_STORE":
+	
 	  }
+	};
+	
+	TrekStore.filterStore = function (filterString) {
+	  var matches = [];
+	  if (filterString.length === 0) {
+	    return TrekStore.all();
+	  }
+	
+	  TrekStore.all().forEach(function (trek) {
+	    var city = trek.location.city.slice(0, filterString.length);
+	    var country = trek.location.country.slice(0, filterString.length);
+	    var title = trek.title.slice(0, filterString.length);
+	    var state = trek.location.state.slice(0, filterString.length);
+	
+	    if (city.toLowerCase() === filterString.toLowerCase()) {
+	      matches.push(trek);
+	    } else if (country.toLowerCase() === filterString.toLowerCase()) {
+	      matches.push(trek);
+	    } else if (title.toLowerCase() === filterString.toLowerCase()) {
+	      matches.push(trek);
+	    } else if (state.toLowerCase() === filterString.toLowerCase()) {
+	      matches.push(trek);
+	    }
+	  }.bind(this));
+	
+	  return matches;
 	};
 	
 	TrekStore.all = function () {
@@ -33321,7 +33362,7 @@
 	var TrekStore = __webpack_require__(241);
 	var ApiActions = __webpack_require__(235);
 	var Utilities = __webpack_require__(260);
-	var TrekUtil = __webpack_require__(261);
+	// var TrekUtil = require('../../util/trek_util');
 	// var MapTrekDetail = require('../maps/trek_detail');
 	
 	var TrekDetail = React.createClass({
@@ -33378,7 +33419,7 @@
 	
 	        if (idx === 0) {
 	          carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': '0', className: 'active' }));
-	          var pictureClass = "item active";
+	          pictureClass = "item active";
 	        } else {
 	          carouselIndicators.push(React.createElement('li', { 'data-target': '#slider', 'data-slide-to': idx }));
 	        }
@@ -33413,7 +33454,7 @@
 	          { className: 'detail' },
 	          React.createElement(
 	            'section',
-	            { id: 'slider', className: 'carousel slide', 'data-ride': 'carousel' },
+	            { id: 'slider', className: 'carousel slide', 'data-interval': 'false' },
 	            React.createElement(
 	              'div',
 	              { className: 'carousel-inner' },
@@ -33534,70 +33575,6 @@
 
 /***/ },
 /* 261 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var TrekUtil = React.createClass({
-	  displayName: "TrekUtil",
-	
-	  createSlider: function () {
-	    var carouselIndicators = [];
-	
-	    var carouselInner = [];
-	    if (this.props.trek.trek_pics !== undefined) {
-	      carouselInner = this.props.trek_pics.map(function (picture, idx) {
-	        var pictureClass = "item";
-	
-	        if (idx === 0) {
-	          carouselIndicators.push(React.createElement("li", { "data-target": "#slider", "data-slide-to": "0", className: "active" }));
-	          var pictureClass = "item active";
-	        } else {
-	          carouselIndicators.push(React.createElement("li", { "data-target": "#slider", "data-slide-to": idx }));
-	        }
-	
-	        return React.createElement(
-	          "div",
-	          { className: pictureClass },
-	          React.createElement("img", { src: "/assets/" + picture.url })
-	        );
-	      });
-	    };
-	
-	    return React.createElement(
-	      "section",
-	      { id: "slider", className: "carousel slide", "data-ride": "carousel" },
-	      React.createElement(
-	        "div",
-	        { className: "carousel-inner" },
-	        carouselInner
-	      ),
-	      React.createElement(
-	        "a",
-	        { className: "left carousel-control", href: "#slider", role: "button", "data-slide": "prev" },
-	        React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
-	      ),
-	      React.createElement(
-	        "a",
-	        { className: "right carousel-control", href: "#slider", role: "button", "data-slide": "next" },
-	        React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
-	      )
-	    );
-	  },
-	
-	  render: function () {
-	    {
-	      createSlider;
-	    }
-	  }
-	});
-	
-	// <ol className="carousel-indicators">
-	//   {carouselIndicators}
-	// </ol>
-
-/***/ },
-/* 262 */
 /***/ function(module, exports) {
 
 	// var React = require('react');
@@ -33621,12 +33598,14 @@
 	// });
 
 /***/ },
-/* 263 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
+	var Update = __webpack_require__(264);
 	var TrekStore = __webpack_require__(241);
+	
 	window.TrekStore = TrekStore;
 	
 	function _getCoordsObj(latLng) {
@@ -33648,25 +33627,6 @@
 	    };
 	  },
 	
-	  // _updateMarkers: function() {
-	  //
-	  //   var markers = this.markers;
-	  //   var newTreks = TrekStore.all();
-	  //   var addIds = newTreks.filter(function(trek){
-	  //     return (
-	  //       for (var i = 0; i < this.markers.length; i++){
-	  //
-	  //       }
-	  //
-	  //     );
-	  //   });
-	  //   var removeRoomIds = Object.keys(this.markers).filter(function(roomId){
-	  //     return (typeof newRooms[roomId] === 'undefined');
-	  //   });
-	  //   this._removeMarkers(removeRoomIds);
-	  //   this._addMarkers(addRoomIds, newRooms);
-	  // },
-	
 	  updateTreks: function () {
 	    this.setState({ treks: TrekStore.all() });
 	  },
@@ -33674,12 +33634,13 @@
 	  componentDidMount: function () {
 	    console.log('map mounted');
 	    this.listenerToken = TrekStore.addListener(this.updateTreks);
+	
 	    var map = ReactDOM.findDOMNode(this.refs.map);
 	    var mapOptions = {
 	      center: this.centerTrekCoords(),
 	      zoom: 5
 	    };
-	    window.map = this.map = new google.maps.Map(map, mapOptions);
+	    this.map = new google.maps.Map(map, mapOptions);
 	    this.registerListeners();
 	    this.markers = [];
 	    this.state.treks.forEach(this.createMarkerFromTrek);
@@ -33719,6 +33680,13 @@
 	    toRemove.forEach(this.removeMarker);
 	  },
 	
+	  placeMarker: function (location) {
+	    var marker = new google.maps.Marker({
+	      position: location,
+	      map: this.map
+	    });
+	  },
+	
 	  registerListeners: function () {
 	    var that = this;
 	    google.maps.event.addListener(this.map, 'idle', function () {
@@ -33731,10 +33699,7 @@
 	      };
 	    });
 	    google.maps.event.addListener(this.map, 'click', function (event) {
-	      console.log("map clicked");
-	      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-	      new google.maps.Marker(coords, map);
-	      that.state.onMapClick(coords);
+	      that.placeMarker(event.latLng);
 	    });
 	  },
 	
@@ -33746,7 +33711,6 @@
 	      map: this.map,
 	      trekId: trek.id
 	    });
-	    window.map = this.map;
 	    marker.addListener('click', function () {
 	      that.state.onMarkerClick(trek);
 	    });
@@ -33763,50 +33727,6 @@
 	    }
 	  },
 	
-	  // _addMarkers: function(addRoomIds, newRoomds) {
-	  //   var _markers = this.markers;
-	  //   var _map = this.map;
-	  //   // var image = "/assets/markers/pink.png";
-	  //   // var imageBlue = "/assets/markers/blue.png";
-	  //   // var img = this.sampleMarker;
-	  //   var room, pos, img;
-	  //   var markerBg = this.markerBg;
-	  //
-	  //   addRoomIds.forEach(function(roomId) {
-	  //     room = newRoomds[roomId];
-	  //     img = MarkerImg(room.price, markerBg);
-	  //     pos = new google.maps.LatLng(room.lat, room.lng);
-	  //     _markers[roomId] = new google.maps.Marker({
-	  //       position: pos,
-	  //       map: _map,
-	  //       icon: {
-	  //         url: img,
-	  //         // size: new google.maps.Size(60, 60),
-	  //         scaledSize: new google.maps.Size(55, 35)
-	  //       }
-	  //       // icon: img
-	  //     });
-	  //
-	  //     var toggleBounce = function(marker, status) {
-	  //       if (status) {
-	  //         marker.setAnimation(google.maps.Animation.BOUNCE);
-	  //       } else {
-	  //         marker.setAnimation(null);
-	  //       }
-	  //     };
-	  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
-	  //                                     "mouseenter",
-	  //                                      function() {
-	  //       toggleBounce(_markers[roomId], true);
-	  //     });
-	  //     google.maps.event.addDomListener(document.getElementById('room-' + roomId),
-	  //                                     "mouseleave",
-	  //                                      function() {
-	  //       toggleBounce(_markers[roomId], false);
-	  //     });
-	  //   });
-	  // },
-	
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -33819,7 +33739,7 @@
 	module.exports = Map;
 
 /***/ },
-/* 264 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33900,6 +33820,125 @@
 	//     </ol>
 	//
 	// </section>
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(265);
+
+/***/ },
+/* 265 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule update
+	 */
+	
+	/* global hasOwnProperty:true */
+	
+	'use strict';
+	
+	var assign = __webpack_require__(39);
+	var keyOf = __webpack_require__(79);
+	var invariant = __webpack_require__(13);
+	var hasOwnProperty = ({}).hasOwnProperty;
+	
+	function shallowCopy(x) {
+	  if (Array.isArray(x)) {
+	    return x.concat();
+	  } else if (x && typeof x === 'object') {
+	    return assign(new x.constructor(), x);
+	  } else {
+	    return x;
+	  }
+	}
+	
+	var COMMAND_PUSH = keyOf({ $push: null });
+	var COMMAND_UNSHIFT = keyOf({ $unshift: null });
+	var COMMAND_SPLICE = keyOf({ $splice: null });
+	var COMMAND_SET = keyOf({ $set: null });
+	var COMMAND_MERGE = keyOf({ $merge: null });
+	var COMMAND_APPLY = keyOf({ $apply: null });
+	
+	var ALL_COMMANDS_LIST = [COMMAND_PUSH, COMMAND_UNSHIFT, COMMAND_SPLICE, COMMAND_SET, COMMAND_MERGE, COMMAND_APPLY];
+	
+	var ALL_COMMANDS_SET = {};
+	
+	ALL_COMMANDS_LIST.forEach(function (command) {
+	  ALL_COMMANDS_SET[command] = true;
+	});
+	
+	function invariantArrayCase(value, spec, command) {
+	  !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected target of %s to be an array; got %s.', command, value) : invariant(false) : undefined;
+	  var specValue = spec[command];
+	  !Array.isArray(specValue) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array; got %s. ' + 'Did you forget to wrap your parameter in an array?', command, specValue) : invariant(false) : undefined;
+	}
+	
+	function update(value, spec) {
+	  !(typeof spec === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): You provided a key path to update() that did not contain one ' + 'of %s. Did you forget to include {%s: ...}?', ALL_COMMANDS_LIST.join(', '), COMMAND_SET) : invariant(false) : undefined;
+	
+	  if (hasOwnProperty.call(spec, COMMAND_SET)) {
+	    !(Object.keys(spec).length === 1) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Cannot have more than one key in an object with %s', COMMAND_SET) : invariant(false) : undefined;
+	
+	    return spec[COMMAND_SET];
+	  }
+	
+	  var nextValue = shallowCopy(value);
+	
+	  if (hasOwnProperty.call(spec, COMMAND_MERGE)) {
+	    var mergeObj = spec[COMMAND_MERGE];
+	    !(mergeObj && typeof mergeObj === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a spec of type \'object\'; got %s', COMMAND_MERGE, mergeObj) : invariant(false) : undefined;
+	    !(nextValue && typeof nextValue === 'object') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): %s expects a target of type \'object\'; got %s', COMMAND_MERGE, nextValue) : invariant(false) : undefined;
+	    assign(nextValue, spec[COMMAND_MERGE]);
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_PUSH)) {
+	    invariantArrayCase(value, spec, COMMAND_PUSH);
+	    spec[COMMAND_PUSH].forEach(function (item) {
+	      nextValue.push(item);
+	    });
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_UNSHIFT)) {
+	    invariantArrayCase(value, spec, COMMAND_UNSHIFT);
+	    spec[COMMAND_UNSHIFT].forEach(function (item) {
+	      nextValue.unshift(item);
+	    });
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_SPLICE)) {
+	    !Array.isArray(value) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Expected %s target to be an array; got %s', COMMAND_SPLICE, value) : invariant(false) : undefined;
+	    !Array.isArray(spec[COMMAND_SPLICE]) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. ' + 'Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : invariant(false) : undefined;
+	    spec[COMMAND_SPLICE].forEach(function (args) {
+	      !Array.isArray(args) ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be an array of arrays; got %s. ' + 'Did you forget to wrap your parameters in an array?', COMMAND_SPLICE, spec[COMMAND_SPLICE]) : invariant(false) : undefined;
+	      nextValue.splice.apply(nextValue, args);
+	    });
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_APPLY)) {
+	    !(typeof spec[COMMAND_APPLY] === 'function') ? process.env.NODE_ENV !== 'production' ? invariant(false, 'update(): expected spec of %s to be a function; got %s.', COMMAND_APPLY, spec[COMMAND_APPLY]) : invariant(false) : undefined;
+	    nextValue = spec[COMMAND_APPLY](nextValue);
+	  }
+	
+	  for (var k in spec) {
+	    if (!(ALL_COMMANDS_SET.hasOwnProperty(k) && ALL_COMMANDS_SET[k])) {
+	      nextValue[k] = update(value[k], spec[k]);
+	    }
+	  }
+	
+	  return nextValue;
+	}
+	
+	module.exports = update;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }
 /******/ ]);
