@@ -1,8 +1,12 @@
-var TrekUtil = React.createClass({
-    createSlider: function(trek) {
+var React = require('react');
 
-      if (this.state.trek.trek_pics !== undefined){
-        carouselInner = this.state.trek.trek_pics.map (function (picture, idx){
+var TrekUtil = React.createClass({
+    createSlider: function() {
+      var carouselIndicators = [];
+
+      var carouselInner = [];
+      if (this.props.trek.trek_pics !== undefined){
+        carouselInner = this.props.trek_pics.map (function (picture, idx){
             var pictureClass = "item";
 
             if (idx === 0){
@@ -32,11 +36,16 @@ var TrekUtil = React.createClass({
           <a className="right carousel-control" href="#slider" role="button" data-slide="next">
               <span className="glyphicon glyphicon-chevron-right"></span>
           </a>
-
-          <ol className="carousel-indicators">
-            {carouselIndicators}
-          </ol>
         </section>
       )
-    }
+    },
+
+  render: function(){
+    {createSlider}
+  }
 });
+
+
+// <ol className="carousel-indicators">
+//   {carouselIndicators}
+// </ol>

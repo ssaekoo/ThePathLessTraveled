@@ -102,6 +102,7 @@ body {
   top: 50px;
 }
 
+
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img{
 width: 100%; /* use this, or not */
@@ -110,6 +111,11 @@ margin: auto;
 
 .carousel-inner > .item > img {
     margin: 0 auto;
+    overflow: hidden;
+}
+
+.carousel-control {
+  text-shadow: none;
 }
 
 .profile {
@@ -181,7 +187,8 @@ margin: auto;
   max-width:300px;
   max-height:200px;
   width: auto;
-  height: auto;
+  height: 200px;
+  overflow: hidden;
 }
 
 .right-side-container{

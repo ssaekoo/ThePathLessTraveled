@@ -2,6 +2,8 @@ var React = require('react');
 var TrekStore = require('../../stores/trek_store');
 var ApiActions = require('../../actions/api_actions');
 var Utilities = require('../../util/util');
+var TrekUtil = require('../../util/trek_util');
+// var MapTrekDetail = require('../maps/trek_detail');
 
 var TrekDetail = React.createClass({
   getInitialState: function () {
@@ -89,10 +91,6 @@ var TrekDetail = React.createClass({
                 <a className="right carousel-control" href="#slider" role="button" data-slide="next">
                     <span className="glyphicon glyphicon-chevron-right"></span>
                 </a>
-
-                <ol className="carousel-indicators">
-                  {carouselIndicators}
-                </ol>
               </section>
 
               <div> Title: {this.state.trek.title} </div>

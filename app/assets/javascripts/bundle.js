@@ -55,7 +55,7 @@
 	
 	var App = __webpack_require__(222);
 	var Search = __webpack_require__(223);
-	var LandingPage = __webpack_require__(263);
+	var LandingPage = __webpack_require__(264);
 	var TrekDetail = __webpack_require__(259);
 	// var Map = require('./components/maps/map');
 	
@@ -25101,9 +25101,9 @@
 	var ApiActions = __webpack_require__(235);
 	var TrekStore = __webpack_require__(241);
 	var TrekDetail = __webpack_require__(259);
-	var TrekIndexItem = __webpack_require__(260);
-	var Map = __webpack_require__(261);
-	var Utilities = __webpack_require__(262);
+	var TrekIndexItem = __webpack_require__(262);
+	var Map = __webpack_require__(263);
+	var Utilities = __webpack_require__(260);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -25193,7 +25193,9 @@
 	  render: function () {
 	    Utilities.changeBackground();
 	    var myMatches = this.matches();
+	    var carouselIndicators = [];
 	
+	    var carouselInner = [];
 	    var results = myMatches.map(function (trek) {
 	      if (trek.trek_pics !== undefined) {
 	        carouselInner = trek.trek_pics.map(function (picture, idx) {
@@ -25216,10 +25218,34 @@
 	
 	      return React.createElement(
 	        'div',
-	        { key: trek.id, className: 'col-xs-12 col-sm-6 row-space-5 text-center', onClick: this.showDetail.bind(null, trek.id) },
+	        { key: trek.id, className: 'col-xs-12 col-sm-6 row-space-5 text-center' },
+	        React.createElement(
+	          'section',
+	          { id: 'slider', className: 'carousel slide search-page-image', 'data-ride': 'carousel' },
+	          React.createElement(
+	            'div',
+	            { onClick: this.showDetail.bind(null, trek.id), className: 'carousel-inner' },
+	            carouselInner
+	          ),
+	          React.createElement(
+	            'a',
+	            { className: 'left carousel-control', href: '#slider', role: 'button', 'data-slide': 'prev' },
+	            React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
+	          ),
+	          React.createElement(
+	            'a',
+	            { className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
+	            React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+	          ),
+	          React.createElement(
+	            'ol',
+	            { className: 'carousel-indicators' },
+	            carouselIndicators
+	          )
+	        ),
 	        React.createElement(
 	          'div',
-	          null,
+	          { onClick: this.showDetail.bind(null, trek.id) },
 	          React.createElement(
 	            'h4',
 	            null,
@@ -25228,36 +25254,31 @@
 	        ),
 	        React.createElement(
 	          'div',
-	          null,
+	          { onClick: this.showDetail.bind(null, trek.id) },
 	          'City: ',
 	          trek.location.city
 	        ),
 	        React.createElement(
 	          'div',
-	          null,
+	          { onClick: this.showDetail.bind(null, trek.id) },
 	          'State: ',
 	          trek.location.state
 	        ),
 	        React.createElement(
 	          'div',
-	          null,
+	          { onClick: this.showDetail.bind(null, trek.id) },
 	          'Country: ',
 	          trek.location.country
 	        ),
 	        React.createElement(
 	          'div',
-	          null,
-	          React.createElement('img', { className: 'img-responsive search-page-image', src: "/assets/" + trek.trek_pics[0].url })
-	        ),
-	        React.createElement(
-	          'div',
-	          null,
+	          { onClick: this.showDetail.bind(null, trek.id) },
 	          'Rating: ',
 	          trek.average_rating
 	        ),
 	        React.createElement(
 	          'div',
-	          null,
+	          { onClick: this.showDetail.bind(null, trek.id) },
 	          React.createElement(
 	            'center',
 	            null,
@@ -33299,7 +33320,9 @@
 	var React = __webpack_require__(1);
 	var TrekStore = __webpack_require__(241);
 	var ApiActions = __webpack_require__(235);
-	var Utilities = __webpack_require__(262);
+	var Utilities = __webpack_require__(260);
+	var TrekUtil = __webpack_require__(261);
+	// var MapTrekDetail = require('../maps/trek_detail');
 	
 	var TrekDetail = React.createClass({
 	  displayName: 'TrekDetail',
@@ -33405,11 +33428,6 @@
 	              'a',
 	              { className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
 	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
-	            ),
-	            React.createElement(
-	              'ol',
-	              { className: 'carousel-indicators' },
-	              carouselIndicators
 	            )
 	          ),
 	          React.createElement(
@@ -33497,6 +33515,91 @@
 /* 260 */
 /***/ function(module, exports) {
 
+	var GeneralUtilities = {};
+	
+	// GeneralUtilities.camelize = function(str) {
+	//   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+	//     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+	//   }).replace(/\s+/g, '');
+	// };
+	
+	GeneralUtilities.changeBackground = function () {
+	  document.body.style.backgroundImage = "";
+	  var selection = document.getElementById("nav");
+	  selection.style.backgroundColor = '#D3E3E8';
+	  selection.style.borderBottom = '1px solid black';
+	};
+	
+	module.exports = GeneralUtilities;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var TrekUtil = React.createClass({
+	  displayName: "TrekUtil",
+	
+	  createSlider: function () {
+	    var carouselIndicators = [];
+	
+	    var carouselInner = [];
+	    if (this.props.trek.trek_pics !== undefined) {
+	      carouselInner = this.props.trek_pics.map(function (picture, idx) {
+	        var pictureClass = "item";
+	
+	        if (idx === 0) {
+	          carouselIndicators.push(React.createElement("li", { "data-target": "#slider", "data-slide-to": "0", className: "active" }));
+	          var pictureClass = "item active";
+	        } else {
+	          carouselIndicators.push(React.createElement("li", { "data-target": "#slider", "data-slide-to": idx }));
+	        }
+	
+	        return React.createElement(
+	          "div",
+	          { className: pictureClass },
+	          React.createElement("img", { src: "/assets/" + picture.url })
+	        );
+	      });
+	    };
+	
+	    return React.createElement(
+	      "section",
+	      { id: "slider", className: "carousel slide", "data-ride": "carousel" },
+	      React.createElement(
+	        "div",
+	        { className: "carousel-inner" },
+	        carouselInner
+	      ),
+	      React.createElement(
+	        "a",
+	        { className: "left carousel-control", href: "#slider", role: "button", "data-slide": "prev" },
+	        React.createElement("span", { className: "glyphicon glyphicon-chevron-left" })
+	      ),
+	      React.createElement(
+	        "a",
+	        { className: "right carousel-control", href: "#slider", role: "button", "data-slide": "next" },
+	        React.createElement("span", { className: "glyphicon glyphicon-chevron-right" })
+	      )
+	    );
+	  },
+	
+	  render: function () {
+	    {
+	      createSlider;
+	    }
+	  }
+	});
+	
+	// <ol className="carousel-indicators">
+	//   {carouselIndicators}
+	// </ol>
+
+/***/ },
+/* 262 */
+/***/ function(module, exports) {
+
 	// var React = require('react');
 	// var History = require('react-router').History;
 	//
@@ -33518,7 +33621,7 @@
 	// });
 
 /***/ },
-/* 261 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33614,11 +33717,6 @@
 	    });
 	    toAdd.forEach(this.createMarkerFromTrek);
 	    toRemove.forEach(this.removeMarker);
-	
-	    if (this.state.singletrek) {
-	      this.map.setOptions({ draggable: false });
-	      this.map.setCenter(this.centerTrekCoords());
-	    }
 	  },
 	
 	  registerListeners: function () {
@@ -33633,7 +33731,9 @@
 	      };
 	    });
 	    google.maps.event.addListener(this.map, 'click', function (event) {
+	      console.log("map clicked");
 	      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+	      new google.maps.Marker(coords, map);
 	      that.state.onMapClick(coords);
 	    });
 	  },
@@ -33643,9 +33743,10 @@
 	    var pos = new google.maps.LatLng(trek.location.latitude, trek.location.longitude);
 	    var marker = new google.maps.Marker({
 	      position: pos,
-	      setMap: this.map,
+	      map: this.map,
 	      trekId: trek.id
 	    });
+	    window.map = this.map;
 	    marker.addListener('click', function () {
 	      that.state.onMarkerClick(trek);
 	    });
@@ -33718,28 +33819,7 @@
 	module.exports = Map;
 
 /***/ },
-/* 262 */
-/***/ function(module, exports) {
-
-	var GeneralUtilities = {};
-	
-	// GeneralUtilities.camelize = function(str) {
-	//   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-	//     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
-	//   }).replace(/\s+/g, '');
-	// };
-	
-	GeneralUtilities.changeBackground = function () {
-	  document.body.style.backgroundImage = "";
-	  var selection = document.getElementById("nav");
-	  selection.style.backgroundColor = '#D3E3E8';
-	  selection.style.borderBottom = '1px solid black';
-	};
-	
-	module.exports = GeneralUtilities;
-
-/***/ },
-/* 263 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

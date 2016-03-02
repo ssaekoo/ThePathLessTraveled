@@ -259,6 +259,41 @@ Picture.create!(author_id: 1,
       url: 'tigerLeapingGorge0.jpg'
       )
 
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      url: 'tigerLeapingGorge1.jpg'
+      )
+
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      url: 'tigerLeapingGorge2.jpg'
+      )
+
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      url: 'tigerLeapingGorge3.jpg'
+      )
+
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      url: 'tigerLeapingGorge4.jpg'
+      )
+
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      url: 'tigerLeapingGorge5.jpg'
+      )
+
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      url: 'tigerLeapingGorge6.jpg'
+      )
+
+Picture.create!(author_id: 1,
+      trek_id: 2,
+      url: 'tigerLeapingGorge7.jpg'
+      )
+
 Picture.create!(author_id: 3,
       trek_id: 3,
       url: 'lostCoast0.jpg'
@@ -296,7 +331,7 @@ Picture.create!(author_id: 6,
 
 Picture.create!(author_id: 6,
       trek_id: 6,
-      url: 'pointReyes3.jpp'
+      url: 'pointReyes3.jpg'
       )
 
 Picture.create!(author_id: 7,
@@ -552,7 +587,7 @@ Location.create!(trek_id: 3,
       city: "Lost Coast",
       state: "California",
       latitude: 40.4401,
-      longitude: 124.4095
+      longitude: -124.4095
       )
 
 Location.create!(trek_id: 4,
@@ -561,7 +596,7 @@ Location.create!(trek_id: 4,
       city: "Mariposa",
       state: "California",
       latitude: 37.8499,
-      longitude: 119.5677
+      longitude: -119.5677
       )
 
 Location.create!(trek_id: 5,
@@ -570,7 +605,7 @@ Location.create!(trek_id: 5,
       city: "Flagstaff",
       state: "Arizona",
       latitude: 36.1000,
-      longitude: 112.1000
+      longitude: -112.1000
       )
 
 Location.create!(trek_id: 6,
@@ -579,7 +614,7 @@ Location.create!(trek_id: 6,
       city: "San Francisco",
       state: "California",
       latitude: 37.9968,
-      longitude: 123.0198
+      longitude: -123.0198
       )
 
 Location.create!(trek_id: 7,
@@ -597,5 +632,5 @@ Location.create!(trek_id: 8,
       city: "San Francisco",
       state: "California",
       latitude: 37.8600,
-      longitude: 122.4300
+      longitude: -122.4300
       )

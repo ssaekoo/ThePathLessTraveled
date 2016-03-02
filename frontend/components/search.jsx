@@ -86,7 +86,9 @@ var Search = React.createClass({
   render: function () {
     Utilities.changeBackground();
     var myMatches = this.matches();
+    var carouselIndicators = [];
 
+    var carouselInner = [];
     var results = myMatches.map(function (trek) {
       if (trek.trek_pics !== undefined){
         carouselInner = trek.trek_pics.map (function (picture, idx){
@@ -108,14 +110,29 @@ var Search = React.createClass({
       };
 
       return (
-        <div key={trek.id} className="col-xs-12 col-sm-6 row-space-5 text-center" onClick={this.showDetail.bind(null, trek.id)}>
-          <div><h4>{trek.title}</h4></div>
-          <div>City: {trek.location.city}</div>
-          <div>State: {trek.location.state}</div>
-          <div>Country: {trek.location.country}</div>
-          <div><img className="img-responsive search-page-image" src={"/assets/" + trek.trek_pics[0].url}/></div>
-          <div>Rating: {trek.average_rating}</div>
-          <div><center><span className="stars">{trek.average_rating}</span></center></div>
+        <div key={trek.id} className="col-xs-12 col-sm-6 row-space-5 text-center">
+          <section id="slider" className="carousel slide search-page-image" data-ride="carousel">
+            <div onClick={this.showDetail.bind(null, trek.id)}className="carousel-inner">
+              {carouselInner}
+            </div>
+
+            <a className="left carousel-control" href="#slider" role="button" data-slide="prev">
+                <span className="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a className="right carousel-control" href="#slider" role="button" data-slide="next">
+                <span className="glyphicon glyphicon-chevron-right"></span>
+            </a>
+
+            <ol className="carousel-indicators">
+              {carouselIndicators}
+            </ol>
+          </section>
+          <div onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
+          <div onClick={this.showDetail.bind(null, trek.id)}>City: {trek.location.city}</div>
+          <div onClick={this.showDetail.bind(null, trek.id)}>State: {trek.location.state}</div>
+          <div onClick={this.showDetail.bind(null, trek.id)}>Country: {trek.location.country}</div>
+          <div onClick={this.showDetail.bind(null, trek.id)}>Rating: {trek.average_rating}</div>
+          <div onClick={this.showDetail.bind(null, trek.id)}><center><span className="stars">{trek.average_rating}</span></center></div>
         </div>
       );
     }.bind(this));
