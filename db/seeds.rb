@@ -380,11 +380,11 @@ Tag.create!(tag_name: 'Intermediate')
 
 Tag.create!(tag_name: 'Expert')
 
-Tag.create!(tag_name: 'Req equipment')
+Tag.create!(tag_name: 'Req_equipment')
 
-Tag.create!(tag_name: 'Multi-day')
+Tag.create!(tag_name: 'Multi_day')
 
-Tag.create!(tag_name: 'Single-day')
+Tag.create!(tag_name: 'Single_day')
 
 Tag.create!(tag_name: 'Famous')
 
@@ -392,11 +392,11 @@ Tag.create!(tag_name: 'Populous')
 
 Tag.create!(tag_name: 'Deserted')
 
-Tag.create!(tag_name: 'Water-crossing')
+Tag.create!(tag_name: 'Water_crossing')
 
 Tag.create!(tag_name: 'Mountainous')
 
-Tag.create!(tag_name: 'Family oriented')
+Tag.create!(tag_name: 'Family_oriented')
 
 Tagging.create!(trek_id: 1,
       tag_id: 2

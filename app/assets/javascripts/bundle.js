@@ -27090,15 +27090,13 @@
 	    this.history.pushState(null, '/treks/' + id, {});
 	  },
 	
-	  handleButton: function (id, tag) {
+	  handleButton: function (id) {
 	    if (document.getElementById("button" + id).className === "btn btn-sm btn-default") {
-	      console.log(tag.name);
 	      document.getElementById("button" + id).className = "btn btn-sm btn-primary";
 	    } else {
-	      console.log(tag.name);
 	      document.getElementById("button" + id).className = "btn btn-sm btn-default";
 	    }
-	    // ApiActions.receiveTagChange(id);
+	    ApiActions.receiveTagChange(id);
 	  },
 	
 	  render: function () {
@@ -27214,7 +27212,7 @@
 	    var myTags = Object.keys(myTagObjs).map(function (key) {
 	      return React.createElement(
 	        'button',
-	        { type: 'button', key: key, id: "button" + key, className: 'btn btn-sm btn-default', onClick: this.handleButton.bind(null, key, myTagObjs[key]) },
+	        { type: 'button', key: key, id: "button" + key, className: 'btn btn-sm btn-default', onClick: this.handleButton.bind(null, key) },
 	        ' ',
 	        myTagObjs[key],
 	        ' '
@@ -27267,11 +27265,7 @@
 	          )
 	        )
 	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'col-md-5 search-map' },
-	        React.createElement(Map, { className: 'trek-map', history: this.history, searchValue: this.state.searchValue })
-	      )
+	      React.createElement(Map, { className: 'trek-map', history: this.history, searchValue: this.state.searchValue })
 	    );
 	  }
 	});
@@ -28346,10 +28340,10 @@
 	  ApiUtil.fetchTreksByLocation(location, ApiActions.receiveTreks);
 	};
 	
-	ApiActions.receiveTagChange = function (tag) {
+	ApiActions.receiveTagChange = function (id) {
 	  AppDispatcher.dispatch({
 	    actionType: "CHANGE_TAG",
-	    tags: tag
+	    tagId: id
 	  });
 	};
 	
@@ -28741,9 +28735,18 @@
 	var _tags = {};
 	
 	var resetTags = function () {
-	  for (var i = 1; i <= 12; i++) {
-	    _tags[i] = false;
-	  };
+	  _tags[1] = ["Beginner", false];
+	  _tags[2] = ["Intermediate", false];
+	  _tags[3] = ["Expert", false];
+	  _tags[4] = ["Req_equipment", false];
+	  _tags[5] = ["Multi_day", false];
+	  _tags[6] = ["Single_day", false];
+	  _tags[7] = ["Famous", false];
+	  _tags[8] = ["Populous", false];
+	  _tags[9] = ["Deserted", false];
+	  _tags[10] = ["Water_crossing", false];
+	  _tags[11] = ["Mountainous", false];
+	  _tags[12] = ["Family_oriented", false];
 	};
 	
 	var resetTreks = function (treks) {
@@ -28752,8 +28755,18 @@
 	  TrekStore.__emitChange();
 	};
 	
-	var changeTag = function (tag) {
-	  _tags[tag.id] = !_tags[tag.id];
+	var changeTag = function (id) {
+	  // _tags[id][1] = !_tags[id][1];
+	  // var tag_name = _tags[id][0];
+	  // var myFilteredTreks = [];
+	  // debugger;
+	  // if
+	  //   myFilteredTreks = _filteredTreks.filter(function(trek){
+	  //     var tag_names = trek.tags.map (function(tag){
+	  //       return tag.tag_name;
+	  //     })
+	  //     tag_names.indexOf(tags[id][1])
+	  //   });
 	};
 	
 	TrekStore.__onDispatch = function (payload) {
@@ -28768,7 +28781,7 @@
 	      resetTreks([payload.treks]);
 	      break;
 	    case "CHANGE_TAG":
-	      changeTag(payload);
+	      changeTag(payload.tagId);
 	      break;
 	    case "FILTER_STORE":
 	      filterStore(payload.searchString);
@@ -28797,7 +28810,6 @@
 	    } else if (state.toLowerCase().indexOf(filterString.toLowerCase()) >= 0 && state) {
 	      _filteredTreks.push(trek);
 	    }
-	    console.log(trek);
 	  }.bind(this));
 	
 	  return _filteredTreks;
@@ -35516,6 +35528,7 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var TrekStore = __webpack_require__(261);
+	var TrekModal = __webpack_require__(283);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -35532,7 +35545,8 @@
 	
 	  getInitialState: function () {
 	    return {
-	      treks: TrekStore.filterStore(this.props.searchValue)
+	      treks: TrekStore.filterStore(this.props.searchValue),
+	      showModalState: false
 	    };
 	  },
 	
@@ -35623,9 +35637,9 @@
 	      position: location,
 	      map: this.map
 	    });
-	    google.maps.event.addListener(marker, 'click', function (event) {
-	      that.placeMarker(event.latLng);
-	    });
+	    // google.maps.event.addListener(marker, 'click', function(event) {
+	    //   that.placeMarker(event.latLng);
+	    // });
 	  },
 	
 	  registerListeners: function () {
@@ -35640,7 +35654,8 @@
 	      };
 	    });
 	    google.maps.event.addListener(this.map, 'click', function (event) {
-	      TrekModal.openModal;
+	      console.log("clicked");
+	      that.showModal();
 	      // that.placeMarker(event.latLng);
 	    });
 	  },
@@ -35669,11 +35684,20 @@
 	    }
 	  },
 	
+	  showModal: function () {
+	    this.setState({ showModalState: true });
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { id: 'search-map-canvas', className: 'google-map-canvas', ref: 'map' },
-	      'Map'
+	      { className: 'col-md-5 search-map' },
+	      React.createElement(TrekModal, { show: this.state.showModalState }),
+	      React.createElement(
+	        'div',
+	        { id: 'search-map-canvas', className: 'google-map-canvas', ref: 'map' },
+	        'Map'
+	      )
 	    );
 	  }
 	});
@@ -35706,8 +35730,8 @@
 	    return { modalIsOpen: false };
 	  },
 	
-	  openModal: function () {
-	    this.setState({ modalIsOpen: true });
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ modalIsOpen: newProps.show });
 	  },
 	
 	  closeModal: function () {

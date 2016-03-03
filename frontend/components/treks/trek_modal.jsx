@@ -19,8 +19,8 @@ var TrekModal = React.createClass({
     return { modalIsOpen: false };
   },
 
-  openModal: function() {
-    this.setState({modalIsOpen: true});
+  componentWillReceiveProps: function(newProps){
+    this.setState({modalIsOpen: newProps.show});
   },
 
   closeModal: function() {

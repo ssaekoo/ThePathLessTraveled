@@ -53,15 +53,13 @@ var Search = React.createClass({
     this.history.pushState(null, '/treks/' + id, {});
   },
 
-  handleButton: function(id, tag) {
+  handleButton: function(id) {
     if (document.getElementById("button" + id).className === "btn btn-sm btn-default") {
-      console.log(tag.name);
       document.getElementById("button" + id).className = "btn btn-sm btn-primary";
     } else {
-      console.log(tag.name);
       document.getElementById("button" + id).className = "btn btn-sm btn-default";
     }
-    // ApiActions.receiveTagChange(id);
+    ApiActions.receiveTagChange(id);
   },
 
   render: function () {
@@ -131,7 +129,7 @@ var Search = React.createClass({
 
     var myTags = Object.keys(myTagObjs).map(function(key){
       return (
-        <button type="button" key={key} id={"button" + key} className="btn btn-sm btn-default" onClick={this.handleButton.bind(null, key, myTagObjs[key])}> {myTagObjs[key]} </button>
+        <button type="button" key={key} id={"button" + key} className="btn btn-sm btn-default" onClick={this.handleButton.bind(null, key)}> {myTagObjs[key]} </button>
       )
     }.bind(this));
 
@@ -160,9 +158,7 @@ var Search = React.createClass({
             </div>
           </div>
         </div>
-        <div className="col-md-5 search-map">
-          <Map className='trek-map' history={this.history} searchValue={this.state.searchValue}/>
-        </div>
+        <Map className='trek-map' history={this.history} searchValue={this.state.searchValue}/>
       </div>
     );
   }

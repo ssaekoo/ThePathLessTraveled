@@ -7,9 +7,18 @@ var _filteredTreks = [];
 var _tags = {};
 
 var resetTags = function() {
-  for (var i = 1; i <= 12; i++){
-    _tags[i] = false;
-  };
+  _tags[1] = ["Beginner", false]
+  _tags[2] = ["Intermediate", false]
+  _tags[3] = ["Expert", false]
+  _tags[4] = ["Req_equipment", false]
+  _tags[5] = ["Multi_day", false]
+  _tags[6] = ["Single_day", false]
+  _tags[7] = ["Famous", false]
+  _tags[8] = ["Populous", false]
+  _tags[9] = ["Deserted", false]
+  _tags[10] = ["Water_crossing", false]
+  _tags[11] = ["Mountainous", false]
+  _tags[12] = ["Family_oriented", false]
 };
 
 var resetTreks = function(treks){
@@ -18,9 +27,19 @@ var resetTreks = function(treks){
   TrekStore.__emitChange();
 };
 
-var changeTag = function(tag){
-  _tags[tag.id] = !_tags[tag.id];
-}
+var changeTag = function(id){
+  // _tags[id][1] = !_tags[id][1];
+  // var tag_name = _tags[id][0];
+  // var myFilteredTreks = [];
+  // debugger;
+  // if
+  //   myFilteredTreks = _filteredTreks.filter(function(trek){
+  //     var tag_names = trek.tags.map (function(tag){
+  //       return tag.tag_name;
+  //     })
+  //     tag_names.indexOf(tags[id][1])
+  //   });
+};
 
 TrekStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
@@ -34,7 +53,7 @@ TrekStore.__onDispatch = function (payload) {
       resetTreks([payload.treks]);
       break;
     case "CHANGE_TAG":
-      changeTag(payload);
+      changeTag(payload.tagId);
       break;
     case "FILTER_STORE":
       filterStore(payload.searchString);
@@ -63,11 +82,12 @@ TrekStore.filterStore = function(filterString) {
     } else if(state.toLowerCase().indexOf(filterString.toLowerCase()) >= 0 && state) {
       _filteredTreks.push(trek);
     }
-    console.log(trek);
   }.bind(this));
 
   return _filteredTreks;
 }
+
+
 
 TrekStore.all = function() {
   return _treks.slice(0);

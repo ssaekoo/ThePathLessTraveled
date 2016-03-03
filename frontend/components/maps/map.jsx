@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var TrekStore = require('../../stores/trek_store');
+var TrekModal = require('../treks/trek_modal');
 
 function _getCoordsObj(latLng) {
   return {
@@ -15,7 +16,8 @@ var Map = React.createClass({
 
   getInitialState: function() {
     return({
-      treks: TrekStore.filterStore(this.props.searchValue)
+      treks: TrekStore.filterStore(this.props.searchValue),
+      showModalState: false
     });
   },
 
@@ -105,9 +107,9 @@ var Map = React.createClass({
         position: location,
         map: this.map
     });
-    google.maps.event.addListener(marker, 'click', function(event) {
-      that.placeMarker(event.latLng);
-    });
+    // google.maps.event.addListener(marker, 'click', function(event) {
+    //   that.placeMarker(event.latLng);
+    // });
   },
 
   registerListeners: function(){
@@ -122,7 +124,8 @@ var Map = React.createClass({
       };
     });
     google.maps.event.addListener(this.map, 'click', function(event) {
-      TrekModal.openModal;
+      console.log("clicked");
+      that.showModal();
       // that.placeMarker(event.latLng);
     });
   },
@@ -151,8 +154,16 @@ var Map = React.createClass({
     }
   },
 
+  showModal: function(){
+    this.setState({showModalState: true});
+  },
+
   render: function(){
-    return (<div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div>);
+    return (<div className="col-md-5 search-map">
+              <TrekModal show={this.state.showModalState}/>
+              <div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div>
+            </div>
+    );
   }
 });
 
