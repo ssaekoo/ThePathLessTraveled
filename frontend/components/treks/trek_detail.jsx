@@ -2,7 +2,6 @@ var React = require('react');
 var TrekStore = require('../../stores/trek_store');
 var ApiActions = require('../../actions/api_actions');
 var Utilities = require('../../util/util');
-// var TrekUtil = require('../../util/trek_util');
 // var MapTrekDetail = require('../maps/trek_detail');
 
 var TrekDetail = React.createClass({
@@ -56,10 +55,7 @@ var TrekDetail = React.createClass({
           var pictureClass = "item";
 
           if (idx === 0){
-            carouselIndicators.push (<li data-target="#slider" data-slide-to="0" className="active"></li>);
             pictureClass = "item active";
-          } else {
-            carouselIndicators.push (<li data-target="#slider" data-slide-to={idx}></li>);
           }
 
           return (

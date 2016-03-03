@@ -1,9 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Update = require('react-addons-update');
 var TrekStore = require('../../stores/trek_store');
-
-window.TrekStore = TrekStore;
 
 function _getCoordsObj(latLng) {
   return {
@@ -18,16 +15,24 @@ var Map = React.createClass({
 
   getInitialState: function() {
     return({
-      treks: TrekStore.all()
+      treks: TrekStore.filterStore(this.props.searchValue)
     });
   },
 
   updateTreks: function() {
-    this.setState({treks: TrekStore.all()});
+    this.setState({treks: TrekStore.filterStore(this.props.searchValue)});
+  },
+
+  recenterMap: function(latLng) {
+    this.map.setCenter(latLng);
+    this.map.setZoom(5);
+  },
+
+  componentWillReceiveProps: function(newProps){
+    this.setState({treks: TrekStore.filterStore(newProps.searchValue)});
   },
 
   componentDidMount: function(){
-    console.log('map mounted');
     this.listenerToken = TrekStore.addListener(this.updateTreks);
 
     var map = ReactDOM.findDOMNode(this.refs.map);
@@ -72,12 +77,36 @@ var Map = React.createClass({
     });
     toAdd.forEach(this.createMarkerFromTrek);
     toRemove.forEach(this.removeMarker);
+
+    var countries = {};
+    var currentLargest = [0, ''];
+
+    this.state.treks.forEach(function(trek) {
+      if(countries[trek.location.country] !== undefined) {
+        countries[trek.location.country].push(trek);
+      } else {
+        countries[trek.location.country] = [trek];
+      }
+    });
+
+    for( var country in countries ) {
+      if (countries[country].length > currentLargest[0]) {
+        currentLargest = [countries[country].length, country];
+      }
+    }
+
+    var lat = countries[currentLargest[1]][0].location.latitude;
+    var lng = countries[currentLargest[1]][0].location.longitude;
+    this.recenterMap({lat, lng});
   },
 
   placeMarker: function(location) {
     var marker = new google.maps.Marker({
         position: location,
         map: this.map
+    });
+    google.maps.event.addListener(marker, 'click', function(event) {
+      that.placeMarker(event.latLng);
     });
   },
 
@@ -93,7 +122,8 @@ var Map = React.createClass({
       };
     });
     google.maps.event.addListener(this.map, 'click', function(event) {
-      that.placeMarker(event.latLng);
+      TrekModal.openModal;
+      // that.placeMarker(event.latLng);
     });
   },
 
@@ -106,11 +136,10 @@ var Map = React.createClass({
       trekId: trek.id
     });
     marker.addListener('click', function () {
-      that.state.onMarkerClick(trek)
+      that.props.history.pushState(null, 'treks/' + this.trekId, {})
     });
     this.markers.push(marker);
   },
-
 
   removeMarker: function(marker){
     for(var i = 0; i < this.markers.length; i++){
@@ -123,7 +152,7 @@ var Map = React.createClass({
   },
 
   render: function(){
-    return ( <div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div> );
+    return (<div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div>);
   }
 });
 

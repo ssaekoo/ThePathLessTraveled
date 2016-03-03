@@ -1,5 +1,5 @@
 var React = require('react');
-
+var TrekModal = require('../treks/trek_modal');
 
 module.exports = React.createClass({
   render: function() {
@@ -17,7 +17,7 @@ module.exports = React.createClass({
             </div>
           </div>
         </section>
-
+        {TrekModal}
       </div>
     );
   }

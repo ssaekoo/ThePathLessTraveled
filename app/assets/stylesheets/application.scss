@@ -2,11 +2,27 @@
 @import "bootstrap";
 @import "http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css";
 
+.tag-item-name {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 13px;
+  padding-right: 13px;
+  font-size: 13px;
+  color: #333;
+  font-weight: normal;
+  background-color: #f0f0f0;
+  position: relative;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  float: left;
+  line-height: 24px;
+}
+
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }
 
 body {
@@ -78,7 +94,7 @@ body {
 }
 
 #sidx {
-  top: 50px;
+  top: 70px;
   padding: 0;
   left: 0;
   right: 0;

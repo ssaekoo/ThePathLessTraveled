@@ -35,6 +35,8 @@ class Trek < ActiveRecord::Base
     foreign_key: :author_id,
     class_name: 'Trek'
 
+  accepts_nested_attributes_for :location, :tags
+
   def average_rating
     reviews.average(:rating)
   end

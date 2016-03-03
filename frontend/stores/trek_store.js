@@ -3,7 +3,7 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var TrekStore = new Store(AppDispatcher);
 
 var _treks = [];
-
+var _filteredTreks = [];
 var _tags = {};
 
 var resetTags = function() {
@@ -37,35 +37,36 @@ TrekStore.__onDispatch = function (payload) {
       changeTag(payload);
       break;
     case "FILTER_STORE":
-
+      filterStore(payload.searchString);
+      break;
   }
 };
 
 TrekStore.filterStore = function(filterString) {
-  var matches = [];
+  _filteredTreks = [];
   if(filterString.length === 0){
     return TrekStore.all();
   }
 
   TrekStore.all().forEach(function (trek) {
-    var city = trek.location.city.slice(0, filterString.length);
-    var country = trek.location.country.slice(0, filterString.length);
-    var title = trek.title.slice(0, filterString.length);
-    var state = trek.location.state.slice(0, filterString.length);
+    var city = trek.location.city;
+    var country = trek.location.country;
+    var title = trek.title;
+    var state = trek.location.state;
 
-    if(city.toLowerCase() === filterString.toLowerCase()){
-      matches.push(trek);
-    } else if(country.toLowerCase() === filterString.toLowerCase()){
-      matches.push(trek);
-    } else if(title.toLowerCase() === filterString.toLowerCase()){
-      matches.push(trek);
-    } else if(state.toLowerCase() === filterString.toLowerCase()){
-      matches.push(trek);
+    if(city.toLowerCase().indexOf(filterString.toLowerCase()) >= 0 && city){
+      _filteredTreks.push(trek);
+    } else if(country.toLowerCase().indexOf(filterString.toLowerCase()) >= 0 ){
+      _filteredTreks.push(trek);
+    } else if(title.toLowerCase().indexOf(filterString.toLowerCase()) >= 0 ){
+      _filteredTreks.push(trek);
+    } else if(state.toLowerCase().indexOf(filterString.toLowerCase()) >= 0 && state) {
+      _filteredTreks.push(trek);
     }
-
+    console.log(trek);
   }.bind(this));
 
-  return matches;
+  return _filteredTreks;
 }
 
 TrekStore.all = function() {

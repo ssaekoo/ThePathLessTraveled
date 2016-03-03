@@ -10,6 +10,7 @@ var TrekDetail = require('./treks/trek_detail');
 var TrekIndexItem = require('./treks/trek_item');
 var Map = require('./maps/map');
 var Utilities = require('../util/util');
+var TrekModal = require('./treks/trek_modal');
 // var Tags = require('./tags');
 // var SessionStore = require('./stores/sessionStore.js');
 
@@ -28,37 +29,6 @@ var Search = React.createClass({
     TrekStore.addListener(this.updateTreks);
     ApiActions.requestAllTreks();
   },
-
-  // matches: function () {
-  //   var matches = [];
-  //   if(this.state.searchValue.length === 0){
-  //     return TrekStore.all();
-  //   }
-  //
-  //   TrekStore.all().forEach(function (trek) {
-  //     var city = trek.location.city.slice(0, this.state.searchValue.length);
-  //     var country = trek.location.country.slice(0, this.state.searchValue.length);
-  //     var title = trek.title.slice(0, this.state.searchValue.length);
-  //     var state = trek.location.state.slice(0, this.state.searchValue.length);
-  //
-  //     if(city.toLowerCase() === this.state.searchValue.toLowerCase()){
-  //       matches.push(trek);
-  //     } else if(country.toLowerCase() === this.state.searchValue.toLowerCase()){
-  //       matches.push(trek);
-  //     } else if(title.toLowerCase() === this.state.searchValue.toLowerCase()){
-  //       matches.push(trek);
-  //     } else if(state.toLowerCase() === this.state.searchValue.toLowerCase()){
-  //       matches.push(trek);
-  //     }
-  //
-  //   }.bind(this));
-  //
-  //   if (matches.length === 0) {
-  //     matches.push("No matches");
-  //   }
-  //
-  //   return matches;
-  // },
 
   updateTreks: function () {
     this.setState({treks: TrekStore.all()});
@@ -83,9 +53,20 @@ var Search = React.createClass({
     this.history.pushState(null, '/treks/' + id, {});
   },
 
+  handleButton: function(id, tag) {
+    if (document.getElementById("button" + id).className === "btn btn-sm btn-default") {
+      console.log(tag.name);
+      document.getElementById("button" + id).className = "btn btn-sm btn-primary";
+    } else {
+      console.log(tag.name);
+      document.getElementById("button" + id).className = "btn btn-sm btn-default";
+    }
+    // ApiActions.receiveTagChange(id);
+  },
+
   render: function () {
     Utilities.changeBackground();
-    var myMatches = TrekStore.filterStore(this.state.searchvalue);
+    var myMatches = TrekStore.filterStore(this.state.searchValue);
 
     var carouselIndicators = [];
 
@@ -118,16 +99,12 @@ var Search = React.createClass({
             {carouselInner}
           </div>
 
-          <a className="left carousel-control" href={trek.id} role="button" data-slide="prev">
+          <a className="left carousel-control" href={'#' + trek.id} role="button" data-slide="prev">
               <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
-          <a className="right carousel-control" href={trek.id} role="button" data-slide="next">
+          <a className="right carousel-control" href={'#' + trek.id} role="button" data-slide="next">
               <span className="glyphicon glyphicon-chevron-right"></span>
           </a>
-
-          <ol className="carousel-indicators">
-            {carouselIndicators}
-          </ol>
         </section>
       );
 
@@ -144,37 +121,39 @@ var Search = React.createClass({
       );
     }.bind(this));
 
-    // var myTagObjs = {};
-    //
-    // myMatches.forEach(function (trek) {
-    //   trek.tags.forEach (function (tag) {
-    //       myTagObjs[tag.id] = tag.tag_name;
-    //   });
-    // });
-    //
-    // var myTags = Object.keys(myTagObjs).map(function(key){
-    //   return (
-    //     <li className={key}> {myTagObjs[key]} </li>
-    //   )
-    // });
+    var myTagObjs = {};
+
+    myMatches.forEach(function (trek) {
+      trek.tags.forEach (function (tag) {
+          myTagObjs[tag.id] = tag.tag_name;
+      });
+    });
+
+    var myTags = Object.keys(myTagObjs).map(function(key){
+      return (
+        <button type="button" key={key} id={"button" + key} className="btn btn-sm btn-default" onClick={this.handleButton.bind(null, key, myTagObjs[key])}> {myTagObjs[key]} </button>
+      )
+    }.bind(this));
 
     return(
       <div id="sidx" className="search-container below-nav">
+        <div className="search-filters">
+          <div className = "col-xs-12 col-md-7">
+            <input placeholder="Search" onChange={this.handleInput} value={this.state.searchValue} />
+          </div>
+          <div className = "col-xs-12 col-md-7 tag-container">
+            {myTags}
+          </div>
+        </div>
         <div className="col-xs-12 col-md-7 search-form">
           <div className="row search-form">
-            <div className="search-filters">
-              <div>
-                <input placeholder="Search" onChange={this.handleInput} value={this.state.searchValue} />
-              </div>
-
-              <div className="container-fluid search-list-frame">
-                <div className="row">
-                  <div className="container-fluid search-list-listings">
-                    <div className="row">
-                      <ReactCSSTransitionGroup transitionName="auto" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
-                        {results}
-                      </ReactCSSTransitionGroup>
-                    </div>
+            <div className="container-fluid search-list-frame">
+              <div className="row">
+                <div className="container-fluid search-list-listings">
+                  <div className="row">
+                    <ReactCSSTransitionGroup transitionName="auto" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
+                      {results}
+                    </ReactCSSTransitionGroup>
                   </div>
                 </div>
               </div>
@@ -182,7 +161,7 @@ var Search = React.createClass({
           </div>
         </div>
         <div className="col-md-5 search-map">
-          <Map className='trek-map'/>
+          <Map className='trek-map' history={this.history} searchValue={this.state.searchValue}/>
         </div>
       </div>
     );

@@ -44,12 +44,11 @@ ApiActions.receiveTagChange = function(tag) {
   });
 };
 
-ApiActions.filterStore = function(treks){
+ApiActions.filterStore = function(myString){
   AppDispatcher.dispath({
     actionType: "FILTER_STORE",
-    treks: treks
-  })
-}
-
+    searchString: myString
+  });
+};
 
 module.exports = ApiActions;

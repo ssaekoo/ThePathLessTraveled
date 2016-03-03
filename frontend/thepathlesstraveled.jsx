@@ -6,6 +6,7 @@ var IndexRoute = ReactRouter.IndexRoute;
 var Router = ReactRouter.Router;
 var Redirect = ReactRouter.Redirect;
 var History = require('history');
+var Modal = require('react-modal');
 
 var App = require('./components/app');
 var Search = require('./components/search');
@@ -25,5 +26,9 @@ var routes = (
 // <Route path='map' component={Map} />
 
 document.addEventListener("DOMContentLoaded", function () {
+  var appElement = document.getElementById('content');
+
+  Modal.setAppElement(appElement);
+
   ReactDOM.render(routes, document.getElementById('content'));
 });
