@@ -12,12 +12,16 @@ function _getCoordsObj(latLng) {
 
 var CENTER = {lat: 37.7758, lng: -122.435};
 var _markers = {};
+
+
 var Map = React.createClass({
 
   getInitialState: function() {
     return({
       treks: TrekStore.filterStore(this.props.searchValue),
-      showModalState: false
+      showModalState: false,
+      modalLng: 0.0,
+      modalLat: 0.0
     });
   },
 
@@ -133,12 +137,12 @@ var Map = React.createClass({
     this.recenterMap({lat, lng});
   },
 
-  placeMarker: function(location) {
-    var marker = new google.maps.Marker({
-        position: location,
-        map: this.map
-    });
-  },
+  // placeMarker: function(location) {
+  //   var marker = new google.maps.Marker({
+  //       position: location,
+  //       map: this.map
+  //   });
+  // },
 
   registerListeners: function(){
     var that = this;
@@ -152,9 +156,10 @@ var Map = React.createClass({
       };
     });
     google.maps.event.addListener(this.map, 'click', function(event) {
-      console.log("clicked");
-      that.showModal();
+      that.setState({modalLat: event.latLng.lat(), modalLng: event.latLng.lng()});
       // that.placeMarker(event.latLng);
+      that.showModal();
+
     });
   },
 
@@ -190,7 +195,7 @@ var Map = React.createClass({
 
   render: function(){
     return (<div className="col-md-5 search-map">
-              <TrekModal show={this.state.showModalState}/>
+              <TrekModal modalLng={this.state.modalLng} modalLat={this.state.modalLat} show={this.state.showModalState}/>
               <div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div>
             </div>
     );

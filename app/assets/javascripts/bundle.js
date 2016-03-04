@@ -56,8 +56,8 @@
 	
 	var App = __webpack_require__(242);
 	var Search = __webpack_require__(243);
-	var LandingPage = __webpack_require__(267);
-	var TrekDetail = __webpack_require__(262);
+	var LandingPage = __webpack_require__(284);
+	var TrekDetail = __webpack_require__(279);
 	// var Map = require('./components/maps/map');
 	
 	var routes = React.createElement(
@@ -27028,11 +27028,11 @@
 	
 	var ApiActions = __webpack_require__(255);
 	var TrekStore = __webpack_require__(261);
-	var TrekDetail = __webpack_require__(262);
-	var TrekIndexItem = __webpack_require__(264);
-	var Map = __webpack_require__(265);
-	var Utilities = __webpack_require__(263);
-	var TrekModal = __webpack_require__(266);
+	var TrekDetail = __webpack_require__(279);
+	var TrekIndexItem = __webpack_require__(281);
+	var Map = __webpack_require__(282);
+	var Utilities = __webpack_require__(280);
+	var TrekModal = __webpack_require__(283);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -28794,7 +28794,7 @@
 /* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(268).Store;
+	var Store = __webpack_require__(262).Store;
 	var AppDispatcher = __webpack_require__(256);
 	var TrekStore = new Store(AppDispatcher);
 	
@@ -28864,14 +28864,18 @@
 	  };
 	
 	  treks.forEach(function (trek) {
-	    var keepTrek = false;
+	    var keepTrek = true;
 	
 	    filteringTags.forEach(function (tagId) {
+	      var tagFound = false;
 	      trek.tags.forEach(function (trekTag) {
 	        if (parseInt(trekTag.id) === parseInt(tagId)) {
-	          keepTrek = true;
+	          tagFound = true;
 	        }
 	      });
+	      if (tagFound === false) {
+	        keepTrek = false;
+	      }
 	    });
 	    if (keepTrek === true) {
 	      tagFilteredTreks.push(trek);
@@ -28933,627 +28937,6 @@
 /* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var TrekStore = __webpack_require__(261);
-	var ApiActions = __webpack_require__(255);
-	var Utilities = __webpack_require__(263);
-	// var MapTrekDetail = require('../maps/trek_detail');
-	
-	var TrekDetail = React.createClass({
-	  displayName: 'TrekDetail',
-	
-	  getInitialState: function () {
-	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ trek: this.getStateFromStore() });
-	  },
-	
-	  getStateFromStore: function () {
-	    return TrekStore.find(parseInt(this.props.params.trekId));
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.requestTreksById(parseInt(newProps.params.trekId));
-	  },
-	
-	  componentDidMount: function () {
-	    this.listenerToken = TrekStore.addListener(this._onChange);
-	    ApiActions.requestTreksById(this.props.params.trekId);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.listenerToken.remove();
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ trek: this.getStateFromStore() });
-	  },
-	
-	  render: function () {
-	
-	    var trekTitle = this.state.trek.title;
-	    var carouselIndicators = [];
-	
-	    var carouselInner = [];
-	    if (this.state.trek.trek_pics !== undefined) {
-	      carouselInner = this.state.trek.trek_pics.map(function (picture, idx) {
-	        var pictureClass = "item";
-	
-	        if (idx === 0) {
-	          pictureClass = "item active";
-	        }
-	
-	        return React.createElement(
-	          'div',
-	          { className: pictureClass },
-	          React.createElement('img', { src: "/assets/" + picture.url })
-	        );
-	      });
-	    };
-	
-	    if (this.state.trek.length === undefined) {
-	      return React.createElement('div', null);
-	    }
-	    var myTags = this.state.trek.tags.map(function (tag) {
-	      return React.createElement(
-	        'div',
-	        null,
-	        tag.tag_name
-	      );
-	    });
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'div',
-	        { className: 'trek-detail-pane' },
-	        React.createElement(
-	          'div',
-	          { className: 'detail' },
-	          React.createElement(
-	            'section',
-	            { id: 'slider', className: 'carousel slide', 'data-interval': 'false' },
-	            React.createElement(
-	              'div',
-	              { className: 'carousel-inner' },
-	              carouselInner
-	            ),
-	            React.createElement(
-	              'a',
-	              { className: 'left carousel-control', href: '#slider', role: 'button', 'data-slide': 'prev' },
-	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
-	            ),
-	            React.createElement(
-	              'a',
-	              { className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
-	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Title: ',
-	            this.state.trek.title,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Rating: ',
-	            this.state.trek.average_rating,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Reviews: ',
-	            this.state.trek.total_reviews,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Description: ',
-	            this.state.trek.description,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' ',
-	            this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1),
-	            ': ',
-	            this.state.trek.duration,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Starting elevation: ',
-	            this.state.trek.start_elv,
-	            ' ',
-	            this.state.trek.elv_measure,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Highest elevation: ',
-	            this.state.trek.peak_elv,
-	            ' ',
-	            this.state.trek.elv_measure,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Country: ',
-	            this.state.trek.location.country,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' tags:',
-	            myTags
-	          )
-	        )
-	      ),
-	      this.props.children
-	    );
-	  }
-	});
-	
-	module.exports = TrekDetail;
-	
-	// <div> City: {this.state.trek.location.city} </div>
-	// <div> Latitude: {this.state.trek.location.latitude} </div>
-	// <div> Longitude: {this.state.trek.location.longitude} </div>
-
-/***/ },
-/* 263 */
-/***/ function(module, exports) {
-
-	var GeneralUtilities = {};
-	
-	// GeneralUtilities.camelize = function(str) {
-	//   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-	//     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
-	//   }).replace(/\s+/g, '');
-	// };
-	
-	GeneralUtilities.changeBackground = function () {
-	  document.body.style.backgroundImage = "";
-	  var selection = document.getElementById("nav");
-	  selection.style.backgroundColor = '#D3E3E8';
-	  selection.style.borderBottom = '1px solid black';
-	};
-	
-	module.exports = GeneralUtilities;
-
-/***/ },
-/* 264 */
-/***/ function(module, exports) {
-
-	// var React = require('react');
-	// var History = require('react-router').History;
-	//
-	// module.exports = React.createClass({
-	//   mixins: [History],
-	//
-	//   showDetail: function () {
-	//     this.history.pushState(null, '/treks/' + this.props.trek.id, {});
-	//   },
-	//
-	//   render: function () {
-	//     return(
-	//       <li onClick={this.showDetail} className="trek-list-item">
-	//         <p>{this.props.trek.title}</p>
-	//         <p>{this.props.trek.description}</p>
-	//       </li>
-	//     );
-	//   }
-	// });
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	var TrekStore = __webpack_require__(261);
-	var TrekModal = __webpack_require__(266);
-	
-	function _getCoordsObj(latLng) {
-	  return {
-	    lat: latLng.lat(),
-	    lng: latLng.lng()
-	  };
-	}
-	
-	var CENTER = { lat: 37.7758, lng: -122.435 };
-	var _markers = {};
-	var Map = React.createClass({
-	  displayName: 'Map',
-	
-	
-	  getInitialState: function () {
-	    return {
-	      treks: TrekStore.filterStore(this.props.searchValue),
-	      showModalState: false
-	    };
-	  },
-	
-	  updateTreks: function () {
-	    this.setState({ treks: TrekStore.filterStore(this.props.searchValue) });
-	  },
-	
-	  recenterMap: function (latLng) {
-	    this.map.setCenter(latLng);
-	    this.map.setZoom(5);
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    this.setState({ treks: TrekStore.filterStore(newProps.searchValue) });
-	  },
-	
-	  componentDidMount: function () {
-	    this.listenerToken = TrekStore.addListener(this.updateTreks);
-	
-	    var map = ReactDOM.findDOMNode(this.refs.map);
-	    var mapOptions = {
-	      center: this.centerTrekCoords(),
-	      zoom: 5
-	    };
-	    this.map = new google.maps.Map(map, mapOptions);
-	    this.registerListeners();
-	    this.markers = [];
-	    _markers = {};
-	    this.state.treks.forEach(this.createMarkerFromTrek);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.listenerToken.remove();
-	  },
-	
-	  centerTrekCoords: function () {
-	    return CENTER;
-	  },
-	
-	  componentDidUpdate: function (oldstate) {
-	    this._onChange();
-	    var that = this;
-	
-	    var toggleBounce = function (marker, status) {
-	      if (status) {
-	        marker.setAnimation(google.maps.Animation.BOUNCE);
-	      } else {
-	        marker.setAnimation(null);
-	      }
-	    };
-	
-	    for (var key in _markers) {
-	      var trekDoc = document.getElementById('trek-' + key);
-	      if (trekDoc) {
-	        (function (k) {
-	          google.maps.event.addDomListener(trekDoc, "mouseenter", function () {
-	            toggleBounce(_markers[k], true);
-	            var lat = _markers[k].position.lat();
-	            var lng = _markers[k].position.lng();
-	            that.recenterMap({ lat, lng });
-	          });
-	          google.maps.event.addDomListener(trekDoc, "mouseleave", function () {
-	            toggleBounce(_markers[k], false);
-	          });
-	        })(key);
-	      }
-	    }
-	  },
-	
-	  _onChange: function () {
-	    var treks = this.state.treks;
-	    var toAdd = [],
-	        toRemove = this.markers.slice(0);
-	    treks.forEach(function (trek, idx) {
-	      var idx = -1;
-	      for (var i = 0; i < toRemove.length; i++) {
-	        if (toRemove[i].trekId == trek.id) {
-	          idx = i;
-	          break;
-	        }
-	      }
-	      if (idx === -1) {
-	        toAdd.push(trek);
-	      } else {
-	        toRemove.splice(idx, 1);
-	      }
-	    });
-	    toAdd.forEach(this.createMarkerFromTrek);
-	    toRemove.forEach(this.removeMarker);
-	
-	    var countries = {};
-	    var currentLargest = [0, ''];
-	
-	    this.state.treks.forEach(function (trek) {
-	      if (countries[trek.location.country] !== undefined) {
-	        countries[trek.location.country].push(trek);
-	      } else {
-	        countries[trek.location.country] = [trek];
-	      }
-	    });
-	
-	    for (var country in countries) {
-	      if (countries[country].length > currentLargest[0]) {
-	        currentLargest = [countries[country].length, country];
-	      }
-	    }
-	
-	    var lat = countries[currentLargest[1]][0].location.latitude;
-	    var lng = countries[currentLargest[1]][0].location.longitude;
-	    this.recenterMap({ lat, lng });
-	  },
-	
-	  placeMarker: function (location) {
-	    var marker = new google.maps.Marker({
-	      position: location,
-	      map: this.map
-	    });
-	  },
-	
-	  registerListeners: function () {
-	    var that = this;
-	    google.maps.event.addListener(this.map, 'idle', function () {
-	      var bounds = that.map.getBounds();
-	      var northEast = _getCoordsObj(bounds.getNorthEast());
-	      var southWest = _getCoordsObj(bounds.getSouthWest());
-	      var bounds = {
-	        northEast: northEast,
-	        southWest: southWest
-	      };
-	    });
-	    google.maps.event.addListener(this.map, 'click', function (event) {
-	      console.log("clicked");
-	      that.showModal();
-	      // that.placeMarker(event.latLng);
-	    });
-	  },
-	
-	  createMarkerFromTrek: function (trek) {
-	    var that = this;
-	    var pos = new google.maps.LatLng(trek.location.latitude, trek.location.longitude);
-	    var marker = new google.maps.Marker({
-	      position: pos,
-	      map: this.map,
-	      trekId: trek.id
-	    });
-	    _markers[trek.id] = marker;
-	
-	    marker.addListener('click', function () {
-	      that.props.history.pushState(null, 'treks/' + this.trekId, {});
-	    });
-	    this.markers.push(marker);
-	  },
-	
-	  removeMarker: function (marker) {
-	    for (var i = 0; i < this.markers.length; i++) {
-	      if (this.markers[i].trekId === marker.trekId) {
-	        this.markers[i].setMap(null);
-	        this.markers.splice(i, 1);
-	        break;
-	      }
-	    }
-	  },
-	
-	  showModal: function () {
-	    this.setState({ showModalState: true });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'col-md-5 search-map' },
-	      React.createElement(TrekModal, { show: this.state.showModalState }),
-	      React.createElement(
-	        'div',
-	        { id: 'search-map-canvas', className: 'google-map-canvas', ref: 'map' },
-	        'Map'
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = Map;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Modal = __webpack_require__(222);
-	
-	const customStyles = {
-	  content: {
-	    top: '50%',
-	    left: '50%',
-	    right: 'auto',
-	    bottom: 'auto',
-	    marginRight: '-50%',
-	    transform: 'translate(-50%, -50%)'
-	  }
-	};
-	
-	var TrekModal = React.createClass({
-	  displayName: 'TrekModal',
-	
-	
-	  getInitialState: function () {
-	    return { modalIsOpen: false };
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    this.setState({ modalIsOpen: newProps.show });
-	  },
-	
-	  closeModal: function () {
-	    this.setState({ modalIsOpen: false });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        Modal,
-	        {
-	          isOpen: this.state.modalIsOpen,
-	          onRequestClose: this.closeModal,
-	          style: customStyles },
-	        React.createElement(
-	          'form',
-	          { className: 'form-horizontal', role: 'form' },
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { className: 'col-sm-2 control-label',
-	                'for': 'inputEmail3' },
-	              'Email'
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'col-sm-10' },
-	              React.createElement('input', { type: 'email', className: 'form-control',
-	                id: 'inputEmail3', placeholder: 'Email' })
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'label',
-	              { className: 'col-sm-2 control-label',
-	                'for': 'inputPassword3' },
-	              'Password'
-	            ),
-	            React.createElement(
-	              'div',
-	              { className: 'col-sm-10' },
-	              React.createElement('input', { type: 'password', className: 'form-control',
-	                id: 'inputPassword3', placeholder: 'Password' })
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'div',
-	              { className: 'col-sm-offset-2 col-sm-10' },
-	              React.createElement(
-	                'div',
-	                { className: 'checkbox' },
-	                React.createElement(
-	                  'label',
-	                  null,
-	                  React.createElement('input', { type: 'checkbox' }),
-	                  ' Remember me'
-	                )
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'form-group' },
-	            React.createElement(
-	              'div',
-	              { className: 'col-sm-offset-2 col-sm-10' },
-	              React.createElement(
-	                'button',
-	                { type: 'submit', className: 'btn btn-default' },
-	                'Sign in'
-	              )
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          'button',
-	          { onClick: this.closeModal },
-	          'close'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = TrekModal;
-
-/***/ },
-/* 267 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var TrekModal = __webpack_require__(266);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  componentWillMount: function () {
-	    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
-	    var selection = document.getElementById("nav");
-	    selection.style.backgroundColor = 'transparent';
-	    selection.style.borderBottom = 'none';
-	  },
-	
-	  componentWillUnmount: function () {
-	    document.body.style.backgroundImage = null;
-	    var selection = document.getElementById("nav");
-	    selection.style.backgroundColor = '#D3E3E8';
-	    selection.style.borderBottom = '1px solid black';
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'landing-page' },
-	      React.createElement(
-	        'section',
-	        { id: 'parallax', className: 'parallax welcome-page' },
-	        React.createElement(
-	          'div',
-	          { className: 'row' },
-	          React.createElement(
-	            'div',
-	            { className: 'container container-custom text-center landing-welcome' },
-	            React.createElement(
-	              'h1',
-	              { className: 'welcome logo' },
-	              'The Path Less Traveled'
-	            ),
-	            React.createElement(
-	              'h4',
-	              { className: 'welcome tagline' },
-	              'Wander. Explore. Discover.'
-	            ),
-	            React.createElement(
-	              'a',
-	              { className: 'btn btn-danger search-btn', href: '/#/search' },
-	              'Begin Exploring'
-	            )
-	          )
-	        )
-	      ),
-	      TrekModal
-	    );
-	  }
-	});
-
-/***/ },
-/* 268 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/**
 	 * Copyright (c) 2014-2015, Facebook, Inc.
 	 * All rights reserved.
@@ -29563,15 +28946,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(269);
-	module.exports.MapStore = __webpack_require__(272);
-	module.exports.Mixin = __webpack_require__(284);
-	module.exports.ReduceStore = __webpack_require__(273);
-	module.exports.Store = __webpack_require__(274);
+	module.exports.Container = __webpack_require__(263);
+	module.exports.MapStore = __webpack_require__(266);
+	module.exports.Mixin = __webpack_require__(278);
+	module.exports.ReduceStore = __webpack_require__(267);
+	module.exports.Store = __webpack_require__(268);
 
 
 /***/ },
-/* 269 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29593,10 +28976,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(270);
+	var FluxStoreGroup = __webpack_require__(264);
 	
 	var invariant = __webpack_require__(259);
-	var shallowEqual = __webpack_require__(271);
+	var shallowEqual = __webpack_require__(265);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -29754,7 +29137,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 270 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29835,7 +29218,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 271 */
+/* 265 */
 /***/ function(module, exports) {
 
 	/**
@@ -29890,7 +29273,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 272 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29911,8 +29294,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(273);
-	var Immutable = __webpack_require__(283);
+	var FluxReduceStore = __webpack_require__(267);
+	var Immutable = __webpack_require__(277);
 	
 	var invariant = __webpack_require__(259);
 	
@@ -30040,7 +29423,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 273 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30061,9 +29444,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(274);
+	var FluxStore = __webpack_require__(268);
 	
-	var abstractMethod = __webpack_require__(282);
+	var abstractMethod = __webpack_require__(276);
 	var invariant = __webpack_require__(259);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -30147,7 +29530,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 274 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30166,7 +29549,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(275);
+	var _require = __webpack_require__(269);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -30330,7 +29713,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 275 */
+/* 269 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30343,14 +29726,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(276)
+	  EventEmitter: __webpack_require__(270)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 276 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30369,11 +29752,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(277);
-	var EventSubscriptionVendor = __webpack_require__(279);
+	var EmitterSubscription = __webpack_require__(271);
+	var EventSubscriptionVendor = __webpack_require__(273);
 	
-	var emptyFunction = __webpack_require__(281);
-	var invariant = __webpack_require__(280);
+	var emptyFunction = __webpack_require__(275);
+	var invariant = __webpack_require__(274);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -30547,7 +29930,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 277 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -30568,7 +29951,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(278);
+	var EventSubscription = __webpack_require__(272);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -30600,7 +29983,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 278 */
+/* 272 */
 /***/ function(module, exports) {
 
 	/**
@@ -30654,7 +30037,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 279 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30673,7 +30056,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(280);
+	var invariant = __webpack_require__(274);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -30763,7 +30146,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 280 */
+/* 274 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30818,7 +30201,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 281 */
+/* 275 */
 /***/ function(module, exports) {
 
 	/**
@@ -30860,7 +30243,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 282 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -30887,7 +30270,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 283 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -35874,7 +35257,7 @@
 	}));
 
 /***/ },
-/* 284 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -35891,7 +35274,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(270);
+	var FluxStoreGroup = __webpack_require__(264);
 	
 	var invariant = __webpack_require__(259);
 	
@@ -35995,6 +35378,769 @@
 	
 	module.exports = FluxMixinLegacy;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 279 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var TrekStore = __webpack_require__(261);
+	var ApiActions = __webpack_require__(255);
+	var Utilities = __webpack_require__(280);
+	// var MapTrekDetail = require('../maps/trek_detail');
+	
+	var TrekDetail = React.createClass({
+	  displayName: 'TrekDetail',
+	
+	  getInitialState: function () {
+	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ trek: this.getStateFromStore() });
+	  },
+	
+	  getStateFromStore: function () {
+	    return TrekStore.find(parseInt(this.props.params.trekId));
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.requestTreksById(parseInt(newProps.params.trekId));
+	  },
+	
+	  componentDidMount: function () {
+	    this.listenerToken = TrekStore.addListener(this._onChange);
+	    ApiActions.requestTreksById(this.props.params.trekId);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ trek: this.getStateFromStore() });
+	  },
+	
+	  render: function () {
+	
+	    var trekTitle = this.state.trek.title;
+	    var carouselIndicators = [];
+	
+	    var carouselInner = [];
+	    if (this.state.trek.trek_pics !== undefined) {
+	      carouselInner = this.state.trek.trek_pics.map(function (picture, idx) {
+	        var pictureClass = "item";
+	
+	        if (idx === 0) {
+	          pictureClass = "item active";
+	        }
+	
+	        return React.createElement(
+	          'div',
+	          { className: pictureClass },
+	          React.createElement('img', { src: "/assets/" + picture.url })
+	        );
+	      });
+	    };
+	
+	    if (this.state.trek.length === undefined) {
+	      return React.createElement('div', null);
+	    }
+	    var myTags = this.state.trek.tags.map(function (tag) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        tag.tag_name
+	      );
+	    });
+	
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'trek-detail-pane' },
+	        React.createElement(
+	          'div',
+	          { className: 'detail' },
+	          React.createElement(
+	            'section',
+	            { id: 'slider', className: 'carousel slide', 'data-interval': 'false' },
+	            React.createElement(
+	              'div',
+	              { className: 'carousel-inner' },
+	              carouselInner
+	            ),
+	            React.createElement(
+	              'a',
+	              { className: 'left carousel-control', href: '#slider', role: 'button', 'data-slide': 'prev' },
+	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
+	            ),
+	            React.createElement(
+	              'a',
+	              { className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
+	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Title: ',
+	            this.state.trek.title,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Rating: ',
+	            this.state.trek.average_rating,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Reviews: ',
+	            this.state.trek.total_reviews,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Description: ',
+	            this.state.trek.description,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' ',
+	            this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1),
+	            ': ',
+	            this.state.trek.duration,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Starting elevation: ',
+	            this.state.trek.start_elv,
+	            ' ',
+	            this.state.trek.elv_measure,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Highest elevation: ',
+	            this.state.trek.peak_elv,
+	            ' ',
+	            this.state.trek.elv_measure,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' Country: ',
+	            this.state.trek.location.country,
+	            ' '
+	          ),
+	          React.createElement(
+	            'div',
+	            null,
+	            ' tags:',
+	            myTags
+	          )
+	        )
+	      ),
+	      this.props.children
+	    );
+	  }
+	});
+	
+	module.exports = TrekDetail;
+	
+	// <div> City: {this.state.trek.location.city} </div>
+	// <div> Latitude: {this.state.trek.location.latitude} </div>
+	// <div> Longitude: {this.state.trek.location.longitude} </div>
+
+/***/ },
+/* 280 */
+/***/ function(module, exports) {
+
+	var GeneralUtilities = {};
+	
+	// GeneralUtilities.camelize = function(str) {
+	//   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+	//     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+	//   }).replace(/\s+/g, '');
+	// };
+	
+	GeneralUtilities.changeBackground = function () {
+	  document.body.style.backgroundImage = "";
+	  var selection = document.getElementById("nav");
+	  selection.style.backgroundColor = '#D3E3E8';
+	  selection.style.borderBottom = '1px solid black';
+	};
+	
+	module.exports = GeneralUtilities;
+
+/***/ },
+/* 281 */
+/***/ function(module, exports) {
+
+	// var React = require('react');
+	// var History = require('react-router').History;
+	//
+	// module.exports = React.createClass({
+	//   mixins: [History],
+	//
+	//   showDetail: function () {
+	//     this.history.pushState(null, '/treks/' + this.props.trek.id, {});
+	//   },
+	//
+	//   render: function () {
+	//     return(
+	//       <li onClick={this.showDetail} className="trek-list-item">
+	//         <p>{this.props.trek.title}</p>
+	//         <p>{this.props.trek.description}</p>
+	//       </li>
+	//     );
+	//   }
+	// });
+
+/***/ },
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var TrekStore = __webpack_require__(261);
+	var TrekModal = __webpack_require__(283);
+	
+	function _getCoordsObj(latLng) {
+	  return {
+	    lat: latLng.lat(),
+	    lng: latLng.lng()
+	  };
+	}
+	
+	var CENTER = { lat: 37.7758, lng: -122.435 };
+	var _markers = {};
+	
+	var Map = React.createClass({
+	  displayName: 'Map',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      treks: TrekStore.filterStore(this.props.searchValue),
+	      showModalState: false,
+	      modalLng: 0.0,
+	      modalLat: 0.0
+	    };
+	  },
+	
+	  updateTreks: function () {
+	    this.setState({ treks: TrekStore.filterStore(this.props.searchValue) });
+	  },
+	
+	  recenterMap: function (latLng) {
+	    this.map.setCenter(latLng);
+	    this.map.setZoom(5);
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ treks: TrekStore.filterStore(newProps.searchValue) });
+	  },
+	
+	  componentDidMount: function () {
+	    this.listenerToken = TrekStore.addListener(this.updateTreks);
+	
+	    var map = ReactDOM.findDOMNode(this.refs.map);
+	    var mapOptions = {
+	      center: this.centerTrekCoords(),
+	      zoom: 5
+	    };
+	    this.map = new google.maps.Map(map, mapOptions);
+	    this.registerListeners();
+	    this.markers = [];
+	    _markers = {};
+	    this.state.treks.forEach(this.createMarkerFromTrek);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  centerTrekCoords: function () {
+	    return CENTER;
+	  },
+	
+	  componentDidUpdate: function (oldstate) {
+	    this._onChange();
+	    var that = this;
+	
+	    var toggleBounce = function (marker, status) {
+	      if (status) {
+	        marker.setAnimation(google.maps.Animation.BOUNCE);
+	      } else {
+	        marker.setAnimation(null);
+	      }
+	    };
+	
+	    for (var key in _markers) {
+	      var trekDoc = document.getElementById('trek-' + key);
+	      if (trekDoc) {
+	        (function (k) {
+	          google.maps.event.addDomListener(trekDoc, "mouseenter", function () {
+	            toggleBounce(_markers[k], true);
+	            var lat = _markers[k].position.lat();
+	            var lng = _markers[k].position.lng();
+	            that.recenterMap({ lat, lng });
+	          });
+	          google.maps.event.addDomListener(trekDoc, "mouseleave", function () {
+	            toggleBounce(_markers[k], false);
+	          });
+	        })(key);
+	      }
+	    }
+	  },
+	
+	  _onChange: function () {
+	    var treks = this.state.treks;
+	    var toAdd = [],
+	        toRemove = this.markers.slice(0);
+	    treks.forEach(function (trek, idx) {
+	      var idx = -1;
+	      for (var i = 0; i < toRemove.length; i++) {
+	        if (toRemove[i].trekId == trek.id) {
+	          idx = i;
+	          break;
+	        }
+	      }
+	      if (idx === -1) {
+	        toAdd.push(trek);
+	      } else {
+	        toRemove.splice(idx, 1);
+	      }
+	    });
+	    toAdd.forEach(this.createMarkerFromTrek);
+	    toRemove.forEach(this.removeMarker);
+	
+	    var countries = {};
+	    var currentLargest = [0, ''];
+	
+	    this.state.treks.forEach(function (trek) {
+	      if (countries[trek.location.country] !== undefined) {
+	        countries[trek.location.country].push(trek);
+	      } else {
+	        countries[trek.location.country] = [trek];
+	      }
+	    });
+	
+	    for (var country in countries) {
+	      if (countries[country].length > currentLargest[0]) {
+	        currentLargest = [countries[country].length, country];
+	      }
+	    }
+	
+	    var lat = countries[currentLargest[1]][0].location.latitude;
+	    var lng = countries[currentLargest[1]][0].location.longitude;
+	    this.recenterMap({ lat, lng });
+	  },
+	
+	  // placeMarker: function(location) {
+	  //   var marker = new google.maps.Marker({
+	  //       position: location,
+	  //       map: this.map
+	  //   });
+	  // },
+	
+	  registerListeners: function () {
+	    var that = this;
+	    google.maps.event.addListener(this.map, 'idle', function () {
+	      var bounds = that.map.getBounds();
+	      var northEast = _getCoordsObj(bounds.getNorthEast());
+	      var southWest = _getCoordsObj(bounds.getSouthWest());
+	      var bounds = {
+	        northEast: northEast,
+	        southWest: southWest
+	      };
+	    });
+	    google.maps.event.addListener(this.map, 'click', function (event) {
+	      that.setState({ modalLat: event.latLng.lat(), modalLng: event.latLng.lng() });
+	      // that.placeMarker(event.latLng);
+	      that.showModal();
+	    });
+	  },
+	
+	  createMarkerFromTrek: function (trek) {
+	    var that = this;
+	    var pos = new google.maps.LatLng(trek.location.latitude, trek.location.longitude);
+	    var marker = new google.maps.Marker({
+	      position: pos,
+	      map: this.map,
+	      trekId: trek.id
+	    });
+	    _markers[trek.id] = marker;
+	
+	    marker.addListener('click', function () {
+	      that.props.history.pushState(null, 'treks/' + this.trekId, {});
+	    });
+	    this.markers.push(marker);
+	  },
+	
+	  removeMarker: function (marker) {
+	    for (var i = 0; i < this.markers.length; i++) {
+	      if (this.markers[i].trekId === marker.trekId) {
+	        this.markers[i].setMap(null);
+	        this.markers.splice(i, 1);
+	        break;
+	      }
+	    }
+	  },
+	
+	  showModal: function () {
+	    this.setState({ showModalState: true });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'col-md-5 search-map' },
+	      React.createElement(TrekModal, { modalLng: this.state.modalLng, modalLat: this.state.modalLat, show: this.state.showModalState }),
+	      React.createElement(
+	        'div',
+	        { id: 'search-map-canvas', className: 'google-map-canvas', ref: 'map' },
+	        'Map'
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Map;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(244);
+	var Modal = __webpack_require__(222);
+	var ApiActions = __webpack_require__(255);
+	var MapTrekCreate = __webpack_require__(285);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var TrekModal = React.createClass({
+	  displayName: 'TrekModal',
+	
+	
+	  getInitialState: function () {
+	    return { modalIsOpen: false, modalLat: 0.0, modalLng: 0.0
+	    };
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ modalIsOpen: newProps.show,
+	      modalLng: newProps.modalLng,
+	      modalLat: newProps.modalLat
+	    });
+	  },
+	
+	  closeModal: function () {
+	    this.setState({ modalIsOpen: false });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        Modal,
+	        {
+	          isOpen: this.state.modalIsOpen,
+	          onRequestClose: this.closeModal,
+	          style: customStyles },
+	        React.createElement(
+	          'div',
+	          { className: 'trek-create-container' },
+	          React.createElement(
+	            'h3',
+	            { className: 'text-center' },
+	            'Create new Trek'
+	          ),
+	          React.createElement(
+	            'form',
+	            { className: 'form-horizontal', role: 'form' },
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-10' },
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekTitle', placeholder: 'Title' })
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-10' },
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekDescription', placeholder: 'Description' })
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-10' },
+	                React.createElement(
+	                  'label',
+	                  { className: 'col-sm-2 control-label',
+	                    'for': 'trekLatLng' },
+	                  'LatLng'
+	                ),
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekLatitude', placeholder: this.state.modalLat }),
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekLongitude', placeholder: this.state.modalLng })
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-10' },
+	                React.createElement(
+	                  'label',
+	                  { className: 'col-sm-2 control-label',
+	                    'for': 'trekAttributes' },
+	                  'Attributes'
+	                ),
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekStartElevation', placeholder: 'Start Elevation' }),
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekPeakElevation', placeholder: 'Peak Elevation' }),
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekElevationMeasure', placeholder: 'Elevation Measure' })
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-offset-2 col-sm-10' },
+	                React.createElement(
+	                  'button',
+	                  { type: 'submit', className: 'btn btn-primary' },
+	                  'create'
+	                ),
+	                React.createElement(
+	                  'button',
+	                  { onClick: this.closeModal, className: 'btn btn-danger' },
+	                  'cancel'
+	                )
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	// to readd back in <MapTrekCreate latitude={this.state.modalLat} longitude={this.state.modalLng}/>
+	module.exports = TrekModal;
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var TrekModal = __webpack_require__(283);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  componentWillMount: function () {
+	    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
+	    var selection = document.getElementById("nav");
+	    selection.style.backgroundColor = 'transparent';
+	    selection.style.borderBottom = 'none';
+	  },
+	
+	  componentWillUnmount: function () {
+	    document.body.style.backgroundImage = null;
+	    document.body.style.backgroundColor = '#EBEDED';
+	    var selection = document.getElementById("nav");
+	    selection.style.backgroundColor = '#D3E3E8';
+	    selection.style.borderBottom = '1px solid black';
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'landing-page' },
+	      React.createElement(
+	        'section',
+	        { id: 'parallax', className: 'parallax welcome-page' },
+	        React.createElement(
+	          'div',
+	          { className: 'row' },
+	          React.createElement(
+	            'div',
+	            { className: 'container container-custom text-center landing-welcome' },
+	            React.createElement(
+	              'h1',
+	              { className: 'welcome logo' },
+	              'The Path Less Traveled'
+	            ),
+	            React.createElement(
+	              'h4',
+	              { className: 'welcome tagline' },
+	              'Wander. Explore. Discover.'
+	            ),
+	            React.createElement(
+	              'a',
+	              { className: 'btn btn-danger search-btn', href: '/#/search' },
+	              'Begin Exploring'
+	            )
+	          )
+	        )
+	      ),
+	      TrekModal
+	    );
+	  }
+	});
+
+/***/ },
+/* 285 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	
+	function _getCoordsObj(latLng) {
+	  return {
+	    lat: latLng.lat(),
+	    lng: latLng.lng()
+	  };
+	}
+	
+	var CreateTrekMap = React.createClass({
+	  displayName: 'CreateTrekMap',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      lat: this.props.latitude,
+	      lng: this.props.longitude
+	    };
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ lat: this.props.latitude,
+	      lng: this.props.longitude });
+	  },
+	
+	  componentDidMount: function () {
+	    var map = ReactDOM.findDOMNode(this.refs.createMap);
+	    var mapOptions = {
+	      center: this.centerTrekCoords(),
+	      zoom: 10
+	    };
+	
+	    this.map = new google.maps.Map(map, mapOptions);
+	    this.registerListeners();
+	    this.markers = [];
+	    createMarkerFromProps();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  centerTrekCoords: function () {
+	    return { lat: this.props.latitude,
+	      lng: this.props.longitude };
+	  },
+	
+	  componentDidUpdate: function (oldstate) {
+	    this._onChange();
+	  },
+	
+	  placeMarker: function (location) {
+	    var marker = new google.maps.Marker({
+	      position: location,
+	      map: this.map
+	    });
+	  },
+	
+	  _onChange: function () {
+	    var treks = this.state.treks;
+	    var toAdd = [],
+	        toRemove = this.markers.slice(0);
+	    toAdd.forEach(this.createMarkerFromProps);
+	    toRemove.forEach(this.removeMarker);
+	  },
+	
+	  registerListeners: function () {
+	    var that = this;
+	    google.maps.event.addListener(this.map, 'idle', function () {
+	      var bounds = that.map.getBounds();
+	      var northEast = _getCoordsObj(bounds.getNorthEast());
+	      var southWest = _getCoordsObj(bounds.getSouthWest());
+	      var bounds = {
+	        northEast: northEast,
+	        southWest: southWest
+	      };
+	    });
+	  },
+	
+	  createMarkerFromProps: function () {
+	    var pos = new google.maps.LatLng(this.state.lat, this.state.lng);
+	    var marker = new google.maps.Marker({
+	      position: pos,
+	      map: this.map
+	    });
+	    this.markers.push(marker);
+	  },
+	
+	  removeMarker: function (marker) {
+	    for (var i = 0; i < this.markers.length; i++) {
+	      if (this.markers[i].trekId === marker.trekId) {
+	        this.markers[i].setMap(null);
+	        this.markers.splice(i, 1);
+	        break;
+	      }
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { id: 'create-trek-map', className: 'google-map-canvas', ref: 'createMap' },
+	      'Map'
+	    );
+	  }
+	});
+	
+	module.exports = CreateTrekMap;
 
 /***/ }
 /******/ ]);

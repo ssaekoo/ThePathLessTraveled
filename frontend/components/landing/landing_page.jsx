@@ -11,6 +11,7 @@ module.exports = React.createClass({
 
   componentWillUnmount: function() {
     document.body.style.backgroundImage = null;
+    document.body.style.backgroundColor = '#EBEDED';
     var selection = document.getElementById("nav");
     selection.style.backgroundColor = '#D3E3E8';
     selection.style.borderBottom = '1px solid black';

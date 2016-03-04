@@ -20,7 +20,7 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  background-color: transparent;
+  background-color: #F2F2F2;
   font-size: 16px;
   font-weight: 400;
   // top: 0px;
@@ -56,11 +56,12 @@ body {
 
 .search-form {
   position: relative;
-  margin-top: 10px;
+  padding-top: 10px;
+  background-color: white;
 }
 
 .tag-container {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #CCCCCC;
   padding-bottom: 10px;
 }
 

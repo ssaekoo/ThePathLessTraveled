@@ -535,7 +535,7 @@ Tagging.create!(trek_id: 6,
       )
 
 Tagging.create!(trek_id: 8,
-      tag_id: 3
+      tag_id: 1
       )
 
 Tagging.create!(trek_id: 8,

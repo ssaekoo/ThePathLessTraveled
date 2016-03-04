@@ -64,14 +64,18 @@ TrekStore.filterTags = function(treks) {
   if (filteringTags.length === 0 ) { return treks};
 
   treks.forEach(function(trek){
-    var keepTrek = false;
+    var keepTrek = true;
 
     filteringTags.forEach (function (tagId){
+      var tagFound = false
       trek.tags.forEach (function (trekTag){
         if (parseInt(trekTag.id) === parseInt(tagId)){
-          keepTrek = true;
+          tagFound = true;
         }
       })
+      if (tagFound === false) {
+        keepTrek = false;
+      }
     })
     if (keepTrek === true) { tagFilteredTreks.push(trek) };
     console.log(tagFilteredTreks);
