@@ -160,7 +160,7 @@ var Search = React.createClass({
       <div id="sidx" className="search-container below-nav">
         <div className="search-filters">
           <div className="col-xs-12 col-md-7">
-            <input placeholder="Search" onChange={this.handleInput} value={this.state.searchValue} />
+            <input placeholder="Search" valueLink={this.linkState('searchValue')} />
           </div>
           <div className="col-xs-12 col-md-7 tag-container">
             <div className="difficulty-tags">

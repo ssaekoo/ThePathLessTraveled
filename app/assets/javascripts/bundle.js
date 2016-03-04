@@ -27266,7 +27266,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'col-xs-12 col-md-7' },
-	          React.createElement('input', { placeholder: 'Search', onChange: this.handleInput, value: this.state.searchValue })
+	          React.createElement('input', { placeholder: 'Search', valueLink: this.linkState('searchValue') })
 	        ),
 	        React.createElement(
 	          'div',
@@ -28841,6 +28841,7 @@
 	    case "CHANGE_TAG":
 	      changeTag(payload.tagId);
 	      this.filterStore(payload.searchString);
+	      TrekStore.__emitChange();
 	      break;
 	    case "FILTER_STORE":
 	      this.filterStore(payload.searchString);

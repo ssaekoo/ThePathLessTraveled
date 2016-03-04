@@ -45,6 +45,7 @@ TrekStore.__onDispatch = function (payload) {
     case "CHANGE_TAG":
       changeTag(payload.tagId);
       this.filterStore(payload.searchString);
+      TrekStore.__emitChange();
       break;
     case "FILTER_STORE":
       this.filterStore(payload.searchString);
