@@ -18,6 +18,7 @@ var routes = (
   <Router history={History.hashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={LandingPage} />
+      <Route path='map' component={Map} />
       <Route path='search' component={Search} />
       <Route path="treks/:trekId" component={TrekDetail} />
     </Route>

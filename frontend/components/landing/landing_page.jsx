@@ -2,11 +2,23 @@ var React = require('react');
 var TrekModal = require('../treks/trek_modal');
 
 module.exports = React.createClass({
-  render: function() {
+  componentWillMount: function() {
     document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
+    var selection = document.getElementById("nav");
+    selection.style.backgroundColor = 'transparent';
+    selection.style.borderBottom = 'none';
+  },
 
+  componentWillUnmount: function() {
+    document.body.style.backgroundImage = null;
+    var selection = document.getElementById("nav");
+    selection.style.backgroundColor = '#D3E3E8';
+    selection.style.borderBottom = '1px solid black';
+  },
+
+  render: function() {
     return (
-      <div>
+      <div className="landing-page">
         <section id="parallax" className="parallax welcome-page">
           <div className="row">
 
@@ -22,40 +34,3 @@ module.exports = React.createClass({
     );
   }
 });
-// <section id="slider-landing" className="carousel slide" data-ride="carousel">
-//     <div className="carousel-inner">
-//
-//         <div className="item active">
-//             <img src={"/assets/slider_0.jpg"}/>
-//         </div>
-//
-//         <div className="item">
-//             <img src={"/assets/slider_1.jpg"}/>
-//         </div>
-//
-//         <div className="item">
-//             <img src={"/assets/slider_2.jpg"}/>
-//         </div>
-//
-//         <div className="item">
-//             <img src={"/assets/slider_3.jpg"}/>
-//         </div>
-//
-//     </div>
-//
-//
-//     <a className="left carousel-control" href="#slider" role="button" data-slide="prev">
-//         <span className="glyphicon glyphicon-chevron-left"></span>
-//     </a>
-//     <a className="right carousel-control" href="#slider" role="button" data-slide="next">
-//         <span className="glyphicon glyphicon-chevron-right"></span>
-//     </a>
-//
-//     <ol className="carousel-indicators">
-//         <li data-target="#slider" data-slide-to="0" className="active"></li>
-//         <li data-target="#slider" data-slide-to="1"></li>
-//         <li data-target="#slider" data-slide-to="2"></li>
-//         <li data-target="#slider" data-slide-to="3"></li>
-//     </ol>
-//
-// </section>

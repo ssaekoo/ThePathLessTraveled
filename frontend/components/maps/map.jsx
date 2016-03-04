@@ -11,7 +11,7 @@ function _getCoordsObj(latLng) {
 }
 
 var CENTER = {lat: 37.7758, lng: -122.435};
-
+var _markers = {};
 var Map = React.createClass({
 
   getInitialState: function() {
@@ -45,6 +45,7 @@ var Map = React.createClass({
     this.map = new google.maps.Map(map, mapOptions);
     this.registerListeners();
     this.markers = [];
+    _markers = {};
     this.state.treks.forEach(this.createMarkerFromTrek);
   },
 
@@ -58,6 +59,36 @@ var Map = React.createClass({
 
   componentDidUpdate: function (oldstate) {
     this._onChange();
+    var that = this;
+
+    var toggleBounce = function(marker, status) {
+        if (status) {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        } else {
+          marker.setAnimation(null);
+        }
+      };
+
+    for (var key in _markers) {
+      var trekDoc = document.getElementById('trek-' + key);
+      if (trekDoc) {
+        (function(k){
+          google.maps.event.addDomListener(trekDoc,
+            "mouseenter",
+            function() {
+              toggleBounce(_markers[k], true);
+              var lat = _markers[k].position.lat();
+              var lng = _markers[k].position.lng();
+              that.recenterMap({lat, lng});
+            });
+            google.maps.event.addDomListener(trekDoc,
+              "mouseleave",
+              function() {
+                toggleBounce(_markers[k], false);
+              });
+        })(key);
+      }
+    }
   },
 
   _onChange: function(){
@@ -107,9 +138,6 @@ var Map = React.createClass({
         position: location,
         map: this.map
     });
-    // google.maps.event.addListener(marker, 'click', function(event) {
-    //   that.placeMarker(event.latLng);
-    // });
   },
 
   registerListeners: function(){
@@ -138,6 +166,8 @@ var Map = React.createClass({
       map: this.map,
       trekId: trek.id
     });
+    _markers[trek.id] = marker;
+
     marker.addListener('click', function () {
       that.props.history.pushState(null, 'treks/' + this.trekId, {})
     });

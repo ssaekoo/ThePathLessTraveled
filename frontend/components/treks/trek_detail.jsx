@@ -34,19 +34,9 @@ var TrekDetail = React.createClass({
     this.setState({trek: this.getStateFromStore()});
   },
 
-  // createInnerCarousel: function() {
-  //   return this.state.trek.pictures.map (function (picture){
-  //       return (<div className="item active">
-  //           <img src="img/" + {picture.url}>
-  //       </div>)
-  //     })
-  // }
-
   render: function () {
-    Utilities.changeBackground();
 
     var trekTitle = this.state.trek.title;
-    // var camelizeTitle = Utilities.camelize(trekTitle);
     var carouselIndicators = [];
 
     var carouselInner = [];

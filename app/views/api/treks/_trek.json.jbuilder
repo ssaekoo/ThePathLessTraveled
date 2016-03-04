@@ -13,5 +13,10 @@ json.trek_pics do
   json.array! trek.pictures, partial: 'api/pictures/picture', as: :picture
 end
 
+# json.array! trek.tags do |tag|
+#   json.extract! tag :tag_name
+# end
+
 json.tags trek.tags
+
 json.location trek.location, partial: 'api/locations/location', as: :location

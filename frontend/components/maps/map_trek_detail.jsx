@@ -97,7 +97,7 @@ var Map = React.createClass({
     var pos = new google.maps.LatLng(trek.location.latitude, trek.location.longitude);
     var marker = new google.maps.Marker({
       position: pos,
-      setMap: this.map,
+      map: this.map,
       trekId: trek.id
     });
     marker.addListener('click', function () {

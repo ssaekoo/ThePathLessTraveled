@@ -4,8 +4,6 @@ var Search = require('./search');
 
 var App = React.createClass({
   render: function() {
-    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
-
     return (
       <div id="treks">
         {this.props.children}

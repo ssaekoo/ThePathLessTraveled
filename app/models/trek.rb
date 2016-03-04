@@ -44,4 +44,12 @@ class Trek < ActiveRecord::Base
   def total_reviews
     reviews.count
   end
+
+  # def tag_names
+  #   tag_arr = []
+  #   self.tags.each do |tag|
+  #     tag_arr << tag.tag_name
+  #   end
+  #   tag_arr
+  # end
 end

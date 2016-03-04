@@ -37,15 +37,16 @@ ApiActions.requestTreksByLocation = function(location){
   ApiUtil.fetchTreksByLocation(location, ApiActions.receiveTreks);
 };
 
-ApiActions.receiveTagChange = function(id) {
+ApiActions.receiveTagChange = function(id, searchString) {
   AppDispatcher.dispatch({
     actionType: "CHANGE_TAG",
-    tagId: id
+    tagId: id,
+    searchString: searchString
   });
 };
 
 ApiActions.filterStore = function(myString){
-  AppDispatcher.dispath({
+  AppDispatcher.dispatch({
     actionType: "FILTER_STORE",
     searchString: myString
   });

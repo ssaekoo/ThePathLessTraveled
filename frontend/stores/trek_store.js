@@ -3,22 +3,22 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var TrekStore = new Store(AppDispatcher);
 
 var _treks = [];
-var _filteredTreks = [];
 var _tags = {};
+var _filteredTreks = [];
 
 var resetTags = function() {
-  _tags[1] = ["Beginner", false]
-  _tags[2] = ["Intermediate", false]
-  _tags[3] = ["Expert", false]
-  _tags[4] = ["Req_equipment", false]
-  _tags[5] = ["Multi_day", false]
-  _tags[6] = ["Single_day", false]
-  _tags[7] = ["Famous", false]
-  _tags[8] = ["Populous", false]
-  _tags[9] = ["Deserted", false]
-  _tags[10] = ["Water_crossing", false]
-  _tags[11] = ["Mountainous", false]
-  _tags[12] = ["Family_oriented", false]
+  _tags[1] = false;
+  _tags[2] = false;
+  _tags[3] = false;
+  _tags[4] = false;
+  _tags[5] = false;
+  _tags[6] = false;
+  _tags[7] = false;
+  _tags[8] = false;
+  _tags[9] = false;
+  _tags[10] = false;
+  _tags[11] = false;
+  _tags[12] = false;
 };
 
 var resetTreks = function(treks){
@@ -28,17 +28,7 @@ var resetTreks = function(treks){
 };
 
 var changeTag = function(id){
-  // _tags[id][1] = !_tags[id][1];
-  // var tag_name = _tags[id][0];
-  // var myFilteredTreks = [];
-  // debugger;
-  // if
-  //   myFilteredTreks = _filteredTreks.filter(function(trek){
-  //     var tag_names = trek.tags.map (function(tag){
-  //       return tag.tag_name;
-  //     })
-  //     tag_names.indexOf(tags[id][1])
-  //   });
+  _tags[id] = !_tags[id];
 };
 
 TrekStore.__onDispatch = function (payload) {
@@ -54,17 +44,45 @@ TrekStore.__onDispatch = function (payload) {
       break;
     case "CHANGE_TAG":
       changeTag(payload.tagId);
+      this.filterStore(payload.searchString);
       break;
     case "FILTER_STORE":
-      filterStore(payload.searchString);
+      this.filterStore(payload.searchString);
       break;
   }
 };
 
+TrekStore.filterTags = function(treks) {
+  var filteringTags = [];
+  var tagFilteredTreks = [];
+
+  for (var key in _tags){
+    if (_tags[key]) { filteringTags.push(key) }
+  };
+
+  if (filteringTags.length === 0 ) { return treks};
+
+  treks.forEach(function(trek){
+    var keepTrek = false;
+
+    filteringTags.forEach (function (tagId){
+      trek.tags.forEach (function (trekTag){
+        if (parseInt(trekTag.id) === parseInt(tagId)){
+          keepTrek = true;
+        }
+      })
+    })
+    if (keepTrek === true) { tagFilteredTreks.push(trek) };
+    console.log(tagFilteredTreks);
+  });
+
+  return tagFilteredTreks;
+}
+
 TrekStore.filterStore = function(filterString) {
   _filteredTreks = [];
   if(filterString.length === 0){
-    return TrekStore.all();
+    return this.filterTags(TrekStore.all());
   }
 
   TrekStore.all().forEach(function (trek) {
@@ -84,10 +102,8 @@ TrekStore.filterStore = function(filterString) {
     }
   }.bind(this));
 
-  return _filteredTreks;
+  return this.filterTags(_filteredTreks);;
 }
-
-
 
 TrekStore.all = function() {
   return _treks.slice(0);

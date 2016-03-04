@@ -2,22 +2,6 @@
 @import "bootstrap";
 @import "http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css";
 
-.tag-item-name {
-  padding-top: 0px;
-  padding-bottom: 0px;
-  padding-left: 13px;
-  padding-right: 13px;
-  font-size: 13px;
-  color: #333;
-  font-weight: normal;
-  background-color: #f0f0f0;
-  position: relative;
-  border-bottom: 1px solid #ddd;
-  border-right: 1px solid #ddd;
-  float: left;
-  line-height: 24px;
-}
-
 html, body {
   margin: 0;
   padding: 0;
@@ -55,6 +39,12 @@ body {
 // }
 //
 
+.trek-box {
+  max-width: 300px;
+  padding: 0px;
+  cursor: pointer;
+}
+
 
 // scroll within container
 .search-btn {
@@ -66,7 +56,12 @@ body {
 
 .search-form {
   position: relative;
-  margin-top: 50px;
+  margin-top: 10px;
+}
+
+.tag-container {
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
 }
 
 .carousel{width:720px;
@@ -83,6 +78,8 @@ body {
 
 #nav {
   margin-bottom: 10px;
+  background-color: #D3E3E8;
+  border-bottom: 1px solid black;
 }
 
 .search-result {
@@ -147,7 +144,8 @@ margin: auto;
 }
 
 .navbar-toggle collapsed {
-  background-color: transparent;
+  background-color: #D3E3E8;
+  border-bottom: '1px solid black';
 }
 
 .navbar-brand {
@@ -230,4 +228,20 @@ span.stars, span.stars span {
 
 span.stars span {
     background-position: 0 0;
+}
+
+.tag-item-name {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-left: 13px;
+  padding-right: 13px;
+  font-size: 13px;
+  color: #333;
+  font-weight: normal;
+  background-color: #f0f0f0;
+  position: relative;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  float: left;
+  line-height: 24px;
 }

@@ -15,7 +15,7 @@ var TrekModal = require('./treks/trek_modal');
 // var SessionStore = require('./stores/sessionStore.js');
 
 var Search = React.createClass({
-  mixins: [History],
+  mixins: [History, LinkedStateMixin],
 
   getInitialState: function () {
     return {searchValue: ''};
@@ -54,16 +54,16 @@ var Search = React.createClass({
   },
 
   handleButton: function(id) {
-    if (document.getElementById("button" + id).className === "btn btn-sm btn-default") {
-      document.getElementById("button" + id).className = "btn btn-sm btn-primary";
+    if (document.getElementById("button" + id).className === "btn btn-xs btn-default") {
+      document.getElementById("button" + id).className = "btn btn-xs btn-primary";
     } else {
-      document.getElementById("button" + id).className = "btn btn-sm btn-default";
+      document.getElementById("button" + id).className = "btn btn-xs btn-default";
     }
-    ApiActions.receiveTagChange(id);
+    ApiActions.receiveTagChange(id, this.state.searchValue);
   },
 
   render: function () {
-    Utilities.changeBackground();
+    // Utilities.changeBackground();
     var myMatches = TrekStore.filterStore(this.state.searchValue);
 
     var carouselIndicators = [];
@@ -107,14 +107,16 @@ var Search = React.createClass({
       );
 
       return (
-        <div key={trek.id} className="col-xs-12 col-sm-6 row-space-5 text-center">
-          {makeCarousels}
-          <div onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
-          <div onClick={this.showDetail.bind(null, trek.id)}>City: {trek.location.city}</div>
-          <div onClick={this.showDetail.bind(null, trek.id)}>State: {trek.location.state}</div>
-          <div onClick={this.showDetail.bind(null, trek.id)}>Country: {trek.location.country}</div>
-          <div onClick={this.showDetail.bind(null, trek.id)}>Rating: {trek.average_rating}</div>
-          <div onClick={this.showDetail.bind(null, trek.id)}><center><span className="stars">{trek.average_rating}</span></center></div>
+        <div className="col-xs-12 col-sm-6 row-space-5 text-center">
+          <div key={trek.id} id={"trek-" + trek.id} className="trek-box">
+            {makeCarousels}
+            <div onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
+            <div onClick={this.showDetail.bind(null, trek.id)}>City: {trek.location.city}</div>
+            <div onClick={this.showDetail.bind(null, trek.id)}>State: {trek.location.state}</div>
+            <div onClick={this.showDetail.bind(null, trek.id)}>Country: {trek.location.country}</div>
+            <div onClick={this.showDetail.bind(null, trek.id)}>Rating: {trek.average_rating}</div>
+            <div onClick={this.showDetail.bind(null, trek.id)}><center><span className="stars">{trek.average_rating}</span></center></div>
+          </div>
         </div>
       );
     }.bind(this));
@@ -127,20 +129,52 @@ var Search = React.createClass({
       });
     });
 
-    var myTags = Object.keys(myTagObjs).map(function(key){
-      return (
-        <button type="button" key={key} id={"button" + key} className="btn btn-sm btn-default" onClick={this.handleButton.bind(null, key)}> {myTagObjs[key]} </button>
-      )
-    }.bind(this));
+    var difficultyTags = [];
+    var durationTags = [];
+    var otherTags = [];
+
+    // TODO redo, will need to change tag table to allow categorization and create a tag store
+    for (var i = 1; i <= 12; i++) {
+      if (myTagObjs[i] !== undefined) {
+        switch (true) {
+          case (i <= 4):
+            difficultyTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
+            break;
+          case (i <= 6):
+            durationTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
+            break;
+          case (i > 6):
+            otherTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
+            break;
+        }
+      }
+    }
+
+    // var myTags = Object.keys(myTagObjs).map(function(key){
+    //   return (
+    //     <button type="button" key={key} id={"button" + key} className="btn btn-sm btn-default" onClick={this.handleButton.bind(null, key)}> {myTagObjs[key]} </button>
+    //   )
+    // }.bind(this));
 
     return(
       <div id="sidx" className="search-container below-nav">
         <div className="search-filters">
-          <div className = "col-xs-12 col-md-7">
+          <div className="col-xs-12 col-md-7">
             <input placeholder="Search" onChange={this.handleInput} value={this.state.searchValue} />
           </div>
-          <div className = "col-xs-12 col-md-7 tag-container">
-            {myTags}
+          <div className="col-xs-12 col-md-7 tag-container">
+            <div className="difficulty-tags">
+              <h5>Difficulty</h5>
+              {difficultyTags}
+            </div>
+            <div className="duration-tags">
+              <h5>Duration</h5>
+              {durationTags}
+            </div>
+            <div className="other-tags">
+              <h5>Other</h5>
+              {otherTags}
+            </div>
           </div>
         </div>
         <div className="col-xs-12 col-md-7 search-form">
