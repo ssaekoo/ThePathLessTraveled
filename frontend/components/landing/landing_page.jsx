@@ -3,7 +3,7 @@ var TrekModal = require('../treks/trek_modal');
 
 module.exports = React.createClass({
   componentWillMount: function() {
-    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
+    document.body.style.backgroundImage = "url('http://res.cloudinary.com/ssaekoo/image/upload/west-coast-trail.jpg')";
     var selection = document.getElementById("nav");
     selection.style.backgroundColor = 'transparent';
     selection.style.borderBottom = 'none';

@@ -18,7 +18,7 @@ var TrekUtil = React.createClass({
 
             return (
                 <div className={pictureClass}>
-                    <img src={"/assets/" + picture.url} />
+                    <img src={"http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url} />
                 </div>
             )
         })

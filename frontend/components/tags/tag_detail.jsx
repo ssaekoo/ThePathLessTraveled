@@ -37,7 +37,7 @@ var TrekDetail = React.createClass({
       var selection = document.getElementById("nav");
       selection.style.backgroundColor = '#D3E3E8';
       selection.style.borderBottom = '1px solid black';
-      
+
       if(this.state.trek.length === undefined) { return <div></div>; }
       var myTags = this.state.trek.tags.map (function(tag){
         return (<div>{tag.tag_name}</div>);
@@ -47,7 +47,7 @@ var TrekDetail = React.createClass({
         <div>
           <div className="trek-detail-pane">
             <div className="detail">
-              <div> <img className="img-responsive search-page-image" src={"/assets/" + this.state.trek.trek_pics[0].url}/></div>
+              <div> <img className="img-responsive search-page-image" src={"http://res.cloudinary.com/ssaekoo/image/upload/" + this.state.trek.trek_pics[0].url}/></div>
               <div> Title: {this.state.trek.title} </div>
               <div> Rating: {this.state.trek.average_rating} </div>
               <div> Reviews: {this.state.trek.total_reviews} </div>

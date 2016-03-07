@@ -385,6 +385,11 @@ Picture.create!(author_id: 7,
       )
 
 Picture.create!(author_id: 7,
+      trek_id: 7,
+      url: 'huaShan7.jpg'
+      )
+
+Picture.create!(author_id: 7,
       trek_id: 8,
       url: 'angelsIsland0.jpg'
       )

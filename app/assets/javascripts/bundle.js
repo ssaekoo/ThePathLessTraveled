@@ -27123,7 +27123,7 @@
 	          return React.createElement(
 	            'div',
 	            { key: trek.title + picture.id, className: pictureClass },
-	            React.createElement('img', { src: "/assets/" + picture.url })
+	            React.createElement('img', { src: "http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url })
 	          );
 	        });
 	      };
@@ -35459,7 +35459,7 @@
 	        return React.createElement(
 	          'div',
 	          { className: pictureClass },
-	          React.createElement('img', { src: "/assets/" + picture.url })
+	          React.createElement('img', { src: "http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url })
 	        );
 	      });
 	    };
@@ -36496,7 +36496,7 @@
 	  displayName: 'exports',
 	
 	  componentWillMount: function () {
-	    document.body.style.backgroundImage = "url('../../assets/west-coast-trail.jpg')";
+	    document.body.style.backgroundImage = "url('http://res.cloudinary.com/ssaekoo/image/upload/west-coast-trail.jpg')";
 	    var selection = document.getElementById("nav");
 	    selection.style.backgroundColor = 'transparent';
 	    selection.style.borderBottom = 'none';
