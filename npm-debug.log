@@ -1,0 +1,83 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '—-save',
+1 verbose cli   'babel-preset-es2015' ]
+2 info using npm@2.14.12
+3 info using node@v4.3.0
+4 verbose install initial load of /Users/ssaekoo/Downloads/ThePathLessTraveled/package.json
+5 warn package.json ThePathLessTraveled@1.0.0 No repository field.
+6 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/babel-core/package.json
+7 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/babel-loader/package.json
+8 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/babel-preset-react/package.json
+9 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/bootstrap/package.json
+10 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/flux/package.json
+11 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/grunt-cli/package.json
+12 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/history/package.json
+13 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react/package.json
+14 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-addons-css-transition-group/package.json
+15 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-addons-linked-state-mixin/package.json
+16 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-bootstrap/package.json
+17 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-dom/package.json
+18 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-google-maps/package.json
+19 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-modal/package.json
+20 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-native/package.json
+21 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-router/package.json
+22 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/react-star-rating-component/package.json
+23 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/scrollmagic/package.json
+24 verbose installManyTop reading scoped package data from /Users/ssaekoo/Downloads/ThePathLessTraveled/node_modules/webpack/package.json
+25 info package.json grunt-cli@0.1.13 No license field.
+26 info package.json scrollmagic@2.0.5 No license field.
+27 verbose readDependencies loading dependencies from /Users/ssaekoo/Downloads/ThePathLessTraveled/package.json
+28 silly cache add args [ '—-save', null ]
+29 verbose cache add spec —-save
+30 silly cache add args [ 'babel-preset-es2015', null ]
+31 verbose cache add spec babel-preset-es2015
+32 silly cache add parsed spec Result {
+32 silly cache add   raw: '—-save',
+32 silly cache add   scope: null,
+32 silly cache add   name: null,
+32 silly cache add   rawSpec: '—-save',
+32 silly cache add   spec: '/Users/ssaekoo/Downloads/ThePathLessTraveled/—-save',
+32 silly cache add   type: 'local' }
+33 silly cache add parsed spec Result {
+33 silly cache add   raw: 'babel-preset-es2015',
+33 silly cache add   scope: null,
+33 silly cache add   name: 'babel-preset-es2015',
+33 silly cache add   rawSpec: '',
+33 silly cache add   spec: 'latest',
+33 silly cache add   type: 'tag' }
+34 silly addNamed babel-preset-es2015@latest
+35 verbose addNamed "latest" is being treated as a dist-tag for babel-preset-es2015
+36 info addNameTag [ 'babel-preset-es2015', 'latest' ]
+37 silly mapToRegistry name babel-preset-es2015
+38 silly mapToRegistry using default registry
+39 silly mapToRegistry registry https://registry.npmjs.org/
+40 silly mapToRegistry uri https://registry.npmjs.org/babel-preset-es2015
+41 verbose addNameTag registry:https://registry.npmjs.org/babel-preset-es2015 not in flight; fetching
+42 error addLocal Could not install /Users/ssaekoo/Downloads/ThePathLessTraveled/—-save
+43 verbose request uri https://registry.npmjs.org/babel-preset-es2015
+44 verbose request no auth needed
+45 info attempt registry request try #1 at 6:56:08 AM
+46 verbose request id 9f2c2ae823e9b3ed
+47 http request GET https://registry.npmjs.org/babel-preset-es2015
+48 verbose stack TypeError: The header content contains invalid characters
+48 verbose stack     at ClientRequest.OutgoingMessage.setHeader (_http_outgoing.js:351:13)
+48 verbose stack     at new ClientRequest (_http_client.js:79:14)
+48 verbose stack     at Object.exports.request (http.js:31:10)
+48 verbose stack     at Object.exports.request (https.js:167:15)
+48 verbose stack     at Request.start (/usr/local/lib/node_modules/npm/node_modules/request/request.js:793:30)
+48 verbose stack     at Request.end (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1400:10)
+48 verbose stack     at end (/usr/local/lib/node_modules/npm/node_modules/request/request.js:564:14)
+48 verbose stack     at Immediate._onImmediate (/usr/local/lib/node_modules/npm/node_modules/request/request.js:578:7)
+48 verbose stack     at processImmediate [as _immediateCallback] (timers.js:383:17)
+49 verbose cwd /Users/ssaekoo/Downloads/ThePathLessTraveled
+50 error Darwin 14.5.0
+51 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install" "—-save" "babel-preset-es2015"
+52 error node v4.3.0
+53 error npm  v2.14.12
+54 error The header content contains invalid characters
+55 error If you need help, you may report this error at:
+55 error     <https://github.com/npm/npm/issues>
+56 verbose exit [ 1, true ]
