@@ -12,14 +12,13 @@ var CreateTrekMap = React.createClass({
 
   getInitialState: function() {
     return({
-      lat: this.props.latitude,
-      lng: this.props.longitude
+      trek: this.props.trek,
     });
   },
 
   componentWillReceiveProps: function(newProps){
-    this.setState({lat: this.props.latitude,
-                  lng: this.props.longitude})
+    this.setState({lat: this.props.trek.location.latitude,
+                  lng: this.props.trek.location.longitude})
   },
 
   componentDidMount: function(){
@@ -40,8 +39,8 @@ var CreateTrekMap = React.createClass({
   },
 
   centerTrekCoords: function () {
-    return {lat: this.props.latitude,
-            lng: this.props.longitude};
+    return {lat: this.props.trek.location.latitude,
+            lng: this.props.trek.location.longitude};
   },
 
   componentDidUpdate: function (oldstate) {
@@ -75,12 +74,13 @@ var CreateTrekMap = React.createClass({
     });
   },
 
-  createMarkerFromProps: function () {
-    var pos = new google.maps.LatLng(this.state.lat, this.state.lng);
+  createMarkerFromProps: function() {
+    var pos = new google.maps.LatLng(this.state.trek.location.latitude, this.state.trek.location.longitude);
     var marker = new google.maps.Marker({
       position: pos,
       map: this.map
     });
+
     this.markers.push(marker);
   },
 

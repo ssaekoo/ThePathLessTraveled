@@ -1,6 +1,5 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var TrekStore = require('../../stores/trek_store');
 
 function _getCoordsObj(latLng) {
   return {
@@ -9,23 +8,21 @@ function _getCoordsObj(latLng) {
   };
 }
 
-var CENTER = {lat: this.props.trek.location.latitude, lng: this.props.trek.location.longitude};
-
-var Map = React.createClass({
+var CreateTrekMap = React.createClass({
 
   getInitialState: function() {
     return({
-      trek: this.props.trek
+      trek: this.props.trek,
     });
   },
 
-  updateTreks: function() {
-    this.setState({trek: this.props.trek});
+  componentWillReceiveProps: function(newProps){
+    this.setState({lat: this.props.trek.location.latitude,
+                  lng: this.props.trek.location.longitude})
   },
 
   componentDidMount: function(){
-    this.listenerToken = TrekStore.addListener(this.updateTreks);
-    var map = ReactDOM.findDOMNode(this.refs.map);
+    var map = ReactDOM.findDOMNode(this.refs.detailMap);
     var mapOptions = {
       center: this.centerTrekCoords(),
       zoom: 10
@@ -34,7 +31,7 @@ var Map = React.createClass({
     this.map = new google.maps.Map(map, mapOptions);
     this.registerListeners();
     this.markers = [];
-    createMarkerFromTrek(this.props.trek);
+    createMarkerFromProps();
   },
 
   componentWillUnmount: function(){
@@ -42,37 +39,26 @@ var Map = React.createClass({
   },
 
   centerTrekCoords: function () {
-    return CENTER;
+    return {lat: this.props.trek.location.latitude,
+            lng: this.props.trek.location.longitude};
   },
 
   componentDidUpdate: function (oldstate) {
     this._onChange();
   },
 
+  placeMarker: function(location) {
+    var marker = new google.maps.Marker({
+        position: location,
+        map: this.map
+    });
+  },
+
   _onChange: function(){
     var treks = this.state.treks;
     var toAdd = [], toRemove = this.markers.slice(0);
-    treks.forEach(function(trek, idx){
-      var idx = -1;
-      for(var i = 0; i < toRemove.length; i++){
-        if(toRemove[i].trekId == trek.id){
-          idx = i;
-          break;
-        }
-      }
-      if(idx === -1){
-        toAdd.push(trek);
-      } else {
-        toRemove.splice(idx, 1);
-      }
-    });
-    toAdd.forEach(this.createMarkerFromTrek);
+    toAdd.forEach(this.createMarkerFromProps);
     toRemove.forEach(this.removeMarker);
-
-    if (this.state.singletrek) {
-      this.map.setOptions({draggable: false});
-      this.map.setCenter(this.centerTrekCoords());
-    }
   },
 
   registerListeners: function(){
@@ -86,22 +72,13 @@ var Map = React.createClass({
         southWest: southWest
       };
     });
-    google.maps.event.addListener(this.map, 'click', function(event) {
-      var coords = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-      that.state.onMapClick(coords);
-    });
   },
 
-  createMarkerFromTrek: function (trek) {
-    var that = this;
-    var pos = new google.maps.LatLng(trek.location.latitude, trek.location.longitude);
+  createMarkerFromProps: function () {
+    var pos = new google.maps.LatLng(this.state.trek.location.latitude, this.state.trek.location.longitude);
     var marker = new google.maps.Marker({
       position: pos,
-      map: this.map,
-      trekId: trek.id
-    });
-    marker.addListener('click', function () {
-      that.state.onMarkerClick(trek)
+      map: this.map
     });
     this.markers.push(marker);
   },
@@ -117,8 +94,8 @@ var Map = React.createClass({
   },
 
   render: function(){
-    return ( <div id="search-map-canvas" className="google-map-canvas" ref="map">Map</div> );
+    return ( <div id="create-trek-map" className="google-map-canvas" ref="detailMap">Map</div> );
   }
 });
 
-module.exports = Map;
+module.exports = CreateTrekMap;

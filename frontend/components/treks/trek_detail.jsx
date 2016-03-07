@@ -2,7 +2,7 @@ var React = require('react');
 var TrekStore = require('../../stores/trek_store');
 var ApiActions = require('../../actions/api_actions');
 var Utilities = require('../../util/util');
-// var MapTrekDetail = require('../maps/trek_detail');
+var MapTrekDetail = require('../maps/map_trek_create');
 
 var TrekDetail = React.createClass({
   getInitialState: function () {
@@ -38,8 +38,8 @@ var TrekDetail = React.createClass({
 
     var trekTitle = this.state.trek.title;
     var carouselIndicators = [];
-
     var carouselInner = [];
+
     if (this.state.trek.trek_pics !== undefined){
       carouselInner = this.state.trek.trek_pics.map (function (picture, idx){
           var pictureClass = "item";
@@ -56,50 +56,100 @@ var TrekDetail = React.createClass({
       })
     };
 
-      if(this.state.trek.length === undefined) { return <div></div>; }
-      var myTags = this.state.trek.tags.map (function(tag){
-        return (<div>{tag.tag_name}</div>);
-      })
+    if(this.state.trek.length === undefined) { return <div></div>; }
+    var myTags = this.state.trek.tags.map (function(tag){
+      return (<button type="button" key={tag.id} id={"button" + tag.id} className="btn btn-xs btn-primary"> {tag.tag_name} </button>);
+    })
 
-      return(
-        <div>
-          <div className="trek-detail-pane">
-            <div className="detail">
+    return(
+      <div id="sidx" className="trek-detail below-nav">
+        <div className="trek-detail-pane">
+          <div className="trek-detail-carousel">
+            <section id="slider" className="carousel slide" data-interval="false">
+              <div className="carousel-inner">
+                {carouselInner}
+              </div>
 
-              <section id="slider" className="carousel slide" data-interval="false">
-                <div className="carousel-inner">
-                  {carouselInner}
-                </div>
-
-                <a className="left carousel-control" href="#slider" role="button" data-slide="prev">
-                    <span className="glyphicon glyphicon-chevron-left"></span>
-                </a>
-                <a className="right carousel-control" href="#slider" role="button" data-slide="next">
-                    <span className="glyphicon glyphicon-chevron-right"></span>
-                </a>
-              </section>
-
-              <div> Title: {this.state.trek.title} </div>
-              <div> Rating: {this.state.trek.average_rating} </div>
-              <div> Reviews: {this.state.trek.total_reviews} </div>
-              <div> Description: {this.state.trek.description} </div>
-              <div> {this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1)}: {this.state.trek.duration} </div>
-              <div> Starting elevation: {this.state.trek.start_elv} {this.state.trek.elv_measure} </div>
-              <div> Highest elevation: {this.state.trek.peak_elv} {this.state.trek.elv_measure} </div>
-              <div> Country: {this.state.trek.location.country} </div>
-
-              <div> tags:
-                {myTags}
+              <a id="carousel-controller" className="left carousel-control" href="#slider" role="button" data-slide="prev">
+                  <span className="glyphicon glyphicon-chevron-left"></span>
+              </a>
+              <a id="carousel-controller" className="right carousel-control" href="#slider" role="button" data-slide="next">
+                  <span className="glyphicon glyphicon-chevron-right"></span>
+              </a>
+            </section>
+          </div>
+          <div className="trek-detail-attributes">
+            <h1 className="trek-detail-title text-center">{this.state.trek.title} </h1>
+            <div className="tag-container text-center">
+              {myTags}
+            </div>
+            <div className="trek-info">
+              <h3>Trek Info</h3>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.average_rating}</div>
+                  <div className="detail-attribute">Rating:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.location.country}</div>
+                  <div className="detail-attribute">Country:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.location.state}</div>
+                  <div className="detail-attribute">State:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.location.city}</div>
+                  <div className="detail-attribute">City:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.duration}</div>
+                  <div className="detail-attribute">{this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1)}:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.start_elv} {this.state.trek.elv_measure}</div>
+                  <div className="detail-attribute">Starting elevation:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.peak_elv} {this.state.trek.elv_measure}</div>
+                  <div className="detail-attribute">Highest elevation:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.average_rating}</div>
+                  <div className="detail-attribute">Description:</div>
+                </li>
+              </ul>
+              <ul>
+                <li>
+                  <div className="detail-value">{this.state.trek.total_reviews}</div>
+                  <div className="detail-attribute">Reviews:</div>
+                </li>
+              </ul>
+              <div className="description-container">
+                <h3>Description</h3>
+                <div className="detail-description trek-info">  {this.state.trek.description} </div>
               </div>
             </div>
           </div>
-
-          {this.props.children}
-
         </div>
-      );
-    }
-  });
+      </div>
+    );
+  }
+});
 
 module.exports = TrekDetail;
 

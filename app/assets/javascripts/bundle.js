@@ -56,7 +56,7 @@
 	
 	var App = __webpack_require__(242);
 	var Search = __webpack_require__(243);
-	var LandingPage = __webpack_require__(284);
+	var LandingPage = __webpack_require__(285);
 	var TrekDetail = __webpack_require__(279);
 	// var Map = require('./components/maps/map');
 	
@@ -27029,10 +27029,10 @@
 	var ApiActions = __webpack_require__(255);
 	var TrekStore = __webpack_require__(261);
 	var TrekDetail = __webpack_require__(279);
-	var TrekIndexItem = __webpack_require__(281);
-	var Map = __webpack_require__(282);
+	var TrekIndexItem = __webpack_require__(282);
+	var Map = __webpack_require__(283);
 	var Utilities = __webpack_require__(280);
-	var TrekModal = __webpack_require__(283);
+	var TrekModal = __webpack_require__(284);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -27137,67 +27137,73 @@
 	        ),
 	        React.createElement(
 	          'a',
-	          { className: 'left carousel-control', href: '#' + trek.id, role: 'button', 'data-slide': 'prev' },
+	          { id: 'carousel-controller', className: 'left carousel-control', href: '#' + trek.id, role: 'button', 'data-slide': 'prev' },
 	          React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
 	        ),
 	        React.createElement(
 	          'a',
-	          { className: 'right carousel-control', href: '#' + trek.id, role: 'button', 'data-slide': 'next' },
+	          { id: 'carousel-controller', className: 'right carousel-control', href: '#' + trek.id, role: 'button', 'data-slide': 'next' },
 	          React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
 	        )
 	      );
 	
 	      return React.createElement(
 	        'div',
-	        { className: 'col-xs-12 col-sm-6 row-space-5 text-center' },
+	        { className: 'col-xs-12 col-sm-6 row-space-5' },
 	        React.createElement(
 	          'div',
 	          { key: trek.id, id: "trek-" + trek.id, className: 'trek-box' },
-	          makeCarousels,
 	          React.createElement(
 	            'div',
-	            { onClick: this.showDetail.bind(null, trek.id) },
+	            { className: 'text-center', onClick: this.showDetail.bind(null, trek.id) },
 	            React.createElement(
 	              'h4',
 	              null,
 	              trek.title
 	            )
 	          ),
+	          makeCarousels,
 	          React.createElement(
 	            'div',
-	            { onClick: this.showDetail.bind(null, trek.id) },
-	            'City: ',
-	            trek.location.city
-	          ),
-	          React.createElement(
-	            'div',
-	            { onClick: this.showDetail.bind(null, trek.id) },
-	            'State: ',
-	            trek.location.state
-	          ),
-	          React.createElement(
-	            'div',
-	            { onClick: this.showDetail.bind(null, trek.id) },
-	            'Country: ',
-	            trek.location.country
-	          ),
-	          React.createElement(
-	            'div',
-	            { onClick: this.showDetail.bind(null, trek.id) },
-	            'Rating: ',
+	            { className: 'text-center', onClick: this.showDetail.bind(null, trek.id) },
 	            trek.average_rating
 	          ),
 	          React.createElement(
 	            'div',
-	            { onClick: this.showDetail.bind(null, trek.id) },
+	            { className: 'col-xs-12 col-sm-6 detail-container-right', onClick: this.showDetail.bind(null, trek.id) },
 	            React.createElement(
-	              'center',
+	              'div',
 	              null,
-	              React.createElement(
-	                'span',
-	                { className: 'stars' },
-	                trek.average_rating
-	              )
+	              'City: '
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              'State: '
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              'Country: '
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-xs-12 col-sm-6 detail-container-left', onClick: this.showDetail.bind(null, trek.id) },
+	            React.createElement(
+	              'div',
+	              null,
+	              trek.location.city
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              trek.location.state
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              trek.location.country
 	            )
 	          )
 	        )
@@ -27266,7 +27272,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'col-xs-12 col-md-7' },
-	          React.createElement('input', { placeholder: 'Search', valueLink: this.linkState('searchValue') })
+	          React.createElement('input', { className: 'search-input', placeholder: 'Search by Trek Title, City, State, or Country', valueLink: this.linkState('searchValue') })
 	        ),
 	        React.createElement(
 	          'div',
@@ -28788,6 +28794,22 @@
 	  });
 	};
 	
+	ApiUtil.createReview = function (userAttributes, receiveNewUser, cleanError, showError) {
+	  $.ajax({
+	    url: '/api/users',
+	    data: { user: userAttributes },
+	    type: 'POST',
+	    success: function (user) {
+	      cleanError();
+	      receiveNewUser(user);
+	    },
+	    error: function (error) {
+	      showError(error.responseJSON.message);
+	      // do something with errors
+	    }
+	  });
+	};
+	
 	module.exports = ApiUtil;
 
 /***/ },
@@ -28880,7 +28902,6 @@
 	    if (keepTrek === true) {
 	      tagFilteredTreks.push(trek);
 	    };
-	    console.log(tagFilteredTreks);
 	  });
 	
 	  return tagFilteredTreks;
@@ -35387,7 +35408,7 @@
 	var TrekStore = __webpack_require__(261);
 	var ApiActions = __webpack_require__(255);
 	var Utilities = __webpack_require__(280);
-	// var MapTrekDetail = require('../maps/trek_detail');
+	var MapTrekDetail = __webpack_require__(281);
 	
 	var TrekDetail = React.createClass({
 	  displayName: 'TrekDetail',
@@ -35425,8 +35446,8 @@
 	
 	    var trekTitle = this.state.trek.title;
 	    var carouselIndicators = [];
-	
 	    var carouselInner = [];
+	
 	    if (this.state.trek.trek_pics !== undefined) {
 	      carouselInner = this.state.trek.trek_pics.map(function (picture, idx) {
 	        var pictureClass = "item";
@@ -35448,21 +35469,23 @@
 	    }
 	    var myTags = this.state.trek.tags.map(function (tag) {
 	      return React.createElement(
-	        'div',
-	        null,
-	        tag.tag_name
+	        'button',
+	        { type: 'button', key: tag.id, id: "button" + tag.id, className: 'btn btn-xs btn-primary' },
+	        ' ',
+	        tag.tag_name,
+	        ' '
 	      );
 	    });
 	
 	    return React.createElement(
 	      'div',
-	      null,
+	      { id: 'sidx', className: 'trek-detail below-nav' },
 	      React.createElement(
 	        'div',
 	        { className: 'trek-detail-pane' },
 	        React.createElement(
 	          'div',
-	          { className: 'detail' },
+	          { className: 'trek-detail-carousel' },
 	          React.createElement(
 	            'section',
 	            { id: 'slider', className: 'carousel slide', 'data-interval': 'false' },
@@ -35473,86 +35496,224 @@
 	            ),
 	            React.createElement(
 	              'a',
-	              { className: 'left carousel-control', href: '#slider', role: 'button', 'data-slide': 'prev' },
+	              { id: 'carousel-controller', className: 'left carousel-control', href: '#slider', role: 'button', 'data-slide': 'prev' },
 	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
 	            ),
 	            React.createElement(
 	              'a',
-	              { className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
+	              { id: 'carousel-controller', className: 'right carousel-control', href: '#slider', role: 'button', 'data-slide': 'next' },
 	              React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
 	            )
-	          ),
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'trek-detail-attributes' },
 	          React.createElement(
-	            'div',
-	            null,
-	            ' Title: ',
+	            'h1',
+	            { className: 'trek-detail-title text-center' },
 	            this.state.trek.title,
 	            ' '
 	          ),
 	          React.createElement(
 	            'div',
-	            null,
-	            ' Rating: ',
-	            this.state.trek.average_rating,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Reviews: ',
-	            this.state.trek.total_reviews,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Description: ',
-	            this.state.trek.description,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' ',
-	            this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1),
-	            ': ',
-	            this.state.trek.duration,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Starting elevation: ',
-	            this.state.trek.start_elv,
-	            ' ',
-	            this.state.trek.elv_measure,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Highest elevation: ',
-	            this.state.trek.peak_elv,
-	            ' ',
-	            this.state.trek.elv_measure,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' Country: ',
-	            this.state.trek.location.country,
-	            ' '
-	          ),
-	          React.createElement(
-	            'div',
-	            null,
-	            ' tags:',
+	            { className: 'tag-container text-center' },
 	            myTags
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'trek-info' },
+	            React.createElement(
+	              'h3',
+	              null,
+	              'Trek Info'
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.average_rating
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'Rating:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.location.country
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'Country:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.location.state
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'State:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.location.city
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'City:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.duration
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  this.state.trek.dur_measure.charAt(0).toUpperCase() + this.state.trek.dur_measure.slice(1),
+	                  ':'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.start_elv,
+	                  ' ',
+	                  this.state.trek.elv_measure
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'Starting elevation:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.peak_elv,
+	                  ' ',
+	                  this.state.trek.elv_measure
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'Highest elevation:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.average_rating
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'Description:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'ul',
+	              null,
+	              React.createElement(
+	                'li',
+	                null,
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-value' },
+	                  this.state.trek.total_reviews
+	                ),
+	                React.createElement(
+	                  'div',
+	                  { className: 'detail-attribute' },
+	                  'Reviews:'
+	                )
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'description-container' },
+	              React.createElement(
+	                'h3',
+	                null,
+	                'Description'
+	              ),
+	              React.createElement(
+	                'div',
+	                { className: 'detail-description trek-info' },
+	                '  ',
+	                this.state.trek.description,
+	                ' '
+	              )
+	            )
 	          )
 	        )
-	      ),
-	      this.props.children
+	      )
 	    );
 	  }
 	});
@@ -35586,6 +35747,120 @@
 
 /***/ },
 /* 281 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	
+	function _getCoordsObj(latLng) {
+	  return {
+	    lat: latLng.lat(),
+	    lng: latLng.lng()
+	  };
+	}
+	
+	var CreateTrekMap = React.createClass({
+	  displayName: 'CreateTrekMap',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      trek: this.props.trek
+	    };
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ lat: this.props.trek.location.latitude,
+	      lng: this.props.trek.location.longitude });
+	  },
+	
+	  componentDidMount: function () {
+	    var map = ReactDOM.findDOMNode(this.refs.createMap);
+	    var mapOptions = {
+	      center: this.centerTrekCoords(),
+	      zoom: 10
+	    };
+	
+	    this.map = new google.maps.Map(map, mapOptions);
+	    this.registerListeners();
+	    this.markers = [];
+	    createMarkerFromProps();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listenerToken.remove();
+	  },
+	
+	  centerTrekCoords: function () {
+	    return { lat: this.props.trek.location.latitude,
+	      lng: this.props.trek.location.longitude };
+	  },
+	
+	  componentDidUpdate: function (oldstate) {
+	    this._onChange();
+	  },
+	
+	  placeMarker: function (location) {
+	    var marker = new google.maps.Marker({
+	      position: location,
+	      map: this.map
+	    });
+	  },
+	
+	  _onChange: function () {
+	    var treks = this.state.treks;
+	    var toAdd = [],
+	        toRemove = this.markers.slice(0);
+	    toAdd.forEach(this.createMarkerFromProps);
+	    toRemove.forEach(this.removeMarker);
+	  },
+	
+	  registerListeners: function () {
+	    var that = this;
+	    google.maps.event.addListener(this.map, 'idle', function () {
+	      var bounds = that.map.getBounds();
+	      var northEast = _getCoordsObj(bounds.getNorthEast());
+	      var southWest = _getCoordsObj(bounds.getSouthWest());
+	      var bounds = {
+	        northEast: northEast,
+	        southWest: southWest
+	      };
+	    });
+	  },
+	
+	  createMarkerFromProps: function () {
+	    var pos = new google.maps.LatLng(this.state.trek.location.latitude, this.state.trek.location.longitude);
+	    var marker = new google.maps.Marker({
+	      position: pos,
+	      map: this.map
+	    });
+	
+	    this.markers.push(marker);
+	  },
+	
+	  removeMarker: function (marker) {
+	    for (var i = 0; i < this.markers.length; i++) {
+	      if (this.markers[i].trekId === marker.trekId) {
+	        this.markers[i].setMap(null);
+	        this.markers.splice(i, 1);
+	        break;
+	      }
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { id: 'create-trek-map', className: 'google-map-canvas', ref: 'createMap' },
+	      'Map'
+	    );
+	  }
+	});
+	
+	module.exports = CreateTrekMap;
+
+/***/ },
+/* 282 */
 /***/ function(module, exports) {
 
 	// var React = require('react');
@@ -35609,13 +35884,13 @@
 	// });
 
 /***/ },
-/* 282 */
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var TrekStore = __webpack_require__(261);
-	var TrekModal = __webpack_require__(283);
+	var TrekModal = __webpack_require__(284);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -35821,14 +36096,14 @@
 	module.exports = Map;
 
 /***/ },
-/* 283 */
+/* 284 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(244);
 	var Modal = __webpack_require__(222);
 	var ApiActions = __webpack_require__(255);
-	var MapTrekCreate = __webpack_require__(285);
+	var MapTrekCreate = __webpack_require__(281);
 	
 	const customStyles = {
 	  content: {
@@ -35968,11 +36243,11 @@
 	module.exports = TrekModal;
 
 /***/ },
-/* 284 */
+/* 285 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var TrekModal = __webpack_require__(283);
+	var TrekModal = __webpack_require__(284);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -36027,120 +36302,6 @@
 	    );
 	  }
 	});
-
-/***/ },
-/* 285 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(158);
-	
-	function _getCoordsObj(latLng) {
-	  return {
-	    lat: latLng.lat(),
-	    lng: latLng.lng()
-	  };
-	}
-	
-	var CreateTrekMap = React.createClass({
-	  displayName: 'CreateTrekMap',
-	
-	
-	  getInitialState: function () {
-	    return {
-	      lat: this.props.latitude,
-	      lng: this.props.longitude
-	    };
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    this.setState({ lat: this.props.latitude,
-	      lng: this.props.longitude });
-	  },
-	
-	  componentDidMount: function () {
-	    var map = ReactDOM.findDOMNode(this.refs.createMap);
-	    var mapOptions = {
-	      center: this.centerTrekCoords(),
-	      zoom: 10
-	    };
-	
-	    this.map = new google.maps.Map(map, mapOptions);
-	    this.registerListeners();
-	    this.markers = [];
-	    createMarkerFromProps();
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.listenerToken.remove();
-	  },
-	
-	  centerTrekCoords: function () {
-	    return { lat: this.props.latitude,
-	      lng: this.props.longitude };
-	  },
-	
-	  componentDidUpdate: function (oldstate) {
-	    this._onChange();
-	  },
-	
-	  placeMarker: function (location) {
-	    var marker = new google.maps.Marker({
-	      position: location,
-	      map: this.map
-	    });
-	  },
-	
-	  _onChange: function () {
-	    var treks = this.state.treks;
-	    var toAdd = [],
-	        toRemove = this.markers.slice(0);
-	    toAdd.forEach(this.createMarkerFromProps);
-	    toRemove.forEach(this.removeMarker);
-	  },
-	
-	  registerListeners: function () {
-	    var that = this;
-	    google.maps.event.addListener(this.map, 'idle', function () {
-	      var bounds = that.map.getBounds();
-	      var northEast = _getCoordsObj(bounds.getNorthEast());
-	      var southWest = _getCoordsObj(bounds.getSouthWest());
-	      var bounds = {
-	        northEast: northEast,
-	        southWest: southWest
-	      };
-	    });
-	  },
-	
-	  createMarkerFromProps: function () {
-	    var pos = new google.maps.LatLng(this.state.lat, this.state.lng);
-	    var marker = new google.maps.Marker({
-	      position: pos,
-	      map: this.map
-	    });
-	    this.markers.push(marker);
-	  },
-	
-	  removeMarker: function (marker) {
-	    for (var i = 0; i < this.markers.length; i++) {
-	      if (this.markers[i].trekId === marker.trekId) {
-	        this.markers[i].setMap(null);
-	        this.markers.splice(i, 1);
-	        break;
-	      }
-	    }
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { id: 'create-trek-map', className: 'google-map-canvas', ref: 'createMap' },
-	      'Map'
-	    );
-	  }
-	});
-	
-	module.exports = CreateTrekMap;
 
 /***/ }
 /******/ ]);

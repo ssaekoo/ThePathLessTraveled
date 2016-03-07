@@ -78,7 +78,6 @@ TrekStore.filterTags = function(treks) {
       }
     })
     if (keepTrek === true) { tagFilteredTreks.push(trek) };
-    console.log(tagFilteredTreks);
   });
 
   return tagFilteredTreks;

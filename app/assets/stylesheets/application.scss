@@ -31,18 +31,21 @@ body {
   background-repeat: no-repeat;
   background-size:100% 100%;
 }
-//
-// .search-map-canvas {
-//   margin-bottom: 0px;
-//   width: 100%;
-//   height: 100%;
-// }
-//
+
+ul {
+  margin-bottom: 2px;
+}
 
 .trek-box {
   max-width: 300px;
-  padding: 0px;
   cursor: pointer;
+  border: 1px solid #EBEBEB;
+  border-radius: 10px;
+  padding: 0px;
+  display: inline-block;
+  background-color: white;
+  box-shadow: 0px 0px 5px;
+  margin: 16px;
 }
 
 
@@ -60,13 +63,21 @@ body {
   background-color: white;
 }
 
+.search-input{
+  border-radius: 5px;
+  width: 400px;
+}
+
 .tag-container {
   border-bottom: 1px solid #CCCCCC;
   padding-bottom: 10px;
 }
 
-.carousel{width:720px;
-       height:480px;}
+.carousel{
+ width:720px;
+ height:480px;
+ border-radius: 10px;
+}
 
 .carousel img {
   width: auto;
@@ -89,6 +100,49 @@ body {
     bottom: 0;
     position: fixed;
     overflow-y: scroll;
+}
+.trek-detail {
+  float: left;
+}
+
+.trek-detail-attributes {
+  float: left;
+  margin-left: 50px;
+  width: 30%;
+}
+
+.trek-detail-pane {
+  margin-top: 10px;
+}
+
+.trek-info {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.detail-attribute {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: 'Oxygen', sans-serif;
+  position: relative;
+  text-align: left;
+}
+
+.detail-value {
+  position: relative;
+  float: right;
+}
+
+li {
+    list-style: none;
+    margin: 0;
+}
+
+.trek-detail-carousel {
+  width: 720px;
+  float: left;
+  margin-left: 15px;
 }
 
 #sidx {
@@ -128,8 +182,16 @@ margin: auto;
     overflow: hidden;
 }
 
+.carousel-inner {
+  height: 100%;
+}
+
 .carousel-control {
   text-shadow: none;
+}
+
+#carousel-controller {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
 }
 
 .profile {
@@ -146,11 +208,13 @@ margin: auto;
 
 .navbar-toggle collapsed {
   background-color: #D3E3E8;
-  border-bottom: '1px solid black';
+  border-bottom: 1px solid black;
 }
 
 .navbar-brand {
   color: #333;
+  font-size: 20px;
+  padding-top: 8px;
 }
 
 .navbar-form {
@@ -167,6 +231,14 @@ margin: auto;
   color: #fff;
  }
 
+.below-nav {
+  top: 70px;
+  padding: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: absolute;
+}
 // .landing-welcome {
 //     display: block;
 //     position: absolute;
@@ -192,10 +264,6 @@ margin: auto;
     font-weight: 400;
 }
 
-.navbar-brand{
-    font-size: 20px;
-}
-
 .search-page-image {
   display: block;
   margin: auto;
@@ -218,6 +286,13 @@ margin: auto;
 .trek-item {
   margin: auto;
   float: left;
+}
+
+.fill{
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
 }
 
 span.stars, span.stars span {

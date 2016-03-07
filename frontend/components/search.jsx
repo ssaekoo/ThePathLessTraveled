@@ -97,25 +97,32 @@ var Search = React.createClass({
             {carouselInner}
           </div>
 
-          <a className="left carousel-control" href={'#' + trek.id} role="button" data-slide="prev">
+          <a id="carousel-controller" className="left carousel-control" href={'#' + trek.id} role="button" data-slide="prev">
               <span className="glyphicon glyphicon-chevron-left"></span>
           </a>
-          <a className="right carousel-control" href={'#' + trek.id} role="button" data-slide="next">
+          <a id="carousel-controller" className="right carousel-control" href={'#' + trek.id} role="button" data-slide="next">
               <span className="glyphicon glyphicon-chevron-right"></span>
           </a>
         </section>
       );
 
       return (
-        <div className="col-xs-12 col-sm-6 row-space-5 text-center">
+        <div className="col-xs-12 col-sm-6 row-space-5">
           <div key={trek.id} id={"trek-" + trek.id} className="trek-box">
+            <div className="text-center" onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
             {makeCarousels}
-            <div onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
-            <div onClick={this.showDetail.bind(null, trek.id)}>City: {trek.location.city}</div>
-            <div onClick={this.showDetail.bind(null, trek.id)}>State: {trek.location.state}</div>
-            <div onClick={this.showDetail.bind(null, trek.id)}>Country: {trek.location.country}</div>
-            <div onClick={this.showDetail.bind(null, trek.id)}>Rating: {trek.average_rating}</div>
-            <div onClick={this.showDetail.bind(null, trek.id)}><center><span className="stars">{trek.average_rating}</span></center></div>
+            <div className="text-center" onClick={this.showDetail.bind(null, trek.id)}>{trek.average_rating}</div>
+            <div className="col-xs-12 col-sm-6 detail-container-right" onClick={this.showDetail.bind(null, trek.id)}>
+              <div>City: </div>
+              <div>State: </div>
+              <div>Country: </div>
+            </div>
+            <div className="col-xs-12 col-sm-6 detail-container-left" onClick={this.showDetail.bind(null, trek.id)}>
+              <div>{trek.location.city}</div>
+              <div>{trek.location.state}</div>
+              <div>{trek.location.country}</div>
+            </div>
+
           </div>
         </div>
       );
@@ -160,7 +167,7 @@ var Search = React.createClass({
       <div id="sidx" className="search-container below-nav">
         <div className="search-filters">
           <div className="col-xs-12 col-md-7">
-            <input placeholder="Search" valueLink={this.linkState('searchValue')} />
+            <input className="search-input" placeholder="Search by Trek Title, City, State, or Country" valueLink={this.linkState('searchValue')} />
           </div>
           <div className="col-xs-12 col-md-7 tag-container">
             <div className="difficulty-tags">

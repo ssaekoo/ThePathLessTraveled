@@ -1,12 +1,12 @@
 class Api::ReviewsController < ApplicationController
   def create
-    review = Review.new(review_params)
-    bench = Trek.find(review.bench_id)
+    @review = Review.new(review_params)
+    @review.user_id = current_user.id
 
-    if review.save
-      render json: trek, include: :reviews
+    if @review.save
+      render json: ['Review Added']
     else
-      render json: review, status: :unprocessable_entity
+      render json: {message: @review.errors.full_messages}, status: 422
     end
   end
 

@@ -42,4 +42,20 @@ ApiUtil.requestTreksById = function(id, callback) {
   })
 };
 
+ApiUtil.createReview = function(userAttributes, receiveNewUser, cleanError, showError) {
+  $.ajax ({
+    url: '/api/users',
+    data: {user: userAttributes},
+    type: 'POST',
+    success: function(user) {
+      cleanError();
+      receiveNewUser(user);
+    },
+    error: function(error){
+      showError(error.responseJSON.message);
+    // do something with errors
+    }
+  })
+}
+
 module.exports = ApiUtil;

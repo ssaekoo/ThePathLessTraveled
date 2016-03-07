@@ -279,10 +279,10 @@ Picture.create!(author_id: 1,
       url: 'tigerLeapingGorge4.jpg'
       )
 
-Picture.create!(author_id: 1,
-      trek_id: 2,
-      url: 'tigerLeapingGorge5.jpg'
-      )
+# Picture.create!(author_id: 1,
+#       trek_id: 2,
+#       url: 'tigerLeapingGorge5.jpg'
+#       )
 
 Picture.create!(author_id: 1,
       trek_id: 2,
@@ -532,6 +532,26 @@ Tagging.create!(trek_id: 6,
 
 Tagging.create!(trek_id: 6,
       tag_id: 12
+      )
+
+Tagging.create!(trek_id: 7,
+      tag_id: 2
+      )
+
+Tagging.create!(trek_id: 7,
+      tag_id: 6
+      )
+
+Tagging.create!(trek_id: 7,
+      tag_id: 7
+      )
+
+Tagging.create!(trek_id: 7,
+      tag_id: 8
+      )
+
+Tagging.create!(trek_id: 7,
+      tag_id: 11
       )
 
 Tagging.create!(trek_id: 8,
