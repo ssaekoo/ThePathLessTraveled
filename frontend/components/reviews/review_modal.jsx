@@ -14,11 +14,12 @@ const customStyles = {
   }
 };
 
-
-var TrekModal = React.createClass({
+var ReviewModal = React.createClass({
 
   getInitialState: function() {
-    return { modalIsOpen: false, trekId: undefined
+    return { modalIsOpen: false,
+            trekId: undefined,
+            rating: 0
     };
   },
 
@@ -32,6 +33,10 @@ var TrekModal = React.createClass({
     this.setState({modalIsOpen: false});
   },
 
+  setRating: function(num) {
+    this.setState({rating: num})
+  },
+
   render: function() {
     return (
       <div>
@@ -40,43 +45,26 @@ var TrekModal = React.createClass({
           onRequestClose={this.closeModal}
           style={customStyles} >
           <div className="trek-create-container">
-            <h3 className="text-center">Create new Trek</h3>
+            <h3 className="text-center">Create a Review</h3>
             <form className="form-horizontal" role="form">
               <div className="form-group">
                 <div className="col-sm-10">
-                    <input type="text" className="form-control"
+                  <input type="text" className="form-control"
                     id="trekTitle" placeholder="Title"/>
                 </div>
               </div>
 
               <div className="form-group">
                 <div className="col-sm-10">
-                    <input type="text" className="form-control"
+                  <input type="text" className="form-control"
+                    id="trekRating" placeholder="Rating 1-5"/>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <div className="col-sm-10">
+                    <textarea className="form-control"
                         id="trekDescription" placeholder="Description"/>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <div className="col-sm-10">
-                    <label className="col-sm-2 control-label"
-                              for="trekLatLng">LatLng</label>
-                    <input type="text" className="form-control"
-                        id="trekLatitude" placeholder={this.state.modalLat}/>
-                    <input type="text" className="form-control"
-                        id="trekLongitude" placeholder={this.state.modalLng}/>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <div className="col-sm-10">
-                    <label className="col-sm-2 control-label"
-                              for="trekAttributes">Attributes</label>
-                    <input type="text" className="form-control"
-                        id="trekStartElevation" placeholder="Start Elevation"/>
-                    <input type="text" className="form-control"
-                        id="trekPeakElevation" placeholder="Peak Elevation"/>
-                    <input type="text" className="form-control"
-                        id="trekElevationMeasure" placeholder="Elevation Measure"/>
                 </div>
               </div>
 
@@ -86,9 +74,7 @@ var TrekModal = React.createClass({
                   <button onClick={this.closeModal} className="btn btn-danger">cancel</button>
                 </div>
               </div>
-
             </form>
-
           </div>
         </Modal>
       </div>
@@ -96,4 +82,21 @@ var TrekModal = React.createClass({
   }
 });
 
-module.exports = TrekModal;
+module.exports = ReviewModal;
+
+
+// <form id="ratingsForm">
+//   <div className="stars">
+//       <input type="radio" name="star" className="star-1" id="star-1" />
+//       <label className="star-1" for="star-1">1</label>
+//       <input type="radio" name="star" className="star-2" id="star-2" />
+//       <label className="star-2" for="star-2">2</label>
+//       <input type="radio" name="star" className="star-3" id="star-3" />
+//       <label className="star-3" for="star-3">3</label>
+//       <input type="radio" name="star" className="star-4" id="star-4" />
+//       <label className="star-4" for="star-4">4</label>
+//       <input type="radio" name="star" className="star-5" id="star-5" />
+//       <label className="star-5" for="star-5">5</label>
+//       <span></span>
+//   </div>
+// </form>

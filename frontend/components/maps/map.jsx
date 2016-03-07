@@ -159,7 +159,6 @@ var Map = React.createClass({
       that.setState({modalLat: event.latLng.lat(), modalLng: event.latLng.lng()});
       // that.placeMarker(event.latLng);
       that.showModal();
-
     });
   },
 

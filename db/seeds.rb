@@ -254,6 +254,11 @@ Picture.create!(author_id: 2,
       url: 'sykes0.jpg'
       )
 
+Picture.create!(author_id: 2,
+      trek_id: 1,
+      url: 'sykes1.jpg'
+      )
+
 Picture.create!(author_id: 1,
       trek_id: 2,
       url: 'tigerLeapingGorge0.jpg'
@@ -299,6 +304,11 @@ Picture.create!(author_id: 3,
       url: 'lostCoast0.jpg'
       )
 
+Picture.create!(author_id: 3,
+      trek_id: 3,
+      url: 'lostCoast1.jpg'
+      )
+
 Picture.create!(author_id: 4,
       trek_id: 4,
       url: 'yosemite0.jpg'
@@ -312,6 +322,11 @@ Picture.create!(author_id: 4,
 Picture.create!(author_id: 5,
       trek_id: 5,
       url: 'grandCanyon0.jpg'
+      )
+
+Picture.create!(author_id: 5,
+      trek_id: 5,
+      url: 'grandCanyon1.jpg'
       )
 
 Picture.create!(author_id: 6,
@@ -372,6 +387,11 @@ Picture.create!(author_id: 7,
 Picture.create!(author_id: 7,
       trek_id: 8,
       url: 'angelsIsland0.jpg'
+      )
+
+Picture.create!(author_id: 7,
+      trek_id: 8,
+      url: 'angelsIsland1.jpg'
       )
 
 Tag.create!(tag_name: 'Beginner')

@@ -14,7 +14,6 @@ body {
   // width: 100%;
   // overflow: hidden;
   // background-image: url("/assets/west-coast-trail.jpg");
-  padding: 10px;
   font-family: "Sorts+Mill+Goudy", sans-serif;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -30,6 +29,35 @@ body {
   font-family: Helvetica, sans-serif;
   background-repeat: no-repeat;
   background-size:100% 100%;
+}
+
+.auth-form{
+  width: 316px;
+  height: 290px;
+  position: absolute;
+  top: 35%;
+  left: 52%;
+  margin: -70px 0 0 -170px;
+  background-color: rgba(255,255,255,0.7);
+  padding: 5px 10px 5px 10px;
+  color: black;
+  box-shadow: 0 1px 3px #626262;
+}
+
+.log-form {
+  height: 100%;
+  width: 100%;
+  background-image: url("/assets/auth.jpg");
+  left: 0;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.auth{
+  top: 50%;
 }
 
 ul {
@@ -77,11 +105,13 @@ ul {
  width:720px;
  height:480px;
  border-radius: 10px;
+ background-size: cover;
 }
 
 .carousel img {
   width: auto;
   height: 300px;
+  background-size: cover;
 }
 
 #slider-landing {
@@ -144,6 +174,7 @@ li {
   width: 720px;
   float: left;
   margin-left: 15px;
+  background-size: cover;
 }
 
 #sidx {
@@ -293,22 +324,16 @@ margin: auto;
   float: left;
 }
 
+#trekDescription {
+  width: 500px;
+  height: 200px;
+}
+
 .fill{
   width: 100%;
   height: 100%;
   background-position: center;
   background-size: cover;
-}
-
-span.stars, span.stars span {
-    display: block;
-    background: url(stars.png) 0 -16px repeat-x;
-    width: 80px;
-    height: 16px;
-}
-
-span.stars span {
-    background-position: 0 0;
 }
 
 .tag-item-name {
@@ -325,4 +350,108 @@ span.stars span {
   border-right: 1px solid #ddd;
   float: left;
   line-height: 24px;
+}
+
+.review-body {
+  padding-left: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.create-review-btn{
+  margin-top: 10px;
+  padding-left: 40px;
+}
+
+#trek-star-average{
+  display: inline-block;
+}
+
+.rating i {
+  margin: 3px;
+  display: inline-block;
+  width: 0;
+  height: 1.5em;
+  border-width: 0 0.75em;
+  border-style: solid;
+  border-color: #eee;
+  border-radius: 3px;
+  color: #fff;
+  font-style: normal;
+  line-height: 1.6em;
+  text-indent: -0.5em;
+  text-shadow: 1px 0 1px #b3b3b3;
+}
+
+[data-review^='1'] .star-1 {
+  border-color: #fdff00;
+  background: #fdff00;
+}
+
+[data-review^='1.5'] .star-2 {
+  border-left-color: #fdff00;
+}
+
+[data-review^='2'] .star-1 {
+  border-color: #ffe700;
+  background: #ffe700;
+}
+
+[data-review^='2'] .star-2 {
+  border-color: #ffe700;
+  background: #ffe700;
+}
+
+[data-review^='2.5'] .star-3 {
+  border-left-color: #ffe700;
+}
+
+[data-review^='3'] .star-1 {
+  border-color: #f26a2c;
+  background: #f26a2c;
+}
+
+[data-review^='3'] .star-2 {
+  border-color: #f26a2c;
+  background: #f26a2c;
+}
+
+[data-review^='3'] .star-3 {
+  border-color: #f26a2c;
+  background: #f26a2c;
+}
+
+[data-review^='3.5'] .star-4 {
+  border-left-color: #f26a2c;
+}
+
+[data-review^='4'] .star-1 {
+  border-color: #ff4d00;
+  background: #ff4d00;
+}
+
+[data-review^='4'] .star-2 {
+  border-color: #ff4d00;
+  background: #ff4d00;
+}
+
+[data-review^='4'] .star-3 {
+  border-color: #ff4d00;
+  background: #ff4d00;
+}
+
+[data-review^='4'] .star-4 {
+  border-color: #ff4d00;
+  background: #ff4d00;
+}
+
+[data-review^='4.5'] .star-5 {
+  border-left-color: #ff4d00;
+}
+
+[data-review^="5"] i {
+  background: #f92600;
+  border-color: #f92600;
 }

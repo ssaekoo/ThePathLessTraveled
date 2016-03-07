@@ -22,7 +22,6 @@ module.exports = React.createClass({
       <div className="landing-page">
         <section id="parallax" className="parallax welcome-page">
           <div className="row">
-
             <div className="container container-custom text-center landing-welcome">
               <h1 className="welcome logo">The Path Less Traveled</h1>
               <h4 className="welcome tagline">Wander. Explore. Discover.</h4>

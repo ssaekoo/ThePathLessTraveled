@@ -11,6 +11,7 @@ var TrekIndexItem = require('./treks/trek_item');
 var Map = require('./maps/map');
 var Utilities = require('../util/util');
 var TrekModal = require('./treks/trek_modal');
+var Rating = require('./reviews/ratings');
 // var Tags = require('./tags');
 // var SessionStore = require('./stores/sessionStore.js');
 
@@ -105,13 +106,16 @@ var Search = React.createClass({
           </a>
         </section>
       );
+      var stars = (Math.round(trek.average_rating * 2) / 2).toFixed(1);
 
       return (
         <div className="col-xs-12 col-sm-6 row-space-5">
           <div key={trek.id} id={"trek-" + trek.id} className="trek-box">
             <div className="text-center" onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
             {makeCarousels}
-            <div className="text-center" onClick={this.showDetail.bind(null, trek.id)}>{trek.average_rating}</div>
+            <div className="text-center">
+              <Rating stars={stars}/>
+            </div>
             <div className="col-xs-12 col-sm-6 detail-container-right" onClick={this.showDetail.bind(null, trek.id)}>
               <div>City: </div>
               <div>State: </div>

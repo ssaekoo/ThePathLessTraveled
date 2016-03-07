@@ -56,7 +56,7 @@
 	
 	var App = __webpack_require__(242);
 	var Search = __webpack_require__(243);
-	var LandingPage = __webpack_require__(285);
+	var LandingPage = __webpack_require__(288);
 	var TrekDetail = __webpack_require__(279);
 	// var Map = require('./components/maps/map');
 	
@@ -27029,10 +27029,11 @@
 	var ApiActions = __webpack_require__(255);
 	var TrekStore = __webpack_require__(261);
 	var TrekDetail = __webpack_require__(279);
-	var TrekIndexItem = __webpack_require__(282);
-	var Map = __webpack_require__(283);
+	var TrekIndexItem = __webpack_require__(285);
+	var Map = __webpack_require__(286);
 	var Utilities = __webpack_require__(280);
-	var TrekModal = __webpack_require__(284);
+	var TrekModal = __webpack_require__(287);
+	var Rating = __webpack_require__(284);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -27146,6 +27147,7 @@
 	          React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
 	        )
 	      );
+	      var stars = (Math.round(trek.average_rating * 2) / 2).toFixed(1);
 	
 	      return React.createElement(
 	        'div',
@@ -27165,8 +27167,8 @@
 	          makeCarousels,
 	          React.createElement(
 	            'div',
-	            { className: 'text-center', onClick: this.showDetail.bind(null, trek.id) },
-	            trek.average_rating
+	            { className: 'text-center' },
+	            React.createElement(Rating, { stars: stars })
 	          ),
 	          React.createElement(
 	            'div',
@@ -35409,7 +35411,8 @@
 	var ApiActions = __webpack_require__(255);
 	var Utilities = __webpack_require__(280);
 	var MapTrekDetail = __webpack_require__(281);
-	var TrekReviews = __webpack_require__(287);
+	var TrekReviews = __webpack_require__(282);
+	var Rating = __webpack_require__(284);
 	
 	var TrekDetail = React.createClass({
 	  displayName: 'TrekDetail',
@@ -35473,6 +35476,7 @@
 	        ' '
 	      );
 	    });
+	    var stars = (Math.round(this.state.trek.average_rating * 2) / 2).toFixed(1);
 	
 	    return React.createElement(
 	      'div',
@@ -35508,13 +35512,21 @@
 	          { className: 'trek-detail-attributes' },
 	          React.createElement(
 	            'h1',
-	            { className: 'trek-detail-title text-center' },
+	            { className: 'trek-detail-title' },
 	            this.state.trek.title,
 	            ' '
 	          ),
 	          React.createElement(
 	            'div',
-	            { className: 'tag-container text-center' },
+	            { id: 'trek-star-average', className: 'trek-star-average' },
+	            React.createElement(Rating, { stars: stars })
+	          ),
+	          '(',
+	          this.state.trek.total_reviews,
+	          ')',
+	          React.createElement(
+	            'div',
+	            { className: 'tag-container' },
 	            myTags
 	          ),
 	          React.createElement(
@@ -35528,20 +35540,7 @@
 	            React.createElement(
 	              'ul',
 	              null,
-	              React.createElement(
-	                'li',
-	                null,
-	                React.createElement(
-	                  'div',
-	                  { className: 'detail-value' },
-	                  this.state.trek.average_rating
-	                ),
-	                React.createElement(
-	                  'div',
-	                  { className: 'detail-attribute' },
-	                  'Rating:'
-	                )
-	              )
+	              React.createElement('li', null)
 	            ),
 	            React.createElement(
 	              'ul',
@@ -35657,42 +35656,6 @@
 	              )
 	            ),
 	            React.createElement(
-	              'ul',
-	              null,
-	              React.createElement(
-	                'li',
-	                null,
-	                React.createElement(
-	                  'div',
-	                  { className: 'detail-value' },
-	                  this.state.trek.average_rating
-	                ),
-	                React.createElement(
-	                  'div',
-	                  { className: 'detail-attribute' },
-	                  'Description:'
-	                )
-	              )
-	            ),
-	            React.createElement(
-	              'ul',
-	              null,
-	              React.createElement(
-	                'li',
-	                null,
-	                React.createElement(
-	                  'div',
-	                  { className: 'detail-value' },
-	                  this.state.trek.total_reviews
-	                ),
-	                React.createElement(
-	                  'div',
-	                  { className: 'detail-attribute' },
-	                  'Reviews:'
-	                )
-	              )
-	            ),
-	            React.createElement(
 	              'div',
 	              { className: 'description-container' },
 	              React.createElement(
@@ -35711,7 +35674,11 @@
 	          )
 	        )
 	      ),
-	      React.createElement(TrekReviews, { reviews: this.state.trek.reviews })
+	      React.createElement(
+	        'div',
+	        { className: 'row' },
+	        React.createElement(TrekReviews, { reviews: this.state.trek.reviews, trekId: this.state.trek.id })
+	      )
 	    );
 	  }
 	});
@@ -35855,6 +35822,288 @@
 
 /***/ },
 /* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ReviewModal = __webpack_require__(283);
+	var Rating = __webpack_require__(284);
+	
+	var ReviewDetail = React.createClass({
+	  displayName: 'ReviewDetail',
+	
+	  getInitialState: function () {
+	    return { reviews: this.props.reviews,
+	      trekId: this.props.trekId,
+	      showModalState: false };
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ reviews: newProps.reviews });
+	  },
+	
+	  showModal: function () {
+	    this.setState({ showModalState: true });
+	  },
+	
+	  onStarClick: function (name, value) {
+	    this.setState({ rating: value });
+	  },
+	
+	  render: function () {
+	    var results = this.state.reviews.map(function (review) {
+	      return React.createElement(
+	        'ul',
+	        { key: review.id, className: 'review' },
+	        React.createElement(
+	          'h4',
+	          { className: 'review-title' },
+	          ' ',
+	          review.title,
+	          ' '
+	        ),
+	        React.createElement(Rating, { stars: review.rating }),
+	        React.createElement(
+	          'li',
+	          { className: 'review-body' },
+	          ' ',
+	          review.body,
+	          ' '
+	        )
+	      );
+	    });
+	
+	    var createReview = '';
+	    if (typeof CURRENT_USER_ID !== "undefined") {
+	      createReview = React.createElement(
+	        'button',
+	        { type: 'button', className: 'btn btn-warning', onClick: this.showModal },
+	        'Write a Review'
+	      );
+	    } else {
+	      createReview = React.createElement(
+	        'h4',
+	        null,
+	        'You must be signed in to write a review'
+	      );
+	    }
+	
+	    return React.createElement(
+	      'div',
+	      { className: 'col-xs-12 col-md-7 review-container' },
+	      React.createElement(
+	        'div',
+	        { className: 'create-review-btn' },
+	        createReview,
+	        React.createElement(ReviewModal, { trekId: this.state.trekId, show: this.state.showModalState })
+	      ),
+	      results
+	    );
+	  }
+	});
+	
+	module.exports = ReviewDetail;
+
+/***/ },
+/* 283 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LinkedStateMixin = __webpack_require__(244);
+	var Modal = __webpack_require__(222);
+	var ApiActions = __webpack_require__(255);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var ReviewModal = React.createClass({
+	  displayName: 'ReviewModal',
+	
+	
+	  getInitialState: function () {
+	    return { modalIsOpen: false,
+	      trekId: undefined,
+	      rating: 0
+	    };
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ modalIsOpen: newProps.show,
+	      trekId: newProps.trekId
+	    });
+	  },
+	
+	  closeModal: function () {
+	    this.setState({ modalIsOpen: false });
+	  },
+	
+	  setRating: function (num) {
+	    this.setState({ rating: num });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        Modal,
+	        {
+	          isOpen: this.state.modalIsOpen,
+	          onRequestClose: this.closeModal,
+	          style: customStyles },
+	        React.createElement(
+	          'div',
+	          { className: 'trek-create-container' },
+	          React.createElement(
+	            'h3',
+	            { className: 'text-center' },
+	            'Create a Review'
+	          ),
+	          React.createElement(
+	            'form',
+	            { className: 'form-horizontal', role: 'form' },
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-10' },
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekTitle', placeholder: 'Title' })
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-10' },
+	                React.createElement('input', { type: 'text', className: 'form-control',
+	                  id: 'trekRating', placeholder: 'Rating 1-5' })
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-10' },
+	                React.createElement('textarea', { className: 'form-control',
+	                  id: 'trekDescription', placeholder: 'Description' })
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'div',
+	                { className: 'col-sm-offset-2 col-sm-10' },
+	                React.createElement(
+	                  'button',
+	                  { type: 'submit', className: 'btn btn-primary' },
+	                  'create'
+	                ),
+	                React.createElement(
+	                  'button',
+	                  { onClick: this.closeModal, className: 'btn btn-danger' },
+	                  'cancel'
+	                )
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ReviewModal;
+	
+	// <form id="ratingsForm">
+	//   <div className="stars">
+	//       <input type="radio" name="star" className="star-1" id="star-1" />
+	//       <label className="star-1" for="star-1">1</label>
+	//       <input type="radio" name="star" className="star-2" id="star-2" />
+	//       <label className="star-2" for="star-2">2</label>
+	//       <input type="radio" name="star" className="star-3" id="star-3" />
+	//       <label className="star-3" for="star-3">3</label>
+	//       <input type="radio" name="star" className="star-4" id="star-4" />
+	//       <label className="star-4" for="star-4">4</label>
+	//       <input type="radio" name="star" className="star-5" id="star-5" />
+	//       <label className="star-5" for="star-5">5</label>
+	//       <span></span>
+	//   </div>
+	// </form>
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var Rating = React.createClass({
+	  displayName: "Rating",
+	
+	
+	  render: function () {
+	    // var stars = (Math.round(this.props.stars * 2) / 2).toFixed(1);
+	    // console.log(stars);
+	    // var result = [];
+	    //
+	    // for (var i = 1; i <= Math.round( stars * 10 ) / 10;; i++){
+	    //   result.push(<i className="star">★</i>)
+	    // }
+	    //
+	    //   return (
+	    //
+	    //   </div>)
+	    // }
+	
+	    return React.createElement(
+	      "div",
+	      { className: "rating", "data-review": this.props.stars },
+	      React.createElement(
+	        "i",
+	        { className: "star-1" },
+	        "★"
+	      ),
+	      React.createElement(
+	        "i",
+	        { className: "star-2" },
+	        "★"
+	      ),
+	      React.createElement(
+	        "i",
+	        { className: "star-3" },
+	        "★"
+	      ),
+	      React.createElement(
+	        "i",
+	        { className: "star-4" },
+	        "★"
+	      ),
+	      React.createElement(
+	        "i",
+	        { className: "star-5" },
+	        "★"
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Rating;
+
+/***/ },
+/* 285 */
 /***/ function(module, exports) {
 
 	// var React = require('react');
@@ -35878,13 +36127,13 @@
 	// });
 
 /***/ },
-/* 283 */
+/* 286 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var TrekStore = __webpack_require__(261);
-	var TrekModal = __webpack_require__(284);
+	var TrekModal = __webpack_require__(287);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -36090,7 +36339,7 @@
 	module.exports = Map;
 
 /***/ },
-/* 284 */
+/* 287 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36237,11 +36486,11 @@
 	module.exports = TrekModal;
 
 /***/ },
-/* 285 */
+/* 288 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var TrekModal = __webpack_require__(284);
+	var TrekModal = __webpack_require__(287);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -36296,66 +36545,6 @@
 	    );
 	  }
 	});
-
-/***/ },
-/* 286 */,
-/* 287 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var ReviewDetail = React.createClass({
-	  displayName: "ReviewDetail",
-	
-	  getInitialState: function () {
-	    return { reviews: this.props.reviews };
-	  },
-	
-	  componentWillReceiveProps: function (newProps) {
-	    this.setState({ reviews: newProps.reviews });
-	  },
-	
-	  render: function () {
-	    var results = this.state.reviews.map(function (review) {
-	      return React.createElement(
-	        "ul",
-	        { key: review.id, className: "review" },
-	        React.createElement(
-	          "li",
-	          { className: "review-title" },
-	          " ",
-	          review.title,
-	          " "
-	        ),
-	        React.createElement(
-	          "li",
-	          { className: "review-rating" },
-	          " ",
-	          review.rating,
-	          " "
-	        ),
-	        React.createElement(
-	          "li",
-	          { className: "review-body" },
-	          " ",
-	          review.body,
-	          " "
-	        )
-	      );
-	    });
-	    return React.createElement(
-	      "div",
-	      { className: "review-container" },
-	      results
-	    );
-	  }
-	});
-	
-	module.exports = ReviewDetail;
-	
-	// <div> City: {this.state.trek.location.city} </div>
-	// <div> Latitude: {this.state.trek.location.latitude} </div>
-	// <div> Longitude: {this.state.trek.location.longitude} </div>
 
 /***/ }
 /******/ ]);

@@ -4,6 +4,7 @@ var ApiActions = require('../../actions/api_actions');
 var Utilities = require('../../util/util');
 var MapTrekDetail = require('../maps/map_trek_create');
 var TrekReviews = require('../reviews/reviews');
+var Rating = require('../reviews/ratings');
 
 var TrekDetail = React.createClass({
   getInitialState: function () {
@@ -57,6 +58,7 @@ var TrekDetail = React.createClass({
     var myTags = this.state.trek.tags.map (function(tag){
       return (<button type="button" key={tag.id} id={"button" + tag.id} className="btn btn-xs btn-primary"> {tag.tag_name} </button>);
     })
+    var stars = (Math.round(this.state.trek.average_rating * 2) / 2).toFixed(1);
 
     return(
       <div id="sidx" className="trek-detail below-nav">
@@ -76,16 +78,18 @@ var TrekDetail = React.createClass({
             </section>
           </div>
           <div className="trek-detail-attributes">
-            <h1 className="trek-detail-title text-center">{this.state.trek.title} </h1>
-            <div className="tag-container text-center">
+            <h1 className="trek-detail-title">{this.state.trek.title} </h1>
+            <div id="trek-star-average" className="trek-star-average">
+              <Rating stars={stars}/>
+            </div>
+            ({this.state.trek.total_reviews})
+            <div className="tag-container">
               {myTags}
             </div>
             <div className="trek-info">
               <h3>Trek Info</h3>
               <ul>
                 <li>
-                  <div className="detail-value">{this.state.trek.average_rating}</div>
-                  <div className="detail-attribute">Rating:</div>
                 </li>
               </ul>
               <ul>
@@ -124,18 +128,6 @@ var TrekDetail = React.createClass({
                   <div className="detail-attribute">Highest elevation:</div>
                 </li>
               </ul>
-              <ul>
-                <li>
-                  <div className="detail-value">{this.state.trek.average_rating}</div>
-                  <div className="detail-attribute">Description:</div>
-                </li>
-              </ul>
-              <ul>
-                <li>
-                  <div className="detail-value">{this.state.trek.total_reviews}</div>
-                  <div className="detail-attribute">Reviews:</div>
-                </li>
-              </ul>
               <div className="description-container">
                 <h3>Description</h3>
                 <div className="detail-description trek-info">  {this.state.trek.description} </div>
@@ -143,8 +135,10 @@ var TrekDetail = React.createClass({
             </div>
           </div>
         </div>
-        
-        <TrekReviews reviews={this.state.trek.reviews} />
+
+        <div className="row">
+          <TrekReviews reviews={this.state.trek.reviews} trekId={this.state.trek.id}/>
+        </div>
       </div>
     );
   }
