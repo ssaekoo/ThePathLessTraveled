@@ -3,14 +3,11 @@ var TrekStore = require('../../stores/trek_store');
 var ApiActions = require('../../actions/api_actions');
 var Utilities = require('../../util/util');
 var MapTrekDetail = require('../maps/map_trek_create');
+var TrekReviews = require('../reviews/reviews');
 
 var TrekDetail = React.createClass({
   getInitialState: function () {
     return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
-  },
-
-  _onChange: function () {
-    this.setState({trek: this.getStateFromStore()});
   },
 
   getStateFromStore: function() {
@@ -146,13 +143,11 @@ var TrekDetail = React.createClass({
             </div>
           </div>
         </div>
+        
+        <TrekReviews reviews={this.state.trek.reviews} />
       </div>
     );
   }
 });
 
 module.exports = TrekDetail;
-
-// <div> City: {this.state.trek.location.city} </div>
-// <div> Latitude: {this.state.trek.location.latitude} </div>
-// <div> Longitude: {this.state.trek.location.longitude} </div>

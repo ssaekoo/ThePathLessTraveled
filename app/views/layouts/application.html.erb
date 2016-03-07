@@ -38,10 +38,10 @@
       <div id="navbar" class="navbar-collapse collapse">
         <div class="navbar-form navbar-right">
           <% if signed_in? %>
-            <%= "<div class='form-group'>".html_safe %>
+            <%= "<div id='signed-in' class='form-group signed-in'>".html_safe %>
               <%= "<a class='navbar-brand profile' href='#'>".html_safe + current_user.username + "</a>".html_safe  %>
             <%= "</div>".html_safe %>
-            <%= "<div class='form-group'>".html_safe %>
+            <%= "<div id='signed-in' class='form-group'>".html_safe %>
               <%= button_to "Sign Out", session_url, :method => :delete, :class => 'btn btn-success'%>
             <%= "</div>".html_safe %>
           <% else %>

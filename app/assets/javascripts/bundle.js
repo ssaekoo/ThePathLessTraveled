@@ -35409,16 +35409,13 @@
 	var ApiActions = __webpack_require__(255);
 	var Utilities = __webpack_require__(280);
 	var MapTrekDetail = __webpack_require__(281);
+	var TrekReviews = __webpack_require__(287);
 	
 	var TrekDetail = React.createClass({
 	  displayName: 'TrekDetail',
 	
 	  getInitialState: function () {
 	    return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ trek: this.getStateFromStore() });
 	  },
 	
 	  getStateFromStore: function () {
@@ -35713,16 +35710,13 @@
 	            )
 	          )
 	        )
-	      )
+	      ),
+	      React.createElement(TrekReviews, { reviews: this.state.trek.reviews })
 	    );
 	  }
 	});
 	
 	module.exports = TrekDetail;
-	
-	// <div> City: {this.state.trek.location.city} </div>
-	// <div> Latitude: {this.state.trek.location.latitude} </div>
-	// <div> Longitude: {this.state.trek.location.longitude} </div>
 
 /***/ },
 /* 280 */
@@ -36302,6 +36296,66 @@
 	    );
 	  }
 	});
+
+/***/ },
+/* 286 */,
+/* 287 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var ReviewDetail = React.createClass({
+	  displayName: "ReviewDetail",
+	
+	  getInitialState: function () {
+	    return { reviews: this.props.reviews };
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ reviews: newProps.reviews });
+	  },
+	
+	  render: function () {
+	    var results = this.state.reviews.map(function (review) {
+	      return React.createElement(
+	        "ul",
+	        { key: review.id, className: "review" },
+	        React.createElement(
+	          "li",
+	          { className: "review-title" },
+	          " ",
+	          review.title,
+	          " "
+	        ),
+	        React.createElement(
+	          "li",
+	          { className: "review-rating" },
+	          " ",
+	          review.rating,
+	          " "
+	        ),
+	        React.createElement(
+	          "li",
+	          { className: "review-body" },
+	          " ",
+	          review.body,
+	          " "
+	        )
+	      );
+	    });
+	    return React.createElement(
+	      "div",
+	      { className: "review-container" },
+	      results
+	    );
+	  }
+	});
+	
+	module.exports = ReviewDetail;
+	
+	// <div> City: {this.state.trek.location.city} </div>
+	// <div> Latitude: {this.state.trek.location.latitude} </div>
+	// <div> Longitude: {this.state.trek.location.longitude} </div>
 
 /***/ }
 /******/ ]);
