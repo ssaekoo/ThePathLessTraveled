@@ -34,9 +34,9 @@ var ReviewDetail = React.createClass({
 
     var createReview = '';
     if (typeof CURRENT_USER_ID !== "undefined") {
-      createReview = (<button type="button" className="btn btn-warning" onClick={this.showModal}>Write a Review</button>)
+      createReview = (<button type="button" className="btn btn-warning review-creation" onClick={this.showModal}>Write a Review</button>)
     } else {
-      createReview = (<h4>You must be signed in to write a review</h4>);
+      createReview = (<h4 className="review-creation">You must be signed in to write a review</h4>);
     }
 
 

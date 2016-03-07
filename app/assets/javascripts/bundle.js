@@ -35876,13 +35876,13 @@
 	    if (typeof CURRENT_USER_ID !== "undefined") {
 	      createReview = React.createElement(
 	        'button',
-	        { type: 'button', className: 'btn btn-warning', onClick: this.showModal },
+	        { type: 'button', className: 'btn btn-warning review-creation', onClick: this.showModal },
 	        'Write a Review'
 	      );
 	    } else {
 	      createReview = React.createElement(
 	        'h4',
-	        null,
+	        { className: 'review-creation' },
 	        'You must be signed in to write a review'
 	      );
 	    }
