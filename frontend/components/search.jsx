@@ -171,7 +171,7 @@ var Search = React.createClass({
       <div id="sidx" className="search-container below-nav">
         <div className="search-filters">
           <div className="col-xs-12 col-md-7">
-            <input className="search-input" placeholder="Search by Trek Title, City, State, or Country" valueLink={this.linkState('searchValue')} />
+            <input className="search-input" placeholder="Search by Title or Location" valueLink={this.linkState('searchValue')} />
           </div>
           <div className="col-xs-12 col-md-7 tag-container">
             <div className="difficulty-tags">

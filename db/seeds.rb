@@ -1136,5 +1136,5 @@ Location.create!(trek_id: 14,
       city: "Wrightwood",
       state: "California",
       latitude: 33.7866,
-      longitude: -118.2987
+      longitude: -117.6600
       )
