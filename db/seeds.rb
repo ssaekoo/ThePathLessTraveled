@@ -8,6 +8,18 @@ User.create!(username: "SamirDuran", password: "SamirDuran")
 User.create!(username: "GerardDuGalle", password: "GerardDuGalle")
 User.create!(username: "AlexeiStukov", password: "AlexeiStukov")
 
+Trek.create!(title: "Tiger Leaping Gorge",
+    author_id: 1,
+    description: "Tiger Leaping Gorge is on the way from Lijiang to Shangri-La in Southwest China's Yunnan Province. Drive about three hours from Lijiang to Tiger Leaping Gorge Town, go along the foot of Haba Snow Mountain, and you will enter the gorge. The river flowing through Tiger Leaping Gorge is between two mountains: Yulong Snow Mountain and Haba Snow Mountain. There is a huge stone in the center of the river, and a tiger once leaped from Yulong Snow Mountain to Haba Snow Mountain by jumping on it, which contributes to the name of Tiger Leaping Gorge.",
+    start_elv: 5905,
+    peak_elv: 12434,
+    elv_measure: "feet",
+    duration: 3,
+    dur_measure: "days",
+    length: 25,
+    len_measure: "miles",
+    last_edited: 1
+    )
 
 Trek.create!(title: "Sykes",
     author_id: 2,
@@ -18,19 +30,6 @@ Trek.create!(title: "Sykes",
     duration: 2,
     dur_measure: "days",
     length: 20,
-    len_measure: "miles",
-    last_edited: 1
-    )
-
-Trek.create!(title: "Tiger Leaping Gorge",
-    author_id: 1,
-    description: "Tiger Leaping Gorge is on the way from Lijiang to Shangri-La in Southwest China's Yunnan Province. Drive about three hours from Lijiang to Tiger Leaping Gorge Town, go along the foot of Haba Snow Mountain, and you will enter the gorge. The river flowing through Tiger Leaping Gorge is between two mountains: Yulong Snow Mountain and Haba Snow Mountain. There is a huge stone in the center of the river, and a tiger once leaped from Yulong Snow Mountain to Haba Snow Mountain by jumping on it, which contributes to the name of Tiger Leaping Gorge.",
-    start_elv: 5905,
-    peak_elv: 12434,
-    elv_measure: "feet",
-    duration: 3,
-    dur_measure: "days",
-    length: 25,
     len_measure: "miles",
     last_edited: 1
     )
@@ -213,7 +212,7 @@ Review.create!(user_id: 1,
       )
 
 Review.create!(user_id: 1,
-      trek_id: 1,
+      trek_id: 2,
       title: "Just Okay",
       body: "The trail had amazing views the main cherry on the top (Sykes hot springs) was not so cheery..it was dirty at least the one above the main hot spring. The main one was full of people and there was a naked women in there, disgusting and rude. I do recommend bringing flashlights, toilet paper, lots and lots of water/snacks, hiking shoes..not runninng shoes.. Like i did lol and a fly swatter.",
       rating: 2.5,
@@ -221,7 +220,7 @@ Review.create!(user_id: 1,
       )
 
 Review.create!(user_id: 2,
-      trek_id: 1,
+      trek_id: 2,
       title: "Tiring",
       body: "Just completed this hike yesterday- by far the most challenging hike I've ever done. I went in a small group of all very experienced hikers- all of us in great shape- and I will be recovering fora week at least. Yes, the first 5 miles is the hardest and will rock you if you don't pace yourself. Other reviews say it gets easier after your past the beginning. Don't be fooled- the entire hike is a process of climbing up and down ridges - gaining a lot of altitude over and over. Seriously, you climb at least 8 of these ridges.",
       rating: 2.5,
@@ -229,7 +228,7 @@ Review.create!(user_id: 2,
       )
 
 Review.create!(user_id: 3,
-      trek_id: 1,
+      trek_id: 2,
       title: "Had an AWESOME time",
       body: "Love love this trail!   It we are staying one night then we just pack in 5 miles and set up camp at the halfway point, then day trip to the springs and back.  This past time we stayed 2 nights and packed all the way into the springs.  So awesome Being there at night!!",
       rating: 4.5,
@@ -237,7 +236,7 @@ Review.create!(user_id: 3,
       )
 
 Review.create!(user_id: 4,
-      trek_id: 1,
+      trek_id: 2,
       title: "Beautiful, but crowded",
       body: "An amazingly beautiful hotsprings and river! The 10 mile hike was well worth the refreshing reward of being a serene nature for 2 nights. Other hikers on the trail were friendly and campers and soakers took care of the hotsprings and sites. The 10 miles back to car felt much easier as I was so refreshed from the hotsprings. Spring was a lovely time to go as we saw lots of wildflowers and the tempertures were pleasant. I will definetly be back!",
       rating: 4.5,
@@ -245,7 +244,7 @@ Review.create!(user_id: 4,
       )
 
 Review.create!(user_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       title: "Indescribable",
       body: "Amazingly beautiful place. However be careful while enjoying the sights, this is not a trail that you would want any missteps.",
       rating: 5.0,
@@ -253,7 +252,7 @@ Review.create!(user_id: 1,
       )
 
 Review.create!(user_id: 5,
-      trek_id: 2,
+      trek_id: 1,
       title: "Awesome Place!!",
       body: "Lovely everything about Tiger Leaping Gorge, this place just kicks ...!! The hiking trails are super with beautiful views. The people you meet along the way make this trip also, stayed at the halfway inn and loved it, The staff are lovely, plenty beer and yummy cooking, what more could u ask for after some great hiking. Outstanding trip, highlight of china trip",
       rating: 5.0,
@@ -261,7 +260,7 @@ Review.create!(user_id: 5,
       )
 
 Review.create!(user_id: 6,
-      trek_id: 2,
+      trek_id: 1,
       title: "Breathtaking",
       body: "I would suggest hiking the whole path, not only the gorges. It takes almost two days, and you can spend the night in one of the guest houses along the path. Tiger Leaping Gorges are not for the faint-hearted, good health conditions are required, but it is not required to be a professional hiker to achieve the goal. The views are amazing, nature shows itself at the strongest, and it it definitely an experience worth the effort.",
       rating: 5.0,
@@ -461,37 +460,37 @@ Review.create!(user_id: 5,
       )
 
 Picture.create!(author_id: 2,
-      trek_id: 1,
+      trek_id: 2,
       url: 'sykes0.jpg'
       )
 
 Picture.create!(author_id: 2,
-      trek_id: 1,
+      trek_id: 2,
       url: 'sykes1.jpg'
       )
 
 Picture.create!(author_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       url: 'tigerLeapingGorge0.jpg'
       )
 
 Picture.create!(author_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       url: 'tigerLeapingGorge1.jpg'
       )
 
 Picture.create!(author_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       url: 'tigerLeapingGorge2.jpg'
       )
 
 Picture.create!(author_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       url: 'tigerLeapingGorge3.jpg'
       )
 
 Picture.create!(author_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       url: 'tigerLeapingGorge4.jpg'
       )
 
@@ -501,12 +500,12 @@ Picture.create!(author_id: 1,
 #       )
 
 Picture.create!(author_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       url: 'tigerLeapingGorge6.jpg'
       )
 
 Picture.create!(author_id: 1,
-      trek_id: 2,
+      trek_id: 1,
       url: 'tigerLeapingGorge7.jpg'
       )
 
@@ -724,43 +723,43 @@ Tag.create!(tag_name: 'Mountainous')
 
 Tag.create!(tag_name: 'Family_oriented')
 
-Tagging.create!(trek_id: 1,
+Tagging.create!(trek_id: 2,
       tag_id: 2
       )
 
-Tagging.create!(trek_id: 1,
+Tagging.create!(trek_id: 2,
       tag_id: 5
       )
 
-Tagging.create!(trek_id: 1,
+Tagging.create!(trek_id: 2,
       tag_id: 7
       )
 
-Tagging.create!(trek_id: 1,
+Tagging.create!(trek_id: 2,
       tag_id: 8
       )
 
-Tagging.create!(trek_id: 1,
+Tagging.create!(trek_id: 2,
       tag_id: 12
       )
 
-Tagging.create!(trek_id: 2,
+Tagging.create!(trek_id: 1,
       tag_id: 2
       )
 
-Tagging.create!(trek_id: 2,
+Tagging.create!(trek_id: 1,
       tag_id: 5
       )
 
-Tagging.create!(trek_id: 2,
+Tagging.create!(trek_id: 1,
       tag_id: 7
       )
 
-Tagging.create!(trek_id: 2,
+Tagging.create!(trek_id: 1,
       tag_id: 9
       )
 
-Tagging.create!(trek_id: 2,
+Tagging.create!(trek_id: 1,
       tag_id: 11
       )
 
@@ -1012,7 +1011,7 @@ Tagging.create!(trek_id: 14,
       tag_id: 12
       )
 
-Location.create!(trek_id: 1,
+Location.create!(trek_id: 2,
       trek_name: "Sykes",
       country: "United States",
       city: "Big Sur",
@@ -1021,7 +1020,7 @@ Location.create!(trek_id: 1,
       longitude: -121.6258
       )
 
-Location.create!(trek_id: 2,
+Location.create!(trek_id: 1,
       trek_name: "Tiger Leaping Gorge",
       country: "China",
       city: "Lijiang",

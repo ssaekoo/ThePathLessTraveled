@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "postinstall": "./node_modules/.bin/webpack"
+    "postinstall": "webpack"
   },
   "engines": {
     "node": "4.3.0",
@@ -17,8 +17,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "babel-core": "^6.5.2",
-    "babel-loader": "^6.2.3",
+    "babel-core": "^6.7.0",
+    "babel-loader": "^6.2.4",
     "babel-preset-react": "^6.5.0",
     "bootstrap": "^3.3.6",
     "flux": "^2.1.1",
@@ -36,5 +36,13 @@
     "react-star-rating-component": "^0.1.0",
     "webpack": "^1.12.14"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssaekoo/ThePathLessTraveled.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ssaekoo/ThePathLessTraveled/issues"
+  },
+  "homepage": "https://github.com/ssaekoo/ThePathLessTraveled#readme"
 }
