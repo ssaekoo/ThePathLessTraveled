@@ -133,6 +133,20 @@ var Search = React.createClass({
     }.bind(this));
 
     var myTagObjs = {};
+    var allTags = {
+      1: 'Beginner',
+      2: 'Intermediate',
+      3: 'Expert',
+      4: 'Req equipment',
+      5: 'Multi-day',
+      6: 'Single-day',
+      7: 'Famous',
+      8: 'Populous',
+      9: 'Deserted',
+      10: 'Water crossing',
+      11: 'Mountainous',
+      12: 'Family oriented'
+    };
 
     myMatches.forEach(function (trek) {
       trek.tags.forEach (function (tag) {
@@ -146,18 +160,28 @@ var Search = React.createClass({
 
     // TODO redo, will need to change tag table to allow categorization and create a tag store
     for (var i = 1; i <= 12; i++) {
-      if (myTagObjs[i] !== undefined) {
-        switch (true) {
-          case (i <= 4):
+      switch (true) {
+        case (i <= 4):
+          if (myTagObjs[i] !== undefined) {
             difficultyTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
-            break;
-          case (i <= 6):
+          } else {
+            difficultyTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default btn-shaded" disabled> {allTags[i]} </button>)
+          }
+          break;
+        case (i <= 6):
+          if (myTagObjs[i] !== undefined) {
             durationTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
-            break;
-          case (i > 6):
+          } else {
+            durationTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" disabled> {allTags[i]} </button>)
+          }
+          break;
+        case (i > 6):
+          if (myTagObjs[i] !== undefined) {
             otherTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
-            break;
-        }
+          } else {
+            otherTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" disabled> {allTags[i]} </button>)
+          }
+          break;
       }
     }
 

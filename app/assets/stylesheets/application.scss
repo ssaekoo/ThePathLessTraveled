@@ -19,7 +19,7 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  background-color: #F2F2F2;
+  background-color: white;
   font-size: 16px;
   font-weight: 400;
   // top: 0px;
@@ -88,7 +88,7 @@ ul {
 .search-form {
   position: relative;
   padding-top: 10px;
-  background-color: white;
+  background-color: #F5F5F5;
 }
 
 .search-input{
@@ -120,7 +120,7 @@ ul {
 
 #nav {
   margin-bottom: 10px;
-  background-color: #D3E3E8;
+  background-color: #F5F5F5;
   border-bottom: 1px solid black;
 }
 
@@ -138,8 +138,12 @@ ul {
 .trek-detail-attributes {
   float: left;
   margin-left: 50px;
-  margin-right: 50px;
-  width: 30%;
+  margin-right: 20px;
+  width: 450px;
+  background-color: #F2F2F2;
+  padding: 0px 20px 0px 20px;
+  border-radius: 10px;
+  border: 1px solid #CCCCCC;
 }
 
 .trek-detail-pane {
@@ -175,6 +179,8 @@ li {
   float: left;
   margin-left: 15px;
   background-size: cover;
+  left: 25px;
+  position: relative;
 }
 
 #sidx {
@@ -205,13 +211,13 @@ li {
 
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img{
-width: 100%; /* use this, or not */
-margin: auto;
+  width: 100%; /* use this, or not */
+  margin: auto;
 }
 
 .carousel-inner > .item > img {
-    margin: 0 auto;
-    overflow: hidden;
+  margin: 0 auto;
+  overflow: hidden;
 }
 
 .carousel-inner {
@@ -243,14 +249,20 @@ margin: auto;
 }
 
 .navbar-toggle collapsed {
-  background-color: #D3E3E8;
+  background-color: #CBDFAD;
   border-bottom: 1px solid black;
 }
 
 .navbar-brand {
   color: #333;
   font-size: 20px;
-  padding-top: 8px;
+  padding-top: 12px;
+  color: grey;
+  font-family: 'SouthernAire';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 30px;
+  font-weight: 400;
 }
 
 .navbar-form {
@@ -258,6 +270,15 @@ margin: auto;
   padding: 0px;
 }
 
+.btn-login {
+  background-color: grey;
+  border-color: grey;
+  color: white;
+}
+
+.btn-default {
+  border-color: #aaa;
+}
 
 .container-custom {
   //  margin-top: 60px;
@@ -275,23 +296,39 @@ margin: auto;
   bottom: 0;
   position: absolute;
 }
-// .landing-welcome {
-//     display: block;
-//     position: absolute;
-//     top: 60%;
-//     left: 50%;
-//     width: auto;
-//     height: 50em;
-//     margin-top: -9em; /*set to a negative number 1/2 of your height*/
-//     margin-left: -15em; /*set to a negative number 1/2 of your width*/
-//     color: white;
-// }
+
+@font-face {
+  font-family: 'Cinzel';
+  src: url("Cinzel-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  font-weight: bold;
+  src: url("Cinzel-Bold.otf") format("opentype");
+}
+
+@font-face {
+  font-family: 'Streetwear';
+  src: url("Streetwear.otf") format("opentype");
+}
+
+@font-face {
+  font-family: 'Magnolia';
+  src: url("Magnolia Light.ttf") format("opentype");
+}
+
+@font-face {
+  font-family: 'SouthernAire';
+  src: url("SouthernAire.ttf") format("opentype");
+}
 
 .logo {
     display: block;
-    font-family: 'Bitter';
-    src: url(https://fonts.googleapis.com/css?family=Bitter);
-    font-size: 43px;
+    font-family: 'Cinzel';
+    font-weight: bold;
+    font-style: normal;
+    font-size: 45px;
     font-weight: 700;
 }
 
@@ -329,6 +366,10 @@ margin: auto;
   height: 200px;
 }
 
+.description-container {
+  padding-bottom: 50px;
+}
+
 .fill{
   width: 100%;
   height: 100%;
@@ -357,14 +398,6 @@ margin: auto;
   top: 500px;
 }
 
-.review-body {
-  padding-left: 15px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #ddd;
-}
-
 .create-review-btn{
   margin-top: 10px;
   padding-left: 40px;
@@ -381,7 +414,7 @@ margin: auto;
   height: 1.5em;
   border-width: 0 0.75em;
   border-style: solid;
-  border-color: #eee;
+  border-color: #b0b0b0;
   border-radius: 3px;
   color: #fff;
   font-style: normal;
@@ -459,4 +492,37 @@ margin: auto;
 [data-review^="5"] i {
   background: #f92600;
   border-color: #f92600;
+}
+
+.review {
+  position: relative;
+  background-color: #F2F2F2;
+  padding-left: 0px;
+  left: 40px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #CCCCCC;
+}
+
+.review-title, .rating {
+  padding: 0px 40px 5px 40px;
+}
+
+.review-title {
+  padding-top: 15px;
+}
+
+.review-body {
+  margin: 0px 40px 5px 40px;
+  border-top: 1px solid #CCCCCC;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.trek-star-average .rating {
+  padding: 0px 0px 5px 0px;
+}
+
+.btn[disabled]{
+  opacity: 0.3;
 }

@@ -3,6 +3,7 @@
 <head>
   <title>ThePathLessTraveled</title>
   <link href='https://fonts.googleapis.com/css?family=Sorts+Mill+Goudy' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Bitter' rel='stylesheet' type='text/css'>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -32,7 +33,7 @@
           <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="/"><strong>ThePathLessTraveled</strong></a>
-        <a class="btn btn-danger search-btn" href="/#/search">Search</a>
+        <!-- <a class="btn btn-danger search-btn" href="/#/search">Search</a> -->
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <div class="navbar-form navbar-right">
@@ -41,14 +42,14 @@
               <%= "<a class='navbar-brand profile' href='#'>".html_safe + current_user.username + "</a>".html_safe  %>
             <%= "</div>".html_safe %>
             <%= "<div id='signed-in' class='form-group'>".html_safe %>
-              <%= button_to "Sign Out", session_url, :method => :delete, :class => 'btn btn-success'%>
+              <%= button_to "Sign Out", session_url, :method => :delete, :class => 'btn btn-login'%>
             <%= "</div>".html_safe %>
           <% else %>
             <%= "<div class='form-group'>".html_safe %>
-              <%= link_to "Sign In", new_session_url, :class => 'btn btn-success' %>
+              <%= link_to "Sign In", new_session_url, :class => 'btn btn-login' %>
             <%= "</div>".html_safe %>
             <%= "<div class='form-group'>".html_safe %>
-              <%= link_to "Sign Up", new_user_url, :class => 'btn btn-success' %>
+              <%= link_to "Sign Up", new_user_url, :class => 'btn btn-login' %>
             <%= "</div>".html_safe %>
           <% end %>
         </div>

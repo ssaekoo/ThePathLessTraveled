@@ -62,7 +62,7 @@
 	
 	var routes = React.createElement(
 	  Router,
-	  { history: History.hashHistory },
+	  { history: History.HashHistory },
 	  React.createElement(
 	    Route,
 	    { path: '/', component: App },
@@ -27213,6 +27213,20 @@
 	    }.bind(this));
 	
 	    var myTagObjs = {};
+	    var allTags = {
+	      1: 'Beginner',
+	      2: 'Intermediate',
+	      3: 'Expert',
+	      4: 'Req equipment',
+	      5: 'Multi-day',
+	      6: 'Single-day',
+	      7: 'Famous',
+	      8: 'Populous',
+	      9: 'Deserted',
+	      10: 'Water crossing',
+	      11: 'Mountainous',
+	      12: 'Family oriented'
+	    };
 	
 	    myMatches.forEach(function (trek) {
 	      trek.tags.forEach(function (tag) {
@@ -27226,9 +27240,9 @@
 	
 	    // TODO redo, will need to change tag table to allow categorization and create a tag store
 	    for (var i = 1; i <= 12; i++) {
-	      if (myTagObjs[i] !== undefined) {
-	        switch (true) {
-	          case i <= 4:
+	      switch (true) {
+	        case i <= 4:
+	          if (myTagObjs[i] !== undefined) {
 	            difficultyTags.push(React.createElement(
 	              'button',
 	              { type: 'button', key: i, id: "button" + i, className: 'btn btn-xs btn-default', onClick: this.handleButton.bind(null, i) },
@@ -27236,8 +27250,18 @@
 	              myTagObjs[i],
 	              ' '
 	            ));
-	            break;
-	          case i <= 6:
+	          } else {
+	            difficultyTags.push(React.createElement(
+	              'button',
+	              { type: 'button', key: i, id: "button" + i, className: 'btn btn-xs btn-default btn-shaded', disabled: true },
+	              ' ',
+	              allTags[i],
+	              ' '
+	            ));
+	          }
+	          break;
+	        case i <= 6:
+	          if (myTagObjs[i] !== undefined) {
 	            durationTags.push(React.createElement(
 	              'button',
 	              { type: 'button', key: i, id: "button" + i, className: 'btn btn-xs btn-default', onClick: this.handleButton.bind(null, i) },
@@ -27245,8 +27269,18 @@
 	              myTagObjs[i],
 	              ' '
 	            ));
-	            break;
-	          case i > 6:
+	          } else {
+	            durationTags.push(React.createElement(
+	              'button',
+	              { type: 'button', key: i, id: "button" + i, className: 'btn btn-xs btn-default', disabled: true },
+	              ' ',
+	              allTags[i],
+	              ' '
+	            ));
+	          }
+	          break;
+	        case i > 6:
+	          if (myTagObjs[i] !== undefined) {
 	            otherTags.push(React.createElement(
 	              'button',
 	              { type: 'button', key: i, id: "button" + i, className: 'btn btn-xs btn-default', onClick: this.handleButton.bind(null, i) },
@@ -27254,8 +27288,16 @@
 	              myTagObjs[i],
 	              ' '
 	            ));
-	            break;
-	        }
+	          } else {
+	            otherTags.push(React.createElement(
+	              'button',
+	              { type: 'button', key: i, id: "button" + i, className: 'btn btn-xs btn-default', disabled: true },
+	              ' ',
+	              allTags[i],
+	              ' '
+	            ));
+	          }
+	          break;
 	      }
 	    }
 	
@@ -27274,7 +27316,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'col-xs-12 col-md-7' },
-	          React.createElement('input', { className: 'search-input', placeholder: 'Search by Trek Title, City, State, or Country', valueLink: this.linkState('searchValue') })
+	          React.createElement('input', { className: 'search-input', placeholder: 'Search by Title or Location', valueLink: this.linkState('searchValue') })
 	        ),
 	        React.createElement(
 	          'div',
@@ -35459,7 +35501,7 @@
 	        return React.createElement(
 	          'div',
 	          { className: pictureClass },
-	          React.createElement('img', { src: "http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url })
+	          React.createElement('img', { key: picture.url, src: "http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url })
 	        );
 	      });
 	    };
@@ -36504,9 +36546,9 @@
 	
 	  componentWillUnmount: function () {
 	    document.body.style.backgroundImage = null;
-	    document.body.style.backgroundColor = '#EBEDED';
+	    document.body.style.backgroundColor = 'white';
 	    var selection = document.getElementById("nav");
-	    selection.style.backgroundColor = '#D3E3E8';
+	    selection.style.backgroundColor = '#F5F5F5';
 	    selection.style.borderBottom = '1px solid black';
 	  },
 	

@@ -48,7 +48,7 @@ var TrekDetail = React.createClass({
 
           return (
               <div className={pictureClass}>
-                  <img src={"http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url} />
+                  <img key={picture.url} src={"http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url} />
               </div>
           )
       })

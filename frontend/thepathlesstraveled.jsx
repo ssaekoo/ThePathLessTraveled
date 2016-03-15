@@ -15,7 +15,7 @@ var TrekDetail = require('./components/treks/trek_detail');
 // var Map = require('./components/maps/map');
 
 var routes = (
-  <Router history={History.hashHistory}>
+  <Router history={History.HashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={LandingPage} />
       <Route path='map' component={Map} />
