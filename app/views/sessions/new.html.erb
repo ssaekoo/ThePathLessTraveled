@@ -21,11 +21,32 @@
           <div class="form-group">
             <input class="form-control" type="password" placeholder="Password" name="user[password]">
           </div>
-          <div class="form-group">
-            <input class="btn btn-success" type="submit" value="Submit">
-          </div>
+          <input class="btn btn-login" type="submit" id="enter" value="Submit">
         </form>
+        <button class="btn btn-login" id="guest-login">Guest Login</button>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  $('button#guest-login').click(function(){
+    $("input[name='user[username]']").val("");
+    $("input[name='user[password]']").val("");
+      autoTyper('JimRaynor', $("input[name='user[username]']"), function(){
+        autoTyper('JimRaynor', $("input[name='user[password]']"), function(){
+          $('#enter').click();
+        });
+      });
+    });
+    var autoTyper = function(word, $el, callback){
+      var typer = setInterval(function(){
+        $el.val($el.val() + word.slice(0,1));
+        word = word.substr(1);
+        if(word.length === 0){
+          clearInterval(typer);
+          callback();
+        }
+      }, 100);
+    }
+</script>

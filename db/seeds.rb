@@ -1,4 +1,4 @@
-User.create!(username: "Ssaekoo", password: "baough")
+User.create!(username: "Ssaekoo", password: "Ssaekoo")
 User.create!(username: "SarahKerrigan", password: "SarahKerrigan")
 User.create!(username: "KateLockwell", password: "KateLockwell")
 User.create!(username: "TychusFindlay", password: "TychusFindlay")

@@ -27,7 +27,7 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
-    TrekStore.addListener(this.updateTreks);
+    this.listenerToken = TrekStore.addListener(this.updateTreks);
     ApiActions.requestAllTreks();
   },
 
@@ -35,11 +35,15 @@ var Search = React.createClass({
     this.setState({treks: TrekStore.all()});
   },
 
+  componentWillUnmount: function() {
+    this.listenerToken.remove();
+  },
+
   parseTreks: function (jsonTreks) {
     var renderArray = [];
     jsonTreks.forEach(function(trek) {
       renderArray.push(
-        <ul>
+        <ul key={trek.id}>
           <li>{trek.title}</li>
           <li>{trek.location}</li>
           <li>{trek.description}</li>
@@ -51,7 +55,7 @@ var Search = React.createClass({
   },
 
   showDetail: function (id) {
-    this.history.pushState(null, '/treks/' + id, {});
+    this.history.pushState(null, '/treks/' + id);
   },
 
   handleButton: function(id) {
@@ -163,23 +167,23 @@ var Search = React.createClass({
       switch (true) {
         case (i <= 4):
           if (myTagObjs[i] !== undefined) {
-            difficultyTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
+            difficultyTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default tags" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
           } else {
-            difficultyTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default btn-shaded" disabled> {allTags[i]} </button>)
+            difficultyTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default btn-shaded tags" disabled> {allTags[i]} </button>)
           }
           break;
         case (i <= 6):
           if (myTagObjs[i] !== undefined) {
-            durationTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
+            durationTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default tags" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
           } else {
-            durationTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" disabled> {allTags[i]} </button>)
+            durationTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default tags" disabled> {allTags[i]} </button>)
           }
           break;
         case (i > 6):
           if (myTagObjs[i] !== undefined) {
-            otherTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
+            otherTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default tags" onClick={this.handleButton.bind(null, i)}> {myTagObjs[i]} </button>)
           } else {
-            otherTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default" disabled> {allTags[i]} </button>)
+            otherTags.push(<button type="button" key={i} id={"button" + i} className="btn btn-xs btn-default tags" disabled> {allTags[i]} </button>)
           }
           break;
       }

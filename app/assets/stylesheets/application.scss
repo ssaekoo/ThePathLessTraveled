@@ -31,6 +31,14 @@ body {
   background-size:100% 100%;
 }
 
+#enter {
+  float: left;
+}
+
+#guest-login{
+  float: right;
+}
+
 .auth-form{
   width: 316px;
   height: 290px;
@@ -99,6 +107,10 @@ ul {
 .tag-container {
   border-bottom: 1px solid #CCCCCC;
   padding-bottom: 10px;
+}
+
+.tags {
+  margin-right: 1px;
 }
 
 .carousel{
@@ -263,6 +275,16 @@ li {
   font-style: normal;
   font-size: 30px;
   font-weight: 400;
+}
+
+.profile {
+  font-family: 'Sorts+Mill+Goudy';
+  color: grey;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  font-weight: 700;
+  padding-top: 9px;
 }
 
 .navbar-form {
@@ -517,6 +539,10 @@ li {
   border-top: 1px solid #CCCCCC;
   padding-top: 15px;
   padding-bottom: 15px;
+}
+
+.review-creation{
+  margin-bottom: 10px;
 }
 
 .trek-star-average .rating {
