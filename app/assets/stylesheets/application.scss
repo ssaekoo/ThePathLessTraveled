@@ -147,6 +147,10 @@ ul {
   float: left;
 }
 
+.return-to-search{
+  margin-left: 40px;
+}
+
 .trek-detail-attributes {
   float: left;
   margin-left: 50px;
@@ -216,7 +220,7 @@ li {
   position: fixed;
   right: 0px;
   left: auto;
-  bottom: 0px;
+  bottom: 20px;
   top: 50px;
 }
 
@@ -261,7 +265,6 @@ li {
 }
 
 .navbar-toggle collapsed {
-  background-color: #CBDFAD;
   border-bottom: 1px solid black;
 }
 
@@ -282,7 +285,7 @@ li {
   color: grey;
   font-weight: normal;
   font-style: normal;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   padding-top: 9px;
 }
@@ -384,8 +387,8 @@ li {
 }
 
 #trekDescription {
-  width: 500px;
-  height: 200px;
+  width: 600px;
+  height: 75px;
 }
 
 .description-container {
@@ -418,6 +421,8 @@ li {
 .review-container {
   position: absolute;
   top: 500px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .create-review-btn{
@@ -551,4 +556,52 @@ li {
 
 .btn[disabled]{
   opacity: 0.3;
+}
+
+.footer-note {
+  margin-left: 20px;
+  color: grey;
+}
+
+.navbar-fixed-bottom{
+  background-color: #F5F5F5;
+  opacity: 0.9;
+  height: 23px;
+  border: 1px solid grey;
+}
+
+.ReactModalPortal > div {
+  top: 50px;
+}
+
+.lat-lng {
+  float: left;
+  width: 170px;
+  margin-left: 5px;
+  margin-right: 5px;
+  left: 100px;
+}
+
+.attributes {
+  float: left;
+  width: 170px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.control-label {
+  float: left;
+  margin-left: 15px;
+  width: 100px;
+}
+
+.create-description {
+  width: 630px;
+  height: 75px;
+  margin-left: 20px;
+}
+
+.trek-title {
+  width: 200px;
+  margin-left: 20px;
 }

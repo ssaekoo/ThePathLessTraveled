@@ -126,7 +126,7 @@ Trek.create!(title: "Monrovia Canyon Park",
     )
 
 Trek.create!(title: "Sturtevant Falls",
-    author_id: 9,
+    author_id: 5,
     description: "Sturtevant Falls is located within the Santa Anita Canyon. The trail from Chantry Flats to Sturtevant Falls is about 3.7 miles. There are several stream crossings before arriving at the Falls, and the last 0.6 miles return to the parking lot is all uphill. Car parking is $5 Mon-Thurs and $10 Fri-Sun.",
     start_elv: 482,
     peak_elv: 782,
@@ -1135,5 +1135,5 @@ Location.create!(trek_id: 14,
       city: "Wrightwood",
       state: "California",
       latitude: 33.7866,
-      longitude: -117.6600
+        longitude: -117.6600
       )

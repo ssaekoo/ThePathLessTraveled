@@ -3,6 +3,7 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var History = require('react-router').History;
 var Link = require('react-router').Link;
+var ScrollToTop = require('react-scroll-up');
 
 var ApiActions = require('../actions/api_actions');
 var TrekStore = require('../stores/trek_store');
@@ -232,6 +233,9 @@ var Search = React.createClass({
           </div>
         </div>
         <Map className='trek-map' history={this.history} searchValue={this.state.searchValue}/>
+        <ScrollToTop id="scroll-to-top" showUnder={160}>
+          <span>UP</span>
+        </ScrollToTop>
       </div>
     );
   }

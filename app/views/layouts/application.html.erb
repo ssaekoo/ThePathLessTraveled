@@ -26,14 +26,14 @@
   <nav id="nav" class="nav nav-justified navbar-fixed-top">
     <div class="container auth">
       <div class="navbar-header">
+        <a class="navbar-brand" href="/"><strong>ThePathLessTraveled</strong></a>
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/"><strong>ThePathLessTraveled</strong></a>
-        <!-- <a class="btn btn-danger search-btn" href="/#/search">Search</a> -->
+        
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <div class="navbar-form navbar-right">
@@ -56,7 +56,15 @@
       </div>
     </div>
   </nav>
-<%= yield %>
-
+  <%= yield %>
+  <footer class="navbar-fixed-bottom">
+    <p>
+      <a class="footer-note footer-github" href="https://github.com/ssaekoo">GitHub</a>
+      <a class="footer-note footer-linkedin" href="https://www.linkedin.com/in/ssaekoo">LinkedIn</a> 
+      <span class='footer-note footer-copyright'>
+        © Stephen Saekoo 2016
+      </span>
+    </p>
+  </footer>
 </body>
 </html>

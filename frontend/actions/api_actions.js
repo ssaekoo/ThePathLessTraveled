@@ -52,4 +52,15 @@ ApiActions.filterStore = function(myString){
   });
 };
 
+ApiActions.recieveCurrentUser = function(user) {
+  Dispatcher.dispatch({
+    actionType: "CURRENT_USER_RECIEVED",
+    user: user
+  });
+};
+
+ApiActions.requestCurrentUser = function(){
+  ApiUtil.fetchCurrentUser(ApiActions.recieveCurrentUser);
+};
+
 module.exports = ApiActions;

@@ -6,6 +6,7 @@ var MapTrekDetail = require('../maps/map_trek_create');
 var TrekReviews = require('../reviews/reviews');
 var Rating = require('../reviews/ratings');
 
+
 var TrekDetail = React.createClass({
   getInitialState: function () {
     return { trek: TrekStore.find(parseInt(this.props.params.trekId)) };
@@ -62,6 +63,7 @@ var TrekDetail = React.createClass({
 
     return(
       <div id="sidx" className="trek-detail below-nav">
+        <a className="return-to-search" href="/#/search">{"Return to search"}</a>
         <div className="trek-detail-pane">
           <div className="trek-detail-carousel">
             <section id="slider" className="carousel slide" data-interval="false">

@@ -11,7 +11,7 @@ const customStyles = {
     right                 : 'auto',
     bottom                : 'auto',
     marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
   }
 };
 
@@ -42,44 +42,49 @@ var TrekModal = React.createClass({
           onRequestClose={this.closeModal}
           style={customStyles} >
           <div className="trek-create-container">
-            <h3 className="text-center">Create new Trek</h3>
+            <h3 className="trek-title">Create new Trek</h3>
             <form className="form-horizontal" role="form">
               <div className="form-group">
-                <div className="col-sm-10">
-                    <input type="text" className="form-control"
-                    id="trekTitle" placeholder="Title"/>
-                </div>
+                    <input type="text" className="form-control trek-title"
+                    placeholder="Title"/>
               </div>
 
               <div className="form-group">
-                <div className="col-sm-10">
-                    <input type="text" className="form-control"
-                        id="trekDescription" placeholder="Description"/>
-                </div>
+                  <textarea className="form-control create-description" placeholder="Description"/>
               </div>
 
               <div className="form-group">
-                <div className="col-sm-10">
-                    <label className="col-sm-2 control-label"
-                              for="trekLatLng">LatLng</label>
-                    <input type="text" className="form-control"
-                        id="trekLatitude" placeholder={this.state.modalLat}/>
-                    <input type="text" className="form-control"
-                        id="trekLongitude" placeholder={this.state.modalLng}/>
-                </div>
+                <label className="control-label">Coordinates</label>
+                <input type="text" className="form-control lat-lng"
+                    id="trekLatitude" placeholder={this.state.modalLat} disabled/>
+                <input type="text" className="form-control lat-lng"
+                    id="trekLongitude" placeholder={this.state.modalLng} disabled/>
               </div>
 
               <div className="form-group">
-                <div className="col-sm-10">
-                    <label className="col-sm-2 control-label"
-                              for="trekAttributes">Attributes</label>
-                    <input type="text" className="form-control"
-                        id="trekStartElevation" placeholder="Start Elevation"/>
-                    <input type="text" className="form-control"
-                        id="trekPeakElevation" placeholder="Peak Elevation"/>
-                    <input type="text" className="form-control"
-                        id="trekElevationMeasure" placeholder="Elevation Measure"/>
-                </div>
+                <label className="control-label">Elevation</label>
+                <input type="text" className="form-control attributes"
+                    id="trekStartElevation" placeholder="Start Elevation"/>
+                <input type="text" className="form-control attributes"
+                    id="trekPeakElevation" placeholder="Peak Elevation"/>
+                <input type="text" className="form-control attributes"
+                    id="trekElevationMeasure" placeholder="Elevation Measure"/>
+              </div>
+
+              <div className="form-group">
+                <label className="control-label">Duration</label>
+                <input type="text" className="form-control attributes"
+                    id="trekStartElevation" placeholder="Duration"/>
+                <input type="text" className="form-control attributes"
+                    id="trekPeakElevation" placeholder="Duration Measure"/>
+              </div>
+
+              <div className="form-group">
+                <label className="control-label">Length</label>
+                <input type="text" className="form-control attributes"
+                    id="trekElevationMeasure" placeholder="Distance"/>
+                <input type="text" className="form-control attributes"
+                    id="trekElevationMeasure" placeholder="Distance Measure"/>
               </div>
 
               <div className="form-group">

@@ -56,6 +56,16 @@ ApiUtil.createReview = function(userAttributes, receiveNewUser, cleanError, show
     // do something with errors
     }
   })
-}
+};
+
+ApiUtil.fetchCurrentUser = function(callback) {
+  $.ajax({
+    url: "/api/session",
+    type: "GET",
+    success: function(data) {
+      callback(data);
+    }
+  });
+};
 
 module.exports = ApiUtil;

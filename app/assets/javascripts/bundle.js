@@ -56,7 +56,7 @@
 	
 	var App = __webpack_require__(233);
 	var Search = __webpack_require__(234);
-	var LandingPage = __webpack_require__(279);
+	var LandingPage = __webpack_require__(282);
 	var TrekDetail = __webpack_require__(270);
 	// var Map = require('./components/maps/map');
 	
@@ -26518,15 +26518,16 @@
 	var ReactCSSTransitionGroup = __webpack_require__(239);
 	var History = __webpack_require__(159).History;
 	var Link = __webpack_require__(159).Link;
+	var ScrollToTop = __webpack_require__(271);
 	
 	var ApiActions = __webpack_require__(246);
 	var TrekStore = __webpack_require__(252);
 	var TrekDetail = __webpack_require__(270);
-	var TrekIndexItem = __webpack_require__(276);
-	var Map = __webpack_require__(277);
-	var Utilities = __webpack_require__(271);
-	var TrekModal = __webpack_require__(278);
-	var Rating = __webpack_require__(275);
+	var TrekIndexItem = __webpack_require__(279);
+	var Map = __webpack_require__(280);
+	var Utilities = __webpack_require__(274);
+	var TrekModal = __webpack_require__(281);
+	var Rating = __webpack_require__(278);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -26879,7 +26880,16 @@
 	          )
 	        )
 	      ),
-	      React.createElement(Map, { className: 'trek-map', history: this.history, searchValue: this.state.searchValue })
+	      React.createElement(Map, { className: 'trek-map', history: this.history, searchValue: this.state.searchValue }),
+	      React.createElement(
+	        ScrollToTop,
+	        { id: 'scroll-to-top', showUnder: 160 },
+	        React.createElement(
+	          'span',
+	          null,
+	          'UP'
+	        )
+	      )
 	    );
 	  }
 	});
@@ -27969,6 +27979,17 @@
 	  });
 	};
 	
+	ApiActions.recieveCurrentUser = function (user) {
+	  Dispatcher.dispatch({
+	    actionType: "CURRENT_USER_RECIEVED",
+	    user: user
+	  });
+	};
+	
+	ApiActions.requestCurrentUser = function () {
+	  ApiUtil.fetchCurrentUser(ApiActions.recieveCurrentUser);
+	};
+	
 	module.exports = ApiActions;
 
 /***/ },
@@ -28347,6 +28368,16 @@
 	    error: function (error) {
 	      showError(error.responseJSON.message);
 	      // do something with errors
+	    }
+	  });
+	};
+	
+	ApiUtil.fetchCurrentUser = function (callback) {
+	  $.ajax({
+	    url: "/api/session",
+	    type: "GET",
+	    success: function (data) {
+	      callback(data);
 	    }
 	  });
 	};
@@ -34948,10 +34979,10 @@
 	var React = __webpack_require__(1);
 	var TrekStore = __webpack_require__(252);
 	var ApiActions = __webpack_require__(246);
-	var Utilities = __webpack_require__(271);
-	var MapTrekDetail = __webpack_require__(272);
-	var TrekReviews = __webpack_require__(273);
-	var Rating = __webpack_require__(275);
+	var Utilities = __webpack_require__(274);
+	var MapTrekDetail = __webpack_require__(275);
+	var TrekReviews = __webpack_require__(276);
+	var Rating = __webpack_require__(278);
 	
 	var TrekDetail = React.createClass({
 	  displayName: 'TrekDetail',
@@ -35020,6 +35051,11 @@
 	    return React.createElement(
 	      'div',
 	      { id: 'sidx', className: 'trek-detail below-nav' },
+	      React.createElement(
+	        'a',
+	        { className: 'return-to-search', href: '/#/search' },
+	        "Return to search"
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'trek-detail-pane' },
@@ -35226,6 +35262,432 @@
 
 /***/ },
 /* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * @author  Milos Janda
+	 * @licence MIT
+	 */
+	
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var TweenFunctions = __webpack_require__(272);
+	var objectAssign = __webpack_require__(273);
+	
+	var ScrollUp = React.createClass({
+	    displayName: 'ScrollUp',
+	
+	    data: {
+	        startValue: 0,
+	        currentTime: 0, // store current time of animation
+	        startTime: null,
+	        rafId: null
+	    },
+	
+	    propTypes: {
+	        topPosition: React.PropTypes.number,
+	        showUnder: React.PropTypes.number.isRequired, // show button under this position,
+	        easing: React.PropTypes.oneOf(['linear', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad', 'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart', 'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint', 'easeInOutQuint', 'easeInSine', 'easeOutSine', 'easeInOutSine', 'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc', 'easeInOutCirc', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic', 'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInBounce', 'easeOutBounce', 'easeInOutBounce']),
+	        duration: React.PropTypes.number, // seconds
+	        style: React.PropTypes.object
+	    },
+	
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            duration: 250,
+	            easing: 'easeOutCubic',
+	            style: {
+	                position: 'fixed',
+	                bottom: 50,
+	                right: 30,
+	                cursor: 'pointer',
+	                transitionDuration: '0.2s',
+	                transitionTimingFunction: 'linear',
+	                transitionDelay: '0s'
+	            },
+	            topPosition: 0
+	        };
+	    },
+	    getInitialState: function getInitialState() {
+	        return {
+	            show: false
+	        };
+	    },
+	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	        return nextState.show !== this.state.show;
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this.handleScroll(); // initialize state
+	        window.addEventListener('scroll', this.handleScroll);
+	        window.addEventListener("wheel", this.stopScrolling, false);
+	        window.addEventListener("touchstart", this.stopScrolling, false);
+	    },
+	
+	    componentWillUnmount: function componentWillUnmount() {
+	        window.removeEventListener('scroll', this.handleScroll);
+	        window.removeEventListener("wheel", this.stopScrolling, false);
+	        window.removeEventListener("touchstart", this.stopScrolling, false);
+	    },
+	
+	    handleScroll: function handleScroll() {
+	        if (window.pageYOffset > this.props.showUnder) {
+	            this.setState({ show: true });
+	        } else {
+	            this.setState({ show: false });
+	        }
+	    },
+	    handleClick: function handleClick() {
+	        this.stopScrolling();
+	        this.data.startValue = window.pageYOffset;
+	        this.data.currentTime = 0;
+	        this.data.startTime = null;
+	        this.data.rafId = window.requestAnimationFrame(this.scrollStep);
+	    },
+	
+	    scrollStep: function scrollStep(timestamp) {
+	        if (!this.data.startTime) {
+	            this.data.startTime = timestamp;
+	        }
+	
+	        this.data.currentTime = timestamp - this.data.startTime;
+	
+	        var position = TweenFunctions[this.props.easing](this.data.currentTime, this.data.startValue, this.props.topPosition, this.props.duration);
+	
+	        if (window.pageYOffset <= this.props.topPosition) {
+	            this.stopScrolling();
+	        } else {
+	            window.scrollTo(window.pageYOffset, position);
+	            this.data.rafId = window.requestAnimationFrame(this.scrollStep);
+	        }
+	    },
+	
+	    stopScrolling: function stopScrolling() {
+	        window.cancelAnimationFrame(this.data.rafId);
+	    },
+	
+	    render: function render() {
+	        var propStyle = this.props.style;
+	        var element = React.createElement(
+	            'div',
+	            { style: propStyle, onClick: this.handleClick },
+	            this.props.children
+	        );
+	
+	        var style = objectAssign({}, propStyle);
+	        style.opacity = this.state.show ? 1 : 0;
+	        style.visibility = this.state.show ? 'visible' : 'hidden';
+	        style.transitionProperty = 'opacity, visibility';
+	
+	        return React.cloneElement(element, { style: style });
+	    }
+	});
+	
+	module.exports = ScrollUp;
+
+
+/***/ },
+/* 272 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// t: current time, b: beginning value, _c: final value, d: total duration
+	var tweenFunctions = {
+	  linear: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * t / d + b;
+	  },
+	  easeInQuad: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t + b;
+	  },
+	  easeOutQuad: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * (t /= d) * (t - 2) + b;
+	  },
+	  easeInOutQuad: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t + b;
+	    } else {
+	      return -c / 2 * ((--t) * (t - 2) - 1) + b;
+	    }
+	  },
+	  easeInCubic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t * t + b;
+	  },
+	  easeOutCubic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * ((t = t / d - 1) * t * t + 1) + b;
+	  },
+	  easeInOutCubic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t * t + b;
+	    } else {
+	      return c / 2 * ((t -= 2) * t * t + 2) + b;
+	    }
+	  },
+	  easeInQuart: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t * t * t + b;
+	  },
+	  easeOutQuart: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+	  },
+	  easeInOutQuart: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t * t * t + b;
+	    } else {
+	      return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
+	    }
+	  },
+	  easeInQuint: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t * t * t * t + b;
+	  },
+	  easeOutQuint: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
+	  },
+	  easeInOutQuint: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t * t * t * t + b;
+	    } else {
+	      return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
+	    }
+	  },
+	  easeInSine: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
+	  },
+	  easeOutSine: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * Math.sin(t / d * (Math.PI / 2)) + b;
+	  },
+	  easeInOutSine: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
+	  },
+	  easeInExpo: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return (t==0) ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;
+	  },
+	  easeOutExpo: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+	  },
+	  easeInOutExpo: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if (t === 0) {
+	      return b;
+	    }
+	    if (t === d) {
+	      return b + c;
+	    }
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+	    } else {
+	      return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
+	    }
+	  },
+	  easeInCirc: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
+	  },
+	  easeOutCirc: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * Math.sqrt(1 - (t = t / d - 1) * t) + b;
+	  },
+	  easeInOutCirc: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
+	    } else {
+	      return c / 2 * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
+	    }
+	  },
+	  easeInElastic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var a, p, s;
+	    s = 1.70158;
+	    p = 0;
+	    a = c;
+	    if (t === 0) {
+	      return b;
+	    } else if ((t /= d) === 1) {
+	      return b + c;
+	    }
+	    if (!p) {
+	      p = d * 0.3;
+	    }
+	    if (a < Math.abs(c)) {
+	      a = c;
+	      s = p / 4;
+	    } else {
+	      s = p / (2 * Math.PI) * Math.asin(c / a);
+	    }
+	    return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+	  },
+	  easeOutElastic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var a, p, s;
+	    s = 1.70158;
+	    p = 0;
+	    a = c;
+	    if (t === 0) {
+	      return b;
+	    } else if ((t /= d) === 1) {
+	      return b + c;
+	    }
+	    if (!p) {
+	      p = d * 0.3;
+	    }
+	    if (a < Math.abs(c)) {
+	      a = c;
+	      s = p / 4;
+	    } else {
+	      s = p / (2 * Math.PI) * Math.asin(c / a);
+	    }
+	    return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
+	  },
+	  easeInOutElastic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var a, p, s;
+	    s = 1.70158;
+	    p = 0;
+	    a = c;
+	    if (t === 0) {
+	      return b;
+	    } else if ((t /= d / 2) === 2) {
+	      return b + c;
+	    }
+	    if (!p) {
+	      p = d * (0.3 * 1.5);
+	    }
+	    if (a < Math.abs(c)) {
+	      a = c;
+	      s = p / 4;
+	    } else {
+	      s = p / (2 * Math.PI) * Math.asin(c / a);
+	    }
+	    if (t < 1) {
+	      return -0.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+	    } else {
+	      return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
+	    }
+	  },
+	  easeInBack: function(t, b, _c, d, s) {
+	    var c = _c - b;
+	    if (s === void 0) {
+	      s = 1.70158;
+	    }
+	    return c * (t /= d) * t * ((s + 1) * t - s) + b;
+	  },
+	  easeOutBack: function(t, b, _c, d, s) {
+	    var c = _c - b;
+	    if (s === void 0) {
+	      s = 1.70158;
+	    }
+	    return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
+	  },
+	  easeInOutBack: function(t, b, _c, d, s) {
+	    var c = _c - b;
+	    if (s === void 0) {
+	      s = 1.70158;
+	    }
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
+	    } else {
+	      return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
+	    }
+	  },
+	  easeInBounce: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var v;
+	    v = tweenFunctions.easeOutBounce(d - t, 0, c, d);
+	    return c - v + b;
+	  },
+	  easeOutBounce: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d) < 1 / 2.75) {
+	      return c * (7.5625 * t * t) + b;
+	    } else if (t < 2 / 2.75) {
+	      return c * (7.5625 * (t -= 1.5 / 2.75) * t + 0.75) + b;
+	    } else if (t < 2.5 / 2.75) {
+	      return c * (7.5625 * (t -= 2.25 / 2.75) * t + 0.9375) + b;
+	    } else {
+	      return c * (7.5625 * (t -= 2.625 / 2.75) * t + 0.984375) + b;
+	    }
+	  },
+	  easeInOutBounce: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var v;
+	    if (t < d / 2) {
+	      v = tweenFunctions.easeInBounce(t * 2, 0, c, d);
+	      return v * 0.5 + b;
+	    } else {
+	      v = tweenFunctions.easeOutBounce(t * 2 - d, 0, c, d);
+	      return v * 0.5 + c * 0.5 + b;
+	    }
+	  }
+	};
+	
+	module.exports = tweenFunctions;
+
+
+/***/ },
+/* 273 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+	
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+	
+		return Object(val);
+	}
+	
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+	
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+	
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+	
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+	
+		return to;
+	};
+
+
+/***/ },
+/* 274 */
 /***/ function(module, exports) {
 
 	var GeneralUtilities = {};
@@ -35246,7 +35708,7 @@
 	module.exports = GeneralUtilities;
 
 /***/ },
-/* 272 */
+/* 275 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -35360,12 +35822,12 @@
 	module.exports = CreateTrekMap;
 
 /***/ },
-/* 273 */
+/* 276 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ReviewModal = __webpack_require__(274);
-	var Rating = __webpack_require__(275);
+	var ReviewModal = __webpack_require__(277);
+	var Rating = __webpack_require__(278);
 	
 	var ReviewDetail = React.createClass({
 	  displayName: 'ReviewDetail',
@@ -35443,7 +35905,7 @@
 	module.exports = ReviewDetail;
 
 /***/ },
-/* 274 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -35582,7 +36044,7 @@
 	// </form>
 
 /***/ },
-/* 275 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -35642,7 +36104,7 @@
 	module.exports = Rating;
 
 /***/ },
-/* 276 */
+/* 279 */
 /***/ function(module, exports) {
 
 	// var React = require('react');
@@ -35666,13 +36128,13 @@
 	// });
 
 /***/ },
-/* 277 */
+/* 280 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
 	var TrekStore = __webpack_require__(252);
-	var TrekModal = __webpack_require__(278);
+	var TrekModal = __webpack_require__(281);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -35878,14 +36340,14 @@
 	module.exports = Map;
 
 /***/ },
-/* 278 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(235);
 	var Modal = __webpack_require__(213);
 	var ApiActions = __webpack_require__(246);
-	var MapTrekCreate = __webpack_require__(272);
+	var MapTrekCreate = __webpack_require__(275);
 	
 	const customStyles = {
 	  content: {
@@ -35933,7 +36395,7 @@
 	          { className: 'trek-create-container' },
 	          React.createElement(
 	            'h3',
-	            { className: 'text-center' },
+	            { className: 'trek-title' },
 	            'Create new Trek'
 	          ),
 	          React.createElement(
@@ -35942,60 +36404,67 @@
 	            React.createElement(
 	              'div',
 	              { className: 'form-group' },
-	              React.createElement(
-	                'div',
-	                { className: 'col-sm-10' },
-	                React.createElement('input', { type: 'text', className: 'form-control',
-	                  id: 'trekTitle', placeholder: 'Title' })
-	              )
+	              React.createElement('input', { type: 'text', className: 'form-control trek-title',
+	                placeholder: 'Title' })
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement('textarea', { className: 'form-control create-description', placeholder: 'Description' })
 	            ),
 	            React.createElement(
 	              'div',
 	              { className: 'form-group' },
 	              React.createElement(
-	                'div',
-	                { className: 'col-sm-10' },
-	                React.createElement('input', { type: 'text', className: 'form-control',
-	                  id: 'trekDescription', placeholder: 'Description' })
-	              )
+	                'label',
+	                { className: 'control-label' },
+	                'Coordinates'
+	              ),
+	              React.createElement('input', { type: 'text', className: 'form-control lat-lng',
+	                id: 'trekLatitude', placeholder: this.state.modalLat, disabled: true }),
+	              React.createElement('input', { type: 'text', className: 'form-control lat-lng',
+	                id: 'trekLongitude', placeholder: this.state.modalLng, disabled: true })
 	            ),
 	            React.createElement(
 	              'div',
 	              { className: 'form-group' },
 	              React.createElement(
-	                'div',
-	                { className: 'col-sm-10' },
-	                React.createElement(
-	                  'label',
-	                  { className: 'col-sm-2 control-label',
-	                    'for': 'trekLatLng' },
-	                  'LatLng'
-	                ),
-	                React.createElement('input', { type: 'text', className: 'form-control',
-	                  id: 'trekLatitude', placeholder: this.state.modalLat }),
-	                React.createElement('input', { type: 'text', className: 'form-control',
-	                  id: 'trekLongitude', placeholder: this.state.modalLng })
-	              )
+	                'label',
+	                { className: 'control-label' },
+	                'Elevation'
+	              ),
+	              React.createElement('input', { type: 'text', className: 'form-control attributes',
+	                id: 'trekStartElevation', placeholder: 'Start Elevation' }),
+	              React.createElement('input', { type: 'text', className: 'form-control attributes',
+	                id: 'trekPeakElevation', placeholder: 'Peak Elevation' }),
+	              React.createElement('input', { type: 'text', className: 'form-control attributes',
+	                id: 'trekElevationMeasure', placeholder: 'Elevation Measure' })
 	            ),
 	            React.createElement(
 	              'div',
 	              { className: 'form-group' },
 	              React.createElement(
-	                'div',
-	                { className: 'col-sm-10' },
-	                React.createElement(
-	                  'label',
-	                  { className: 'col-sm-2 control-label',
-	                    'for': 'trekAttributes' },
-	                  'Attributes'
-	                ),
-	                React.createElement('input', { type: 'text', className: 'form-control',
-	                  id: 'trekStartElevation', placeholder: 'Start Elevation' }),
-	                React.createElement('input', { type: 'text', className: 'form-control',
-	                  id: 'trekPeakElevation', placeholder: 'Peak Elevation' }),
-	                React.createElement('input', { type: 'text', className: 'form-control',
-	                  id: 'trekElevationMeasure', placeholder: 'Elevation Measure' })
-	              )
+	                'label',
+	                { className: 'control-label' },
+	                'Duration'
+	              ),
+	              React.createElement('input', { type: 'text', className: 'form-control attributes',
+	                id: 'trekStartElevation', placeholder: 'Duration' }),
+	              React.createElement('input', { type: 'text', className: 'form-control attributes',
+	                id: 'trekPeakElevation', placeholder: 'Duration Measure' })
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'form-group' },
+	              React.createElement(
+	                'label',
+	                { className: 'control-label' },
+	                'Length'
+	              ),
+	              React.createElement('input', { type: 'text', className: 'form-control attributes',
+	                id: 'trekElevationMeasure', placeholder: 'Distance' }),
+	              React.createElement('input', { type: 'text', className: 'form-control attributes',
+	                id: 'trekElevationMeasure', placeholder: 'Distance Measure' })
 	            ),
 	            React.createElement(
 	              'div',
@@ -36025,11 +36494,11 @@
 	module.exports = TrekModal;
 
 /***/ },
-/* 279 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var TrekModal = __webpack_require__(278);
+	var TrekModal = __webpack_require__(281);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
