@@ -57,7 +57,7 @@
 	var App = __webpack_require__(233);
 	var Search = __webpack_require__(234);
 	var LandingPage = __webpack_require__(282);
-	var TrekDetail = __webpack_require__(270);
+	var TrekDetail = __webpack_require__(273);
 	// var Map = require('./components/maps/map');
 	
 	var routes = React.createElement(
@@ -26518,11 +26518,11 @@
 	var ReactCSSTransitionGroup = __webpack_require__(239);
 	var History = __webpack_require__(159).History;
 	var Link = __webpack_require__(159).Link;
-	var ScrollToTop = __webpack_require__(271);
+	var ScrollToTop = __webpack_require__(246);
 	
-	var ApiActions = __webpack_require__(246);
-	var TrekStore = __webpack_require__(252);
-	var TrekDetail = __webpack_require__(270);
+	var ApiActions = __webpack_require__(249);
+	var TrekStore = __webpack_require__(255);
+	var TrekDetail = __webpack_require__(273);
 	var TrekIndexItem = __webpack_require__(279);
 	var Map = __webpack_require__(280);
 	var Utilities = __webpack_require__(274);
@@ -27927,8 +27927,434 @@
 /* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(247);
-	var ApiUtil = __webpack_require__(251);
+	/**
+	 * @author  Milos Janda
+	 * @licence MIT
+	 */
+	
+	'use strict';
+	
+	var React = __webpack_require__(1);
+	var TweenFunctions = __webpack_require__(247);
+	var objectAssign = __webpack_require__(248);
+	
+	var ScrollUp = React.createClass({
+	    displayName: 'ScrollUp',
+	
+	    data: {
+	        startValue: 0,
+	        currentTime: 0, // store current time of animation
+	        startTime: null,
+	        rafId: null
+	    },
+	
+	    propTypes: {
+	        topPosition: React.PropTypes.number,
+	        showUnder: React.PropTypes.number.isRequired, // show button under this position,
+	        easing: React.PropTypes.oneOf(['linear', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad', 'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart', 'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint', 'easeInOutQuint', 'easeInSine', 'easeOutSine', 'easeInOutSine', 'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc', 'easeInOutCirc', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic', 'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInBounce', 'easeOutBounce', 'easeInOutBounce']),
+	        duration: React.PropTypes.number, // seconds
+	        style: React.PropTypes.object
+	    },
+	
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            duration: 250,
+	            easing: 'easeOutCubic',
+	            style: {
+	                position: 'fixed',
+	                bottom: 50,
+	                right: 30,
+	                cursor: 'pointer',
+	                transitionDuration: '0.2s',
+	                transitionTimingFunction: 'linear',
+	                transitionDelay: '0s'
+	            },
+	            topPosition: 0
+	        };
+	    },
+	    getInitialState: function getInitialState() {
+	        return {
+	            show: false
+	        };
+	    },
+	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	        return nextState.show !== this.state.show;
+	    },
+	    componentDidMount: function componentDidMount() {
+	        this.handleScroll(); // initialize state
+	        window.addEventListener('scroll', this.handleScroll);
+	        window.addEventListener("wheel", this.stopScrolling, false);
+	        window.addEventListener("touchstart", this.stopScrolling, false);
+	    },
+	
+	    componentWillUnmount: function componentWillUnmount() {
+	        window.removeEventListener('scroll', this.handleScroll);
+	        window.removeEventListener("wheel", this.stopScrolling, false);
+	        window.removeEventListener("touchstart", this.stopScrolling, false);
+	    },
+	
+	    handleScroll: function handleScroll() {
+	        if (window.pageYOffset > this.props.showUnder) {
+	            this.setState({ show: true });
+	        } else {
+	            this.setState({ show: false });
+	        }
+	    },
+	    handleClick: function handleClick() {
+	        this.stopScrolling();
+	        this.data.startValue = window.pageYOffset;
+	        this.data.currentTime = 0;
+	        this.data.startTime = null;
+	        this.data.rafId = window.requestAnimationFrame(this.scrollStep);
+	    },
+	
+	    scrollStep: function scrollStep(timestamp) {
+	        if (!this.data.startTime) {
+	            this.data.startTime = timestamp;
+	        }
+	
+	        this.data.currentTime = timestamp - this.data.startTime;
+	
+	        var position = TweenFunctions[this.props.easing](this.data.currentTime, this.data.startValue, this.props.topPosition, this.props.duration);
+	
+	        if (window.pageYOffset <= this.props.topPosition) {
+	            this.stopScrolling();
+	        } else {
+	            window.scrollTo(window.pageYOffset, position);
+	            this.data.rafId = window.requestAnimationFrame(this.scrollStep);
+	        }
+	    },
+	
+	    stopScrolling: function stopScrolling() {
+	        window.cancelAnimationFrame(this.data.rafId);
+	    },
+	
+	    render: function render() {
+	        var propStyle = this.props.style;
+	        var element = React.createElement(
+	            'div',
+	            { style: propStyle, onClick: this.handleClick },
+	            this.props.children
+	        );
+	
+	        var style = objectAssign({}, propStyle);
+	        style.opacity = this.state.show ? 1 : 0;
+	        style.visibility = this.state.show ? 'visible' : 'hidden';
+	        style.transitionProperty = 'opacity, visibility';
+	
+	        return React.cloneElement(element, { style: style });
+	    }
+	});
+	
+	module.exports = ScrollUp;
+
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	// t: current time, b: beginning value, _c: final value, d: total duration
+	var tweenFunctions = {
+	  linear: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * t / d + b;
+	  },
+	  easeInQuad: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t + b;
+	  },
+	  easeOutQuad: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * (t /= d) * (t - 2) + b;
+	  },
+	  easeInOutQuad: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t + b;
+	    } else {
+	      return -c / 2 * ((--t) * (t - 2) - 1) + b;
+	    }
+	  },
+	  easeInCubic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t * t + b;
+	  },
+	  easeOutCubic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * ((t = t / d - 1) * t * t + 1) + b;
+	  },
+	  easeInOutCubic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t * t + b;
+	    } else {
+	      return c / 2 * ((t -= 2) * t * t + 2) + b;
+	    }
+	  },
+	  easeInQuart: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t * t * t + b;
+	  },
+	  easeOutQuart: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+	  },
+	  easeInOutQuart: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t * t * t + b;
+	    } else {
+	      return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
+	    }
+	  },
+	  easeInQuint: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * (t /= d) * t * t * t * t + b;
+	  },
+	  easeOutQuint: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
+	  },
+	  easeInOutQuint: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * t * t * t * t * t + b;
+	    } else {
+	      return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
+	    }
+	  },
+	  easeInSine: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
+	  },
+	  easeOutSine: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * Math.sin(t / d * (Math.PI / 2)) + b;
+	  },
+	  easeInOutSine: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
+	  },
+	  easeInExpo: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return (t==0) ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;
+	  },
+	  easeOutExpo: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+	  },
+	  easeInOutExpo: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if (t === 0) {
+	      return b;
+	    }
+	    if (t === d) {
+	      return b + c;
+	    }
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
+	    } else {
+	      return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
+	    }
+	  },
+	  easeInCirc: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
+	  },
+	  easeOutCirc: function(t, b, _c, d) {
+	    var c = _c - b;
+	    return c * Math.sqrt(1 - (t = t / d - 1) * t) + b;
+	  },
+	  easeInOutCirc: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d / 2) < 1) {
+	      return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
+	    } else {
+	      return c / 2 * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
+	    }
+	  },
+	  easeInElastic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var a, p, s;
+	    s = 1.70158;
+	    p = 0;
+	    a = c;
+	    if (t === 0) {
+	      return b;
+	    } else if ((t /= d) === 1) {
+	      return b + c;
+	    }
+	    if (!p) {
+	      p = d * 0.3;
+	    }
+	    if (a < Math.abs(c)) {
+	      a = c;
+	      s = p / 4;
+	    } else {
+	      s = p / (2 * Math.PI) * Math.asin(c / a);
+	    }
+	    return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+	  },
+	  easeOutElastic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var a, p, s;
+	    s = 1.70158;
+	    p = 0;
+	    a = c;
+	    if (t === 0) {
+	      return b;
+	    } else if ((t /= d) === 1) {
+	      return b + c;
+	    }
+	    if (!p) {
+	      p = d * 0.3;
+	    }
+	    if (a < Math.abs(c)) {
+	      a = c;
+	      s = p / 4;
+	    } else {
+	      s = p / (2 * Math.PI) * Math.asin(c / a);
+	    }
+	    return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
+	  },
+	  easeInOutElastic: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var a, p, s;
+	    s = 1.70158;
+	    p = 0;
+	    a = c;
+	    if (t === 0) {
+	      return b;
+	    } else if ((t /= d / 2) === 2) {
+	      return b + c;
+	    }
+	    if (!p) {
+	      p = d * (0.3 * 1.5);
+	    }
+	    if (a < Math.abs(c)) {
+	      a = c;
+	      s = p / 4;
+	    } else {
+	      s = p / (2 * Math.PI) * Math.asin(c / a);
+	    }
+	    if (t < 1) {
+	      return -0.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+	    } else {
+	      return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
+	    }
+	  },
+	  easeInBack: function(t, b, _c, d, s) {
+	    var c = _c - b;
+	    if (s === void 0) {
+	      s = 1.70158;
+	    }
+	    return c * (t /= d) * t * ((s + 1) * t - s) + b;
+	  },
+	  easeOutBack: function(t, b, _c, d, s) {
+	    var c = _c - b;
+	    if (s === void 0) {
+	      s = 1.70158;
+	    }
+	    return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
+	  },
+	  easeInOutBack: function(t, b, _c, d, s) {
+	    var c = _c - b;
+	    if (s === void 0) {
+	      s = 1.70158;
+	    }
+	    if ((t /= d / 2) < 1) {
+	      return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
+	    } else {
+	      return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
+	    }
+	  },
+	  easeInBounce: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var v;
+	    v = tweenFunctions.easeOutBounce(d - t, 0, c, d);
+	    return c - v + b;
+	  },
+	  easeOutBounce: function(t, b, _c, d) {
+	    var c = _c - b;
+	    if ((t /= d) < 1 / 2.75) {
+	      return c * (7.5625 * t * t) + b;
+	    } else if (t < 2 / 2.75) {
+	      return c * (7.5625 * (t -= 1.5 / 2.75) * t + 0.75) + b;
+	    } else if (t < 2.5 / 2.75) {
+	      return c * (7.5625 * (t -= 2.25 / 2.75) * t + 0.9375) + b;
+	    } else {
+	      return c * (7.5625 * (t -= 2.625 / 2.75) * t + 0.984375) + b;
+	    }
+	  },
+	  easeInOutBounce: function(t, b, _c, d) {
+	    var c = _c - b;
+	    var v;
+	    if (t < d / 2) {
+	      v = tweenFunctions.easeInBounce(t * 2, 0, c, d);
+	      return v * 0.5 + b;
+	    } else {
+	      v = tweenFunctions.easeOutBounce(t * 2 - d, 0, c, d);
+	      return v * 0.5 + c * 0.5 + b;
+	    }
+	  }
+	};
+	
+	module.exports = tweenFunctions;
+
+
+/***/ },
+/* 248 */
+/***/ function(module, exports) {
+
+	/* eslint-disable no-unused-vars */
+	'use strict';
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+	
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+	
+		return Object(val);
+	}
+	
+	module.exports = Object.assign || function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+	
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+	
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+	
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+	
+		return to;
+	};
+
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(250);
+	var ApiUtil = __webpack_require__(254);
 	var ApiActions = {};
 	
 	ApiActions.receiveAllTreks = function (treks) {
@@ -27993,15 +28419,15 @@
 	module.exports = ApiActions;
 
 /***/ },
-/* 247 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(248).Dispatcher;
+	var Dispatcher = __webpack_require__(251).Dispatcher;
 	
 	module.exports = new Dispatcher();
 
 /***/ },
-/* 248 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28013,11 +28439,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Dispatcher = __webpack_require__(249);
+	module.exports.Dispatcher = __webpack_require__(252);
 
 
 /***/ },
-/* 249 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28039,7 +28465,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(250);
+	var invariant = __webpack_require__(253);
 	
 	var _prefix = 'ID_';
 	
@@ -28254,7 +28680,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 250 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28309,7 +28735,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 251 */
+/* 254 */
 /***/ function(module, exports) {
 
 	var ApiUtil = {};
@@ -28385,11 +28811,11 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 252 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(253).Store;
-	var AppDispatcher = __webpack_require__(247);
+	var Store = __webpack_require__(256).Store;
+	var AppDispatcher = __webpack_require__(250);
 	var TrekStore = new Store(AppDispatcher);
 	
 	var _treks = [];
@@ -28527,7 +28953,7 @@
 	module.exports = TrekStore;
 
 /***/ },
-/* 253 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -28539,15 +28965,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(254);
-	module.exports.MapStore = __webpack_require__(257);
-	module.exports.Mixin = __webpack_require__(269);
-	module.exports.ReduceStore = __webpack_require__(258);
-	module.exports.Store = __webpack_require__(259);
+	module.exports.Container = __webpack_require__(257);
+	module.exports.MapStore = __webpack_require__(260);
+	module.exports.Mixin = __webpack_require__(272);
+	module.exports.ReduceStore = __webpack_require__(261);
+	module.exports.Store = __webpack_require__(262);
 
 
 /***/ },
-/* 254 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28569,10 +28995,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(255);
+	var FluxStoreGroup = __webpack_require__(258);
 	
-	var invariant = __webpack_require__(250);
-	var shallowEqual = __webpack_require__(256);
+	var invariant = __webpack_require__(253);
+	var shallowEqual = __webpack_require__(259);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -28730,7 +29156,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 255 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28749,7 +29175,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(250);
+	var invariant = __webpack_require__(253);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -28811,7 +29237,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 256 */
+/* 259 */
 /***/ function(module, exports) {
 
 	/**
@@ -28866,7 +29292,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 257 */
+/* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -28887,10 +29313,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(258);
-	var Immutable = __webpack_require__(268);
+	var FluxReduceStore = __webpack_require__(261);
+	var Immutable = __webpack_require__(271);
 	
-	var invariant = __webpack_require__(250);
+	var invariant = __webpack_require__(253);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -29016,7 +29442,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 258 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29037,10 +29463,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(259);
+	var FluxStore = __webpack_require__(262);
 	
-	var abstractMethod = __webpack_require__(267);
-	var invariant = __webpack_require__(250);
+	var abstractMethod = __webpack_require__(270);
+	var invariant = __webpack_require__(253);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -29123,7 +29549,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 259 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29142,11 +29568,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(260);
+	var _require = __webpack_require__(263);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(250);
+	var invariant = __webpack_require__(253);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -29306,7 +29732,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 260 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -29319,14 +29745,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(261)
+	  EventEmitter: __webpack_require__(264)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 261 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29345,11 +29771,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(262);
-	var EventSubscriptionVendor = __webpack_require__(264);
+	var EmitterSubscription = __webpack_require__(265);
+	var EventSubscriptionVendor = __webpack_require__(267);
 	
-	var emptyFunction = __webpack_require__(266);
-	var invariant = __webpack_require__(265);
+	var emptyFunction = __webpack_require__(269);
+	var invariant = __webpack_require__(268);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -29523,7 +29949,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 262 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -29544,7 +29970,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(263);
+	var EventSubscription = __webpack_require__(266);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -29576,7 +30002,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 263 */
+/* 266 */
 /***/ function(module, exports) {
 
 	/**
@@ -29630,7 +30056,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 264 */
+/* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29649,7 +30075,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(265);
+	var invariant = __webpack_require__(268);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -29739,7 +30165,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 265 */
+/* 268 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29794,7 +30220,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 266 */
+/* 269 */
 /***/ function(module, exports) {
 
 	/**
@@ -29836,7 +30262,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 267 */
+/* 270 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -29853,7 +30279,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(250);
+	var invariant = __webpack_require__(253);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -29863,7 +30289,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 268 */
+/* 271 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -34850,7 +35276,7 @@
 	}));
 
 /***/ },
-/* 269 */
+/* 272 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -34867,9 +35293,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(255);
+	var FluxStoreGroup = __webpack_require__(258);
 	
-	var invariant = __webpack_require__(250);
+	var invariant = __webpack_require__(253);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -34973,12 +35399,12 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 270 */
+/* 273 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var TrekStore = __webpack_require__(252);
-	var ApiActions = __webpack_require__(246);
+	var TrekStore = __webpack_require__(255);
+	var ApiActions = __webpack_require__(249);
 	var Utilities = __webpack_require__(274);
 	var MapTrekDetail = __webpack_require__(275);
 	var TrekReviews = __webpack_require__(276);
@@ -35261,432 +35687,6 @@
 	module.exports = TrekDetail;
 
 /***/ },
-/* 271 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * @author  Milos Janda
-	 * @licence MIT
-	 */
-	
-	'use strict';
-	
-	var React = __webpack_require__(1);
-	var TweenFunctions = __webpack_require__(272);
-	var objectAssign = __webpack_require__(273);
-	
-	var ScrollUp = React.createClass({
-	    displayName: 'ScrollUp',
-	
-	    data: {
-	        startValue: 0,
-	        currentTime: 0, // store current time of animation
-	        startTime: null,
-	        rafId: null
-	    },
-	
-	    propTypes: {
-	        topPosition: React.PropTypes.number,
-	        showUnder: React.PropTypes.number.isRequired, // show button under this position,
-	        easing: React.PropTypes.oneOf(['linear', 'easeInQuad', 'easeOutQuad', 'easeInOutQuad', 'easeInCubic', 'easeOutCubic', 'easeInOutCubic', 'easeInQuart', 'easeOutQuart', 'easeInOutQuart', 'easeInQuint', 'easeOutQuint', 'easeInOutQuint', 'easeInSine', 'easeOutSine', 'easeInOutSine', 'easeInExpo', 'easeOutExpo', 'easeInOutExpo', 'easeInCirc', 'easeOutCirc', 'easeInOutCirc', 'easeInElastic', 'easeOutElastic', 'easeInOutElastic', 'easeInBack', 'easeOutBack', 'easeInOutBack', 'easeInBounce', 'easeOutBounce', 'easeInOutBounce']),
-	        duration: React.PropTypes.number, // seconds
-	        style: React.PropTypes.object
-	    },
-	
-	    getDefaultProps: function getDefaultProps() {
-	        return {
-	            duration: 250,
-	            easing: 'easeOutCubic',
-	            style: {
-	                position: 'fixed',
-	                bottom: 50,
-	                right: 30,
-	                cursor: 'pointer',
-	                transitionDuration: '0.2s',
-	                transitionTimingFunction: 'linear',
-	                transitionDelay: '0s'
-	            },
-	            topPosition: 0
-	        };
-	    },
-	    getInitialState: function getInitialState() {
-	        return {
-	            show: false
-	        };
-	    },
-	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	        return nextState.show !== this.state.show;
-	    },
-	    componentDidMount: function componentDidMount() {
-	        this.handleScroll(); // initialize state
-	        window.addEventListener('scroll', this.handleScroll);
-	        window.addEventListener("wheel", this.stopScrolling, false);
-	        window.addEventListener("touchstart", this.stopScrolling, false);
-	    },
-	
-	    componentWillUnmount: function componentWillUnmount() {
-	        window.removeEventListener('scroll', this.handleScroll);
-	        window.removeEventListener("wheel", this.stopScrolling, false);
-	        window.removeEventListener("touchstart", this.stopScrolling, false);
-	    },
-	
-	    handleScroll: function handleScroll() {
-	        if (window.pageYOffset > this.props.showUnder) {
-	            this.setState({ show: true });
-	        } else {
-	            this.setState({ show: false });
-	        }
-	    },
-	    handleClick: function handleClick() {
-	        this.stopScrolling();
-	        this.data.startValue = window.pageYOffset;
-	        this.data.currentTime = 0;
-	        this.data.startTime = null;
-	        this.data.rafId = window.requestAnimationFrame(this.scrollStep);
-	    },
-	
-	    scrollStep: function scrollStep(timestamp) {
-	        if (!this.data.startTime) {
-	            this.data.startTime = timestamp;
-	        }
-	
-	        this.data.currentTime = timestamp - this.data.startTime;
-	
-	        var position = TweenFunctions[this.props.easing](this.data.currentTime, this.data.startValue, this.props.topPosition, this.props.duration);
-	
-	        if (window.pageYOffset <= this.props.topPosition) {
-	            this.stopScrolling();
-	        } else {
-	            window.scrollTo(window.pageYOffset, position);
-	            this.data.rafId = window.requestAnimationFrame(this.scrollStep);
-	        }
-	    },
-	
-	    stopScrolling: function stopScrolling() {
-	        window.cancelAnimationFrame(this.data.rafId);
-	    },
-	
-	    render: function render() {
-	        var propStyle = this.props.style;
-	        var element = React.createElement(
-	            'div',
-	            { style: propStyle, onClick: this.handleClick },
-	            this.props.children
-	        );
-	
-	        var style = objectAssign({}, propStyle);
-	        style.opacity = this.state.show ? 1 : 0;
-	        style.visibility = this.state.show ? 'visible' : 'hidden';
-	        style.transitionProperty = 'opacity, visibility';
-	
-	        return React.cloneElement(element, { style: style });
-	    }
-	});
-	
-	module.exports = ScrollUp;
-
-
-/***/ },
-/* 272 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	// t: current time, b: beginning value, _c: final value, d: total duration
-	var tweenFunctions = {
-	  linear: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * t / d + b;
-	  },
-	  easeInQuad: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * (t /= d) * t + b;
-	  },
-	  easeOutQuad: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return -c * (t /= d) * (t - 2) + b;
-	  },
-	  easeInOutQuad: function(t, b, _c, d) {
-	    var c = _c - b;
-	    if ((t /= d / 2) < 1) {
-	      return c / 2 * t * t + b;
-	    } else {
-	      return -c / 2 * ((--t) * (t - 2) - 1) + b;
-	    }
-	  },
-	  easeInCubic: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * (t /= d) * t * t + b;
-	  },
-	  easeOutCubic: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * ((t = t / d - 1) * t * t + 1) + b;
-	  },
-	  easeInOutCubic: function(t, b, _c, d) {
-	    var c = _c - b;
-	    if ((t /= d / 2) < 1) {
-	      return c / 2 * t * t * t + b;
-	    } else {
-	      return c / 2 * ((t -= 2) * t * t + 2) + b;
-	    }
-	  },
-	  easeInQuart: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * (t /= d) * t * t * t + b;
-	  },
-	  easeOutQuart: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return -c * ((t = t / d - 1) * t * t * t - 1) + b;
-	  },
-	  easeInOutQuart: function(t, b, _c, d) {
-	    var c = _c - b;
-	    if ((t /= d / 2) < 1) {
-	      return c / 2 * t * t * t * t + b;
-	    } else {
-	      return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
-	    }
-	  },
-	  easeInQuint: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * (t /= d) * t * t * t * t + b;
-	  },
-	  easeOutQuint: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * ((t = t / d - 1) * t * t * t * t + 1) + b;
-	  },
-	  easeInOutQuint: function(t, b, _c, d) {
-	    var c = _c - b;
-	    if ((t /= d / 2) < 1) {
-	      return c / 2 * t * t * t * t * t + b;
-	    } else {
-	      return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-	    }
-	  },
-	  easeInSine: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return -c * Math.cos(t / d * (Math.PI / 2)) + c + b;
-	  },
-	  easeOutSine: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * Math.sin(t / d * (Math.PI / 2)) + b;
-	  },
-	  easeInOutSine: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return -c / 2 * (Math.cos(Math.PI * t / d) - 1) + b;
-	  },
-	  easeInExpo: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return (t==0) ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;
-	  },
-	  easeOutExpo: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
-	  },
-	  easeInOutExpo: function(t, b, _c, d) {
-	    var c = _c - b;
-	    if (t === 0) {
-	      return b;
-	    }
-	    if (t === d) {
-	      return b + c;
-	    }
-	    if ((t /= d / 2) < 1) {
-	      return c / 2 * Math.pow(2, 10 * (t - 1)) + b;
-	    } else {
-	      return c / 2 * (-Math.pow(2, -10 * --t) + 2) + b;
-	    }
-	  },
-	  easeInCirc: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return -c * (Math.sqrt(1 - (t /= d) * t) - 1) + b;
-	  },
-	  easeOutCirc: function(t, b, _c, d) {
-	    var c = _c - b;
-	    return c * Math.sqrt(1 - (t = t / d - 1) * t) + b;
-	  },
-	  easeInOutCirc: function(t, b, _c, d) {
-	    var c = _c - b;
-	    if ((t /= d / 2) < 1) {
-	      return -c / 2 * (Math.sqrt(1 - t * t) - 1) + b;
-	    } else {
-	      return c / 2 * (Math.sqrt(1 - (t -= 2) * t) + 1) + b;
-	    }
-	  },
-	  easeInElastic: function(t, b, _c, d) {
-	    var c = _c - b;
-	    var a, p, s;
-	    s = 1.70158;
-	    p = 0;
-	    a = c;
-	    if (t === 0) {
-	      return b;
-	    } else if ((t /= d) === 1) {
-	      return b + c;
-	    }
-	    if (!p) {
-	      p = d * 0.3;
-	    }
-	    if (a < Math.abs(c)) {
-	      a = c;
-	      s = p / 4;
-	    } else {
-	      s = p / (2 * Math.PI) * Math.asin(c / a);
-	    }
-	    return -(a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-	  },
-	  easeOutElastic: function(t, b, _c, d) {
-	    var c = _c - b;
-	    var a, p, s;
-	    s = 1.70158;
-	    p = 0;
-	    a = c;
-	    if (t === 0) {
-	      return b;
-	    } else if ((t /= d) === 1) {
-	      return b + c;
-	    }
-	    if (!p) {
-	      p = d * 0.3;
-	    }
-	    if (a < Math.abs(c)) {
-	      a = c;
-	      s = p / 4;
-	    } else {
-	      s = p / (2 * Math.PI) * Math.asin(c / a);
-	    }
-	    return a * Math.pow(2, -10 * t) * Math.sin((t * d - s) * (2 * Math.PI) / p) + c + b;
-	  },
-	  easeInOutElastic: function(t, b, _c, d) {
-	    var c = _c - b;
-	    var a, p, s;
-	    s = 1.70158;
-	    p = 0;
-	    a = c;
-	    if (t === 0) {
-	      return b;
-	    } else if ((t /= d / 2) === 2) {
-	      return b + c;
-	    }
-	    if (!p) {
-	      p = d * (0.3 * 1.5);
-	    }
-	    if (a < Math.abs(c)) {
-	      a = c;
-	      s = p / 4;
-	    } else {
-	      s = p / (2 * Math.PI) * Math.asin(c / a);
-	    }
-	    if (t < 1) {
-	      return -0.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-	    } else {
-	      return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
-	    }
-	  },
-	  easeInBack: function(t, b, _c, d, s) {
-	    var c = _c - b;
-	    if (s === void 0) {
-	      s = 1.70158;
-	    }
-	    return c * (t /= d) * t * ((s + 1) * t - s) + b;
-	  },
-	  easeOutBack: function(t, b, _c, d, s) {
-	    var c = _c - b;
-	    if (s === void 0) {
-	      s = 1.70158;
-	    }
-	    return c * ((t = t / d - 1) * t * ((s + 1) * t + s) + 1) + b;
-	  },
-	  easeInOutBack: function(t, b, _c, d, s) {
-	    var c = _c - b;
-	    if (s === void 0) {
-	      s = 1.70158;
-	    }
-	    if ((t /= d / 2) < 1) {
-	      return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
-	    } else {
-	      return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
-	    }
-	  },
-	  easeInBounce: function(t, b, _c, d) {
-	    var c = _c - b;
-	    var v;
-	    v = tweenFunctions.easeOutBounce(d - t, 0, c, d);
-	    return c - v + b;
-	  },
-	  easeOutBounce: function(t, b, _c, d) {
-	    var c = _c - b;
-	    if ((t /= d) < 1 / 2.75) {
-	      return c * (7.5625 * t * t) + b;
-	    } else if (t < 2 / 2.75) {
-	      return c * (7.5625 * (t -= 1.5 / 2.75) * t + 0.75) + b;
-	    } else if (t < 2.5 / 2.75) {
-	      return c * (7.5625 * (t -= 2.25 / 2.75) * t + 0.9375) + b;
-	    } else {
-	      return c * (7.5625 * (t -= 2.625 / 2.75) * t + 0.984375) + b;
-	    }
-	  },
-	  easeInOutBounce: function(t, b, _c, d) {
-	    var c = _c - b;
-	    var v;
-	    if (t < d / 2) {
-	      v = tweenFunctions.easeInBounce(t * 2, 0, c, d);
-	      return v * 0.5 + b;
-	    } else {
-	      v = tweenFunctions.easeOutBounce(t * 2 - d, 0, c, d);
-	      return v * 0.5 + c * 0.5 + b;
-	    }
-	  }
-	};
-	
-	module.exports = tweenFunctions;
-
-
-/***/ },
-/* 273 */
-/***/ function(module, exports) {
-
-	/* eslint-disable no-unused-vars */
-	'use strict';
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-	
-	function toObject(val) {
-		if (val === null || val === undefined) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-	
-		return Object(val);
-	}
-	
-	module.exports = Object.assign || function (target, source) {
-		var from;
-		var to = toObject(target);
-		var symbols;
-	
-		for (var s = 1; s < arguments.length; s++) {
-			from = Object(arguments[s]);
-	
-			for (var key in from) {
-				if (hasOwnProperty.call(from, key)) {
-					to[key] = from[key];
-				}
-			}
-	
-			if (Object.getOwnPropertySymbols) {
-				symbols = Object.getOwnPropertySymbols(from);
-				for (var i = 0; i < symbols.length; i++) {
-					if (propIsEnumerable.call(from, symbols[i])) {
-						to[symbols[i]] = from[symbols[i]];
-					}
-				}
-			}
-		}
-	
-		return to;
-	};
-
-
-/***/ },
 /* 274 */
 /***/ function(module, exports) {
 
@@ -35911,7 +35911,7 @@
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(235);
 	var Modal = __webpack_require__(213);
-	var ApiActions = __webpack_require__(246);
+	var ApiActions = __webpack_require__(249);
 	
 	const customStyles = {
 	  content: {
@@ -36133,7 +36133,7 @@
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var TrekStore = __webpack_require__(252);
+	var TrekStore = __webpack_require__(255);
 	var TrekModal = __webpack_require__(281);
 	
 	function _getCoordsObj(latLng) {
@@ -36346,7 +36346,7 @@
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(235);
 	var Modal = __webpack_require__(213);
-	var ApiActions = __webpack_require__(246);
+	var ApiActions = __webpack_require__(249);
 	var MapTrekCreate = __webpack_require__(275);
 	
 	const customStyles = {
