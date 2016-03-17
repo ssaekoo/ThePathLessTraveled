@@ -28,7 +28,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find()
-
+  end
+  
   private
   def user_params
     params.require(:user).permit(:password, :username)

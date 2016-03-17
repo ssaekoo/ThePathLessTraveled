@@ -26883,7 +26883,7 @@
 	      React.createElement(Map, { className: 'trek-map', history: this.history, searchValue: this.state.searchValue }),
 	      React.createElement(
 	        ScrollToTop,
-	        { id: 'scroll-to-top', showUnder: 160 },
+	        { className: 'scroll-to-top', showUnder: 160 },
 	        React.createElement(
 	          'span',
 	          null,

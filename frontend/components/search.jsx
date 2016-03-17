@@ -233,7 +233,7 @@ var Search = React.createClass({
           </div>
         </div>
         <Map className='trek-map' history={this.history} searchValue={this.state.searchValue}/>
-        <ScrollToTop id="scroll-to-top" showUnder={160}>
+        <ScrollToTop className="scroll-to-top" showUnder={160}>
           <span>UP</span>
         </ScrollToTop>
       </div>
