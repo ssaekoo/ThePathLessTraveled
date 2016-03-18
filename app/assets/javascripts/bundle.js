@@ -26804,6 +26804,15 @@
 	    //     <button type="button" key={key} id={"button" + key} className="btn btn-sm btn-default" onClick={this.handleButton.bind(null, key)}> {myTagObjs[key]} </button>
 	    //   )
 	    // }.bind(this));
+	    var scrollUpStyle = {
+	      position: 'fixed',
+	      bottom: 30,
+	      right: 543,
+	      cursor: 'pointer',
+	      transitionDuration: '0.2s',
+	      transitionTimingFunction: 'linear',
+	      transitionDelay: '0s'
+	    };
 	
 	    return React.createElement(
 	      'div',
@@ -26883,7 +26892,7 @@
 	      React.createElement(Map, { className: 'trek-map', history: this.history, searchValue: this.state.searchValue }),
 	      React.createElement(
 	        ScrollToTop,
-	        { className: 'scroll-to-top', showUnder: 160 },
+	        { style: scrollUpStyle, showUnder: 160 },
 	        React.createElement(
 	          'span',
 	          null,
