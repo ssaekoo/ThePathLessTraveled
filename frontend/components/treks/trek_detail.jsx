@@ -5,6 +5,7 @@ var Utilities = require('../../util/util');
 var MapTrekDetail = require('../maps/map_trek_create');
 var TrekReviews = require('../reviews/reviews');
 var Rating = require('../reviews/ratings');
+var ScrollToTop = require('react-scroll-up');
 
 
 var TrekDetail = React.createClass({
@@ -57,13 +58,14 @@ var TrekDetail = React.createClass({
 
     if(this.state.trek.length === undefined) { return <div></div>; }
     var myTags = this.state.trek.tags.map (function(tag){
-      return (<button type="button" key={tag.id} id={"button" + tag.id} className="btn btn-xs btn-primary"> {tag.tag_name} </button>);
+      return (<button type="button" key={tag.id} id={"tag-button" + tag.id} className="btn btn-xs btn-primary tag-button"> {tag.tag_name} </button>);
     })
+
     var stars = (Math.round(this.state.trek.average_rating * 2) / 2).toFixed(1);
 
     return(
       <div id="sidx" className="trek-detail below-nav">
-        <a className="return-to-search" href="/#/search">{"Return to search"}</a>
+        <a className="return-to-search" href="/#/search">{"Return to Search"}</a>
         <div className="trek-detail-pane">
           <div className="trek-detail-carousel">
             <section id="slider" className="carousel slide" data-interval="false">
@@ -141,6 +143,9 @@ var TrekDetail = React.createClass({
         <div className="row">
           <TrekReviews reviews={this.state.trek.reviews} trekId={this.state.trek.id}/>
         </div>
+        <ScrollToTop showUnder={160}>
+          <img className="up-arrow" src="http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png"/>
+        </ScrollToTop>
       </div>
     );
   }

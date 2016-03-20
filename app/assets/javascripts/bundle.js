@@ -26589,10 +26589,10 @@
 	  },
 	
 	  handleButton: function (id) {
-	    if (document.getElementById("button" + id).className === "btn btn-xs btn-default") {
-	      document.getElementById("button" + id).className = "btn btn-xs btn-primary";
+	    if (document.getElementById("button" + id).className === "btn btn-xs btn-default tags") {
+	      document.getElementById("button" + id).className = "btn btn-xs btn-primary tags";
 	    } else {
-	      document.getElementById("button" + id).className = "btn btn-xs btn-default";
+	      document.getElementById("button" + id).className = "btn btn-xs btn-default tags";
 	    }
 	    ApiActions.receiveTagChange(id, this.state.searchValue);
 	  },
@@ -26806,8 +26806,8 @@
 	    // }.bind(this));
 	    var scrollUpStyle = {
 	      position: 'fixed',
-	      bottom: 30,
-	      right: 543,
+	      bottom: 15,
+	      left: 5,
 	      cursor: 'pointer',
 	      transitionDuration: '0.2s',
 	      transitionTimingFunction: 'linear',
@@ -26893,11 +26893,7 @@
 	      React.createElement(
 	        ScrollToTop,
 	        { style: scrollUpStyle, showUnder: 160 },
-	        React.createElement(
-	          'span',
-	          null,
-	          'UP'
-	        )
+	        React.createElement('img', { className: 'up-arrow', src: 'http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png' })
 	      )
 	    );
 	  }
@@ -35418,6 +35414,7 @@
 	var MapTrekDetail = __webpack_require__(275);
 	var TrekReviews = __webpack_require__(276);
 	var Rating = __webpack_require__(278);
+	var ScrollToTop = __webpack_require__(246);
 	
 	var TrekDetail = React.createClass({
 	  displayName: 'TrekDetail',
@@ -35475,12 +35472,13 @@
 	    var myTags = this.state.trek.tags.map(function (tag) {
 	      return React.createElement(
 	        'button',
-	        { type: 'button', key: tag.id, id: "button" + tag.id, className: 'btn btn-xs btn-primary' },
+	        { type: 'button', key: tag.id, id: "tag-button" + tag.id, className: 'btn btn-xs btn-primary tag-button' },
 	        ' ',
 	        tag.tag_name,
 	        ' '
 	      );
 	    });
+	
 	    var stars = (Math.round(this.state.trek.average_rating * 2) / 2).toFixed(1);
 	
 	    return React.createElement(
@@ -35489,7 +35487,7 @@
 	      React.createElement(
 	        'a',
 	        { className: 'return-to-search', href: '/#/search' },
-	        "Return to search"
+	        "Return to Search"
 	      ),
 	      React.createElement(
 	        'div',
@@ -35688,6 +35686,11 @@
 	        'div',
 	        { className: 'row' },
 	        React.createElement(TrekReviews, { reviews: this.state.trek.reviews, trekId: this.state.trek.id })
+	      ),
+	      React.createElement(
+	        ScrollToTop,
+	        { showUnder: 160 },
+	        React.createElement('img', { className: 'up-arrow', src: 'http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png' })
 	      )
 	    );
 	  }

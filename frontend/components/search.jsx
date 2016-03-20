@@ -60,10 +60,10 @@ var Search = React.createClass({
   },
 
   handleButton: function(id) {
-    if (document.getElementById("button" + id).className === "btn btn-xs btn-default") {
-      document.getElementById("button" + id).className = "btn btn-xs btn-primary";
+    if (document.getElementById("button" + id).className === "btn btn-xs btn-default tags") {
+      document.getElementById("button" + id).className = "btn btn-xs btn-primary tags";
     } else {
-      document.getElementById("button" + id).className = "btn btn-xs btn-default";
+      document.getElementById("button" + id).className = "btn btn-xs btn-default tags";
     }
     ApiActions.receiveTagChange(id, this.state.searchValue);
   },
@@ -197,8 +197,8 @@ var Search = React.createClass({
     // }.bind(this));
     var scrollUpStyle = {
           position: 'fixed',
-          bottom: 30,
-          right: 543,
+          bottom: 15,
+          left: 5,
           cursor: 'pointer',
           transitionDuration: '0.2s',
           transitionTimingFunction: 'linear',
@@ -243,7 +243,7 @@ var Search = React.createClass({
         </div>
         <Map className='trek-map' history={this.history} searchValue={this.state.searchValue}/>
         <ScrollToTop style={scrollUpStyle} showUnder={160}>
-          <span>UP</span>
+          <img className="up-arrow" src="http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png"/>
         </ScrollToTop>
       </div>
     );

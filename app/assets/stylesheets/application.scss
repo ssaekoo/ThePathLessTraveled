@@ -48,7 +48,6 @@ body {
   margin: -70px 0 0 -170px;
   background-color: rgba(255,255,255,0.7);
   padding: 5px 10px 5px 10px;
-  color: black;
   box-shadow: 0 1px 3px #626262;
 }
 
@@ -136,6 +135,14 @@ ul {
   border-bottom: 1px solid black;
 }
 
+.link-logo img{
+  margin-left: 20px;
+  margin-top: 3px;
+  width: auto;
+  height: 30px;
+  background-size: cover;
+}
+
 .search-result {
     top: 50px;
     left: 0;
@@ -143,8 +150,14 @@ ul {
     position: fixed;
     overflow-y: scroll;
 }
+
 .trek-detail {
   float: left;
+}
+
+.up-arrow {
+  height: 35px;
+  width: auto;
 }
 
 .return-to-search{
@@ -220,7 +233,7 @@ li {
   position: fixed;
   right: 0px;
   left: auto;
-  bottom: 20px;
+  bottom: 0px;
   top: 50px;
 }
 
@@ -604,4 +617,12 @@ li {
 .trek-title {
   width: 200px;
   margin-left: 20px;
+}
+
+.tag-button {
+  cursor: default;
+}
+
+.tag-button:hover {
+  
 }
