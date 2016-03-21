@@ -26621,7 +26621,7 @@
 	          return React.createElement(
 	            'div',
 	            { key: trek.title + picture.id, className: pictureClass },
-	            React.createElement('img', { src: "http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url })
+	            React.createElement('img', { src: "http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url })
 	          );
 	        });
 	      };
@@ -26893,7 +26893,7 @@
 	      React.createElement(
 	        ScrollToTop,
 	        { style: scrollUpStyle, showUnder: 160 },
-	        React.createElement('img', { className: 'up-arrow', src: 'http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png' })
+	        React.createElement('img', { className: 'up-arrow', src: 'http://res.cloudinary.com/stephensaekoo/image/upload/up_arrow.png' })
 	      )
 	    );
 	  }
@@ -35461,7 +35461,7 @@
 	        return React.createElement(
 	          'div',
 	          { className: pictureClass },
-	          React.createElement('img', { key: picture.url, src: "http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url })
+	          React.createElement('img', { key: picture.url, src: "http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url })
 	        );
 	      });
 	    };
@@ -35690,7 +35690,7 @@
 	      React.createElement(
 	        ScrollToTop,
 	        { showUnder: 160 },
-	        React.createElement('img', { className: 'up-arrow', src: 'http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png' })
+	        React.createElement('img', { className: 'up-arrow', src: 'http://res.cloudinary.com/stephensaekoo/image/upload/up_arrow.png' })
 	      )
 	    );
 	  }
@@ -36516,7 +36516,7 @@
 	  displayName: 'exports',
 	
 	  componentWillMount: function () {
-	    document.body.style.backgroundImage = "url('http://res.cloudinary.com/ssaekoo/image/upload/west-coast-trail.jpg')";
+	    document.body.style.backgroundImage = "url('http://res.cloudinary.com/stephensaekoo/image/upload/west-coast-trail.jpg')";
 	    var selection = document.getElementById("nav");
 	    selection.style.backgroundColor = 'transparent';
 	    selection.style.borderBottom = 'none';

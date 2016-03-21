@@ -91,7 +91,7 @@ var Search = React.createClass({
 
             return (
                 <div key={trek.title + picture.id} className={pictureClass}>
-                    <img src={"http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url} />
+                    <img src={"http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url} />
                 </div>
             )
         })
@@ -243,7 +243,7 @@ var Search = React.createClass({
         </div>
         <Map className='trek-map' history={this.history} searchValue={this.state.searchValue}/>
         <ScrollToTop style={scrollUpStyle} showUnder={160}>
-          <img className="up-arrow" src="http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png"/>
+          <img className="up-arrow" src="http://res.cloudinary.com/stephensaekoo/image/upload/up_arrow.png"/>
         </ScrollToTop>
       </div>
     );

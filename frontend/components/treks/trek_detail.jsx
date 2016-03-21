@@ -50,7 +50,7 @@ var TrekDetail = React.createClass({
 
           return (
               <div className={pictureClass}>
-                  <img key={picture.url} src={"http://res.cloudinary.com/ssaekoo/image/upload/" + picture.url} />
+                  <img key={picture.url} src={"http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url} />
               </div>
           )
       })
@@ -144,7 +144,7 @@ var TrekDetail = React.createClass({
           <TrekReviews reviews={this.state.trek.reviews} trekId={this.state.trek.id}/>
         </div>
         <ScrollToTop showUnder={160}>
-          <img className="up-arrow" src="http://res.cloudinary.com/ssaekoo/image/upload/up_arrow.png"/>
+          <img className="up-arrow" src="http://res.cloudinary.com/stephensaekoo/image/upload/up_arrow.png"/>
         </ScrollToTop>
       </div>
     );
