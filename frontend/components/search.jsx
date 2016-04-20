@@ -1,6 +1,5 @@
 var React = require('react');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
-var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 var History = require('react-router').History;
 var Link = require('react-router').Link;
 var ScrollToTop = require('react-scroll-up');
@@ -12,8 +11,7 @@ var TrekIndexItem = require('./treks/trek_item');
 var Map = require('./maps/map');
 var Utilities = require('../util/util');
 var TrekModal = require('./treks/trek_modal');
-var Rating = require('./reviews/ratings');
-var Carousel = require('./carousel/carousel');
+var Carousels = require('./carousel/carousels');
 // var Tags = require('./tags');
 // var SessionStore = require('./stores/sessionStore.js');
 
@@ -76,37 +74,7 @@ var Search = React.createClass({
     var carouselIndicators = [];
 
     var carouselInner = [];
-    var results = myMatches.map(function (trek) {
-
-      if (trek.trek_pics !== undefined){
-        makeCarousels = <Carousel trek={trek}/>
-      };
-
-      var stars = (Math.round(trek.average_rating * 2) / 2).toFixed(1);
-
-      return (
-        <div className="col-xs-12 col-sm-6 row-space-5">
-          <div key={trek.id} id={"trek-" + trek.id} className="trek-box">
-            <div className="text-center" onClick={this.showDetail.bind(null, trek.id)}><h4>{trek.title}</h4></div>
-            {makeCarousels}
-            <div className="text-center">
-              <Rating stars={stars}/>
-            </div>
-            <div className="col-xs-12 col-sm-6 detail-container-right" onClick={this.showDetail.bind(null, trek.id)}>
-              <div>City: </div>
-              <div>State: </div>
-              <div>Country: </div>
-            </div>
-            <div className="col-xs-12 col-sm-6 detail-container-left" onClick={this.showDetail.bind(null, trek.id)}>
-              <div>{trek.location.city}</div>
-              <div>{trek.location.state}</div>
-              <div>{trek.location.country}</div>
-            </div>
-
-          </div>
-        </div>
-      );
-    }.bind(this));
+    var carousels = <Carousels myMatches={myMatches}/>
 
     var myTagObjs = {};
     var allTags = {
@@ -134,7 +102,6 @@ var Search = React.createClass({
     var durationTags = [];
     var otherTags = [];
 
-    // TODO redo, will need to change tag table to allow categorization and create a tag store
     for (var i = 1; i <= 12; i++) {
       switch (true) {
         case (i <= 4):
@@ -203,9 +170,7 @@ var Search = React.createClass({
               <div className="row">
                 <div className="container-fluid search-list-listings">
                   <div className="row">
-                    <ReactCSSTransitionGroup transitionName="auto" transitionEnterTimeout={500} transitionLeaveTimeout={500}>
-                      {results}
-                    </ReactCSSTransitionGroup>
+                    {carousels}
                   </div>
                 </div>
               </div>

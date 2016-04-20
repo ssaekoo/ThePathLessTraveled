@@ -1,7 +1,10 @@
 var React = require('react');
 var PropTypes = React.PropTypes;
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var History = require('react-router').History;
 
-var Carousel = React.createClass({
+var MakeCarousel = React.createClass({
+  mixins: [History, LinkedStateMixin],
   showDetail: function (id) {
     this.history.pushState(null, '/treks/' + id);
   },
@@ -44,4 +47,4 @@ var Carousel = React.createClass({
 
 });
 
-module.exports = Carousel;
+module.exports = MakeCarousel;

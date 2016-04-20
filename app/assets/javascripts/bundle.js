@@ -26515,7 +26515,6 @@
 
 	var React = __webpack_require__(1);
 	var LinkedStateMixin = __webpack_require__(235);
-	var ReactCSSTransitionGroup = __webpack_require__(239);
 	var History = __webpack_require__(159).History;
 	var Link = __webpack_require__(159).Link;
 	var ScrollToTop = __webpack_require__(246);
@@ -26527,8 +26526,7 @@
 	var Map = __webpack_require__(280);
 	var Utilities = __webpack_require__(274);
 	var TrekModal = __webpack_require__(281);
-	var Rating = __webpack_require__(278);
-	var Carousel = __webpack_require__(284);
+	var Carousels = __webpack_require__(282);
 	// var Tags = require('./tags');
 	// var SessionStore = require('./stores/sessionStore.js');
 	
@@ -26605,76 +26603,7 @@
 	    var carouselIndicators = [];
 	
 	    var carouselInner = [];
-	    var results = myMatches.map(function (trek) {
-	
-	      if (trek.trek_pics !== undefined) {
-	        makeCarousels = React.createElement(Carousel, { trek: trek });
-	      };
-	
-	      var stars = (Math.round(trek.average_rating * 2) / 2).toFixed(1);
-	
-	      return React.createElement(
-	        'div',
-	        { className: 'col-xs-12 col-sm-6 row-space-5' },
-	        React.createElement(
-	          'div',
-	          { key: trek.id, id: "trek-" + trek.id, className: 'trek-box' },
-	          React.createElement(
-	            'div',
-	            { className: 'text-center', onClick: this.showDetail.bind(null, trek.id) },
-	            React.createElement(
-	              'h4',
-	              null,
-	              trek.title
-	            )
-	          ),
-	          makeCarousels,
-	          React.createElement(
-	            'div',
-	            { className: 'text-center' },
-	            React.createElement(Rating, { stars: stars })
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'col-xs-12 col-sm-6 detail-container-right', onClick: this.showDetail.bind(null, trek.id) },
-	            React.createElement(
-	              'div',
-	              null,
-	              'City: '
-	            ),
-	            React.createElement(
-	              'div',
-	              null,
-	              'State: '
-	            ),
-	            React.createElement(
-	              'div',
-	              null,
-	              'Country: '
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'col-xs-12 col-sm-6 detail-container-left', onClick: this.showDetail.bind(null, trek.id) },
-	            React.createElement(
-	              'div',
-	              null,
-	              trek.location.city
-	            ),
-	            React.createElement(
-	              'div',
-	              null,
-	              trek.location.state
-	            ),
-	            React.createElement(
-	              'div',
-	              null,
-	              trek.location.country
-	            )
-	          )
-	        )
-	      );
-	    }.bind(this));
+	    var carousels = React.createElement(Carousels, { myMatches: myMatches });
 	
 	    var myTagObjs = {};
 	    var allTags = {
@@ -26702,7 +26631,6 @@
 	    var durationTags = [];
 	    var otherTags = [];
 	
-	    // TODO redo, will need to change tag table to allow categorization and create a tag store
 	    for (var i = 1; i <= 12; i++) {
 	      switch (true) {
 	        case i <= 4:
@@ -26844,11 +26772,7 @@
 	                React.createElement(
 	                  'div',
 	                  { className: 'row' },
-	                  React.createElement(
-	                    ReactCSSTransitionGroup,
-	                    { transitionName: 'auto', transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
-	                    results
-	                  )
+	                  carousels
 	                )
 	              )
 	            )
@@ -36472,7 +36396,110 @@
 	module.exports = TrekModal;
 
 /***/ },
-/* 282 */,
+/* 282 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	var LinkedStateMixin = __webpack_require__(235);
+	var ReactCSSTransitionGroup = __webpack_require__(239);
+	var History = __webpack_require__(159).History;
+	var MakeCarousel = __webpack_require__(284);
+	var Rating = __webpack_require__(278);
+	
+	var Carousel = React.createClass({
+	  displayName: 'Carousel',
+	
+	  mixins: [History, LinkedStateMixin],
+	  showDetail: function (id) {
+	    this.history.pushState(null, '/treks/' + id);
+	  },
+	
+	  render: function () {
+	
+	    var that = this;
+	    results = this.props.myMatches.map(function (trek) {
+	
+	      if (trek.trek_pics !== undefined) {
+	        makeCarousels = React.createElement(MakeCarousel, { trek: trek });
+	      };
+	
+	      var stars = (Math.round(trek.average_rating * 2) / 2).toFixed(1);
+	
+	      return React.createElement(
+	        'div',
+	        { className: 'col-xs-12 col-sm-6 row-space-5' },
+	        React.createElement(
+	          'div',
+	          { key: trek.id, id: "trek-" + trek.id, className: 'trek-box' },
+	          React.createElement(
+	            'div',
+	            { className: 'text-center', onClick: that.showDetail.bind(null, trek.id) },
+	            React.createElement(
+	              'h4',
+	              null,
+	              trek.title
+	            )
+	          ),
+	          makeCarousels,
+	          React.createElement(
+	            'div',
+	            { className: 'text-center' },
+	            React.createElement(Rating, { stars: stars })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-xs-12 col-sm-6 detail-container-right', onClick: that.showDetail.bind(null, trek.id) },
+	            React.createElement(
+	              'div',
+	              null,
+	              'City: '
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              'State: '
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              'Country: '
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'col-xs-12 col-sm-6 detail-container-left', onClick: that.showDetail.bind(null, trek.id) },
+	            React.createElement(
+	              'div',
+	              null,
+	              trek.location.city
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              trek.location.state
+	            ),
+	            React.createElement(
+	              'div',
+	              null,
+	              trek.location.country
+	            )
+	          )
+	        )
+	      );
+	    });
+	    return React.createElement(
+	      ReactCSSTransitionGroup,
+	      { transitionName: 'auto', transitionEnterTimeout: 500, transitionLeaveTimeout: 500 },
+	      results
+	    );
+	  }
+	
+	});
+	
+	module.exports = Carousel;
+
+/***/ },
 /* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -36539,10 +36566,13 @@
 
 	var React = __webpack_require__(1);
 	var PropTypes = React.PropTypes;
+	var LinkedStateMixin = __webpack_require__(235);
+	var History = __webpack_require__(159).History;
 	
-	var Carousel = React.createClass({
-	  displayName: 'Carousel',
+	var MakeCarousel = React.createClass({
+	  displayName: 'MakeCarousel',
 	
+	  mixins: [History, LinkedStateMixin],
 	  showDetail: function (id) {
 	    this.history.pushState(null, '/treks/' + id);
 	  },
@@ -36590,7 +36620,7 @@
 	
 	});
 	
-	module.exports = Carousel;
+	module.exports = MakeCarousel;
 
 /***/ }
 /******/ ]);
