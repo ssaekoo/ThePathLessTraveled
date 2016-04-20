@@ -13,7 +13,9 @@ var Map = require('./maps/map');
 var Utilities = require('../util/util');
 var TrekModal = require('./treks/trek_modal');
 var Rating = require('./reviews/ratings');
-// var Tags = require('./tags'); 
+var Carousel = require('./carousel/carousel');
+// var Tags = require('./tags');
+// var SessionStore = require('./stores/sessionStore.js');
 
 var Search = React.createClass({
   mixins: [History, LinkedStateMixin],
@@ -75,41 +77,11 @@ var Search = React.createClass({
 
     var carouselInner = [];
     var results = myMatches.map(function (trek) {
-      carouselIndicators = [];
-      carouselInner = [];
+
       if (trek.trek_pics !== undefined){
-        carouselInner = trek.trek_pics.map (function (picture, idx){
-            var pictureClass = "item";
-
-            if (idx === 0){
-              carouselIndicators.push (<li key={picture.id} data-target="#slider" data-slide-to="0" className="active"></li>);
-              pictureClass = "item active";
-            } else {
-              carouselIndicators.push (<li key={picture.id} data-target="#slider" data-slide-to={idx}></li>);
-            }
-
-            return (
-                <div key={trek.title + picture.id} className={pictureClass}>
-                    <img src={"http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url} />
-                </div>
-            )
-        })
+        makeCarousels = <Carousel trek={trek}/>
       };
 
-      var makeCarousels = (
-        <section id={trek.id} className="carousel slide search-page-image" data-interval="false">
-          <div onClick={this.showDetail.bind(null, trek.id)} className="carousel-inner">
-            {carouselInner}
-          </div>
-
-          <a id="carousel-controller" className="left carousel-control" href={'#' + trek.id} role="button" data-slide="prev">
-              <span className="glyphicon glyphicon-chevron-left"></span>
-          </a>
-          <a id="carousel-controller" className="right carousel-control" href={'#' + trek.id} role="button" data-slide="next">
-              <span className="glyphicon glyphicon-chevron-right"></span>
-          </a>
-        </section>
-      );
       var stars = (Math.round(trek.average_rating * 2) / 2).toFixed(1);
 
       return (

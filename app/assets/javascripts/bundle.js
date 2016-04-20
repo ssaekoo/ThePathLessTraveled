@@ -56,7 +56,7 @@
 	
 	var App = __webpack_require__(233);
 	var Search = __webpack_require__(234);
-	var LandingPage = __webpack_require__(282);
+	var LandingPage = __webpack_require__(283);
 	var TrekDetail = __webpack_require__(273);
 	// var Map = require('./components/maps/map');
 	
@@ -26528,7 +26528,9 @@
 	var Utilities = __webpack_require__(274);
 	var TrekModal = __webpack_require__(281);
 	var Rating = __webpack_require__(278);
+	var Carousel = __webpack_require__(284);
 	// var Tags = require('./tags');
+	// var SessionStore = require('./stores/sessionStore.js');
 	
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -26604,46 +26606,11 @@
 	
 	    var carouselInner = [];
 	    var results = myMatches.map(function (trek) {
-	      carouselIndicators = [];
-	      carouselInner = [];
+	
 	      if (trek.trek_pics !== undefined) {
-	        carouselInner = trek.trek_pics.map(function (picture, idx) {
-	          var pictureClass = "item";
-	
-	          if (idx === 0) {
-	            carouselIndicators.push(React.createElement('li', { key: picture.id, 'data-target': '#slider', 'data-slide-to': '0', className: 'active' }));
-	            pictureClass = "item active";
-	          } else {
-	            carouselIndicators.push(React.createElement('li', { key: picture.id, 'data-target': '#slider', 'data-slide-to': idx }));
-	          }
-	
-	          return React.createElement(
-	            'div',
-	            { key: trek.title + picture.id, className: pictureClass },
-	            React.createElement('img', { src: "http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url })
-	          );
-	        });
+	        makeCarousels = React.createElement(Carousel, { trek: trek });
 	      };
 	
-	      var makeCarousels = React.createElement(
-	        'section',
-	        { id: trek.id, className: 'carousel slide search-page-image', 'data-interval': 'false' },
-	        React.createElement(
-	          'div',
-	          { onClick: this.showDetail.bind(null, trek.id), className: 'carousel-inner' },
-	          carouselInner
-	        ),
-	        React.createElement(
-	          'a',
-	          { id: 'carousel-controller', className: 'left carousel-control', href: '#' + trek.id, role: 'button', 'data-slide': 'prev' },
-	          React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
-	        ),
-	        React.createElement(
-	          'a',
-	          { id: 'carousel-controller', className: 'right carousel-control', href: '#' + trek.id, role: 'button', 'data-slide': 'next' },
-	          React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
-	        )
-	      );
 	      var stars = (Math.round(trek.average_rating * 2) / 2).toFixed(1);
 	
 	      return React.createElement(
@@ -36505,7 +36472,8 @@
 	module.exports = TrekModal;
 
 /***/ },
-/* 282 */
+/* 282 */,
+/* 283 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -36564,6 +36532,65 @@
 	    );
 	  }
 	});
+
+/***/ },
+/* 284 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var Carousel = React.createClass({
+	  displayName: 'Carousel',
+	
+	  showDetail: function (id) {
+	    this.history.pushState(null, '/treks/' + id);
+	  },
+	
+	  render: function () {
+	    var that = this;
+	    var carouselIndicators = [];
+	    var carouselInner = this.props.trek.trek_pics.map(function (picture, idx) {
+	      var pictureClass = "item";
+	
+	      if (idx === 0) {
+	        carouselIndicators.push(React.createElement('li', { key: picture.id, 'data-target': '#slider', 'data-slide-to': '0', className: 'active' }));
+	        pictureClass = "item active";
+	      } else {
+	        carouselIndicators.push(React.createElement('li', { key: picture.id, 'data-target': '#slider', 'data-slide-to': idx }));
+	      }
+	
+	      return React.createElement(
+	        'div',
+	        { key: that.props.trek.title + picture.id, className: pictureClass },
+	        React.createElement('img', { src: "http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url })
+	      );
+	    });
+	
+	    return React.createElement(
+	      'section',
+	      { id: this.props.trek.id, className: 'carousel slide search-page-image', 'data-interval': 'false' },
+	      React.createElement(
+	        'div',
+	        { onClick: this.showDetail.bind(null, this.props.trek.id), className: 'carousel-inner' },
+	        carouselInner
+	      ),
+	      React.createElement(
+	        'a',
+	        { id: 'carousel-controller', className: 'left carousel-control', href: '#' + this.props.trek.id, role: 'button', 'data-slide': 'prev' },
+	        React.createElement('span', { className: 'glyphicon glyphicon-chevron-left' })
+	      ),
+	      React.createElement(
+	        'a',
+	        { id: 'carousel-controller', className: 'right carousel-control', href: '#' + this.props.trek.id, role: 'button', 'data-slide': 'next' },
+	        React.createElement('span', { className: 'glyphicon glyphicon-chevron-right' })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Carousel;
 
 /***/ }
 /******/ ]);
