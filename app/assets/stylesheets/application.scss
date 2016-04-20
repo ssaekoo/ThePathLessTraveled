@@ -14,7 +14,7 @@ body {
   // width: 100%;
   // overflow: hidden;
   // background-image: url("/assets/west-coast-trail.jpg");
-  font-family: "Sorts+Mill+Goudy", sans-serif;
+  font-family: "Montserrat";
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -26,7 +26,6 @@ body {
   // left: 0px;
   background-position: center center;
   background-size: cover;
-  font-family: Helvetica, sans-serif;
   background-repeat: no-repeat;
   background-size:100% 100%;
 }
@@ -294,7 +293,7 @@ li {
 }
 
 .profile {
-  font-family: 'Sorts+Mill+Goudy';
+  font-family: 'Montserrat';
   color: grey;
   font-weight: normal;
   font-style: normal;
@@ -584,7 +583,7 @@ li {
 }
 
 .ReactModal__Content > div {
-  background-color: black;
+
 }
 
 .lat-lng {

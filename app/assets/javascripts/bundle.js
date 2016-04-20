@@ -26529,7 +26529,6 @@
 	var TrekModal = __webpack_require__(281);
 	var Rating = __webpack_require__(278);
 	// var Tags = require('./tags');
-	// var SessionStore = require('./stores/sessionStore.js');
 	
 	var Search = React.createClass({
 	  displayName: 'Search',

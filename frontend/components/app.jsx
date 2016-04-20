@@ -14,5 +14,4 @@ var App = React.createClass({
 
 module.exports = App;
 
-
 //landing page link to search

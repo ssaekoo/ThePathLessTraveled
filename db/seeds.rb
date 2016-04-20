@@ -665,11 +665,6 @@ Picture.create!(author_id: 1,
       )
 
 Picture.create!(author_id: 1,
-      trek_id: 12,
-      url: 'palomerStatePark2.jpg'
-      )
-
-Picture.create!(author_id: 1,
       trek_id: 13,
       url: 'bridgeToNowhere0.jpg'
       )

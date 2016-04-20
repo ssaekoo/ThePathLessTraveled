@@ -13,8 +13,7 @@ var Map = require('./maps/map');
 var Utilities = require('../util/util');
 var TrekModal = require('./treks/trek_modal');
 var Rating = require('./reviews/ratings');
-// var Tags = require('./tags');
-// var SessionStore = require('./stores/sessionStore.js');
+// var Tags = require('./tags'); 
 
 var Search = React.createClass({
   mixins: [History, LinkedStateMixin],
