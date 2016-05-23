@@ -1,51 +1,50 @@
 var React = require('react');
+var PropTypes = React.PropTypes;
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var History = require('react-router').History;
 
-var TrekUtil = React.createClass({
-    createSlider: function() {
-      var carouselIndicators = [];
+var MakeCarousel = React.createClass({
+  mixins: [History, LinkedStateMixin],
+  showDetail: function (id) {
+    this.history.pushState(null, '/treks/' + id);
+  },
 
-      var carouselInner = [];
-      if (this.props.trek.trek_pics !== undefined){
-        carouselInner = this.props.trek_pics.map (function (picture, idx){
-            var pictureClass = "item";
+  render: function() {
+    var that = this;
+    var carouselIndicators = []
+    var carouselInner = this.props.trek.trek_pics.map (function (picture, idx){
+        var pictureClass = "item";
 
-            if (idx === 0){
-              carouselIndicators.push (<li data-target="#slider" data-slide-to="0" className="active"></li>);
-              var pictureClass = "item active";
-            } else {
-              carouselIndicators.push (<li data-target="#slider" data-slide-to={idx}></li>);
-            }
+        if (idx === 0){
+          carouselIndicators.push (<li key={picture.id} data-target="#slider" data-slide-to="0" className="active"></li>);
+          pictureClass = "item active";
+        } else {
+          carouselIndicators.push (<li key={picture.id} data-target="#slider" data-slide-to={idx}></li>);
+        }
 
-            return (
-                <div className={pictureClass}>
-                    <img src={"http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url} />
-                </div>
-            )
-        })
-      };
+        return (
+            <div key={that.props.trek.title + picture.id} className={pictureClass}>
+                <img src={"http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url} />
+            </div>
+        );
+    })
 
-      return (
-        <section id="slider" className="carousel slide" data-ride="carousel">
-          <div className="carousel-inner">
-            {carouselInner}
-          </div>
+    return(
+      <section id={this.props.trek.id} className="carousel trek-detail-carousel" data-interval="false">
+        <div onClick={this.showDetail.bind(null, this.props.trek.id)} className="carousel-inner">
+          {carouselInner}
+        </div>
 
-          <a className="left carousel-control" href="#slider" role="button" data-slide="prev">
-              <span className="glyphicon glyphicon-chevron-left"></span>
-          </a>
-          <a className="right carousel-control" href="#slider" role="button" data-slide="next">
-              <span className="glyphicon glyphicon-chevron-right"></span>
-          </a>
-        </section>
-      )
-    },
-
-  render: function(){
-    {createSlider}
+        <a id="carousel-controller" className="left carousel-control" href={'#' + this.props.trek.id} role="button" data-slide="prev">
+            <span className="glyphicon glyphicon-chevron-left"></span>
+        </a>
+        <a id="carousel-controller" className="right carousel-control" href={'#' + this.props.trek.id} role="button" data-slide="next">
+            <span className="glyphicon glyphicon-chevron-right"></span>
+        </a>
+      </section>
+    );
   }
+
 });
 
-
-// <ol className="carousel-indicators">
-//   {carouselIndicators}
-// </ol>
+module.exports = MakeCarousel;

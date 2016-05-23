@@ -6,7 +6,7 @@ var MapTrekDetail = require('../maps/map_trek_create');
 var TrekReviews = require('../reviews/reviews');
 var Rating = require('../reviews/ratings');
 var ScrollToTop = require('react-scroll-up');
-
+var Carousel = require('./carousel');
 
 var TrekDetail = React.createClass({
   getInitialState: function () {
@@ -35,27 +35,8 @@ var TrekDetail = React.createClass({
   },
 
   render: function () {
-
+    var carousel = <Carousel trek = {this.state.trek}/>
     var trekTitle = this.state.trek.title;
-    var carouselIndicators = [];
-    var carouselInner = [];
-
-    if (this.state.trek.trek_pics !== undefined){
-      carouselInner = this.state.trek.trek_pics.map (function (picture, idx){
-          var pictureClass = "item";
-
-          if (idx === 0){
-            pictureClass = "item active";
-          }
-
-          return (
-              <div className={pictureClass}>
-                  <img key={picture.url} src={"http://res.cloudinary.com/stephensaekoo/image/upload/" + picture.url} />
-              </div>
-          )
-      })
-    };
-
     if(this.state.trek.length === undefined) { return <div></div>; }
     var myTags = this.state.trek.tags.map (function(tag){
       return (<button type="button" key={tag.id} id={"tag-button" + tag.id} className="btn btn-xs btn-primary tag-button"> {tag.tag_name} </button>);
@@ -67,20 +48,7 @@ var TrekDetail = React.createClass({
       <div id="sidx" className="trek-detail below-nav">
         <a className="return-to-search" href="/#/search">{"Return to Search"}</a>
         <div className="trek-detail-pane">
-          <div className="trek-detail-carousel">
-            <section id="slider" className="carousel slide" data-interval="false">
-              <div className="carousel-inner">
-                {carouselInner}
-              </div>
-
-              <a id="carousel-controller" className="left carousel-control" href="#slider" role="button" data-slide="prev">
-                  <span className="glyphicon glyphicon-chevron-left"></span>
-              </a>
-              <a id="carousel-controller" className="right carousel-control" href="#slider" role="button" data-slide="next">
-                  <span className="glyphicon glyphicon-chevron-right"></span>
-              </a>
-            </section>
-          </div>
+          {carousel}
           <div className="trek-detail-attributes">
             <h1 className="trek-detail-title">{this.state.trek.title} </h1>
             <div id="trek-star-average" className="trek-star-average">
